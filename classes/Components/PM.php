@@ -48,52 +48,52 @@ class ComponentPM extends TemplateComponent
         $td = XMLToolbox::createElement('td');
         $td->setAttribute('colspan', '2');
         $td->setAttribute('class', 'formLeft');
-        $td->nodeValue = $language['Modules.PM.From'] . ': ';
-        $row->appendChild($td);
+        $td->addContent($language['Modules.PM.From'] . ': ');
+        $row->addContent($td);
 
         $td = XMLToolbox::createElement('td');
         $a = XMLToolbox::createElement('a');
         $a->setAttribute('href', 'character.php?name=' . $this['pm']['from']);
-        $a->nodeValue = $this['pm']['from'];
+        $a->addContent($this['pm']['from']);
         $td->setAttribute('colspan', '2');
         $td->setAttribute('class', 'formRight');
-        $td->appendChild($a);
-        $row->appendChild($td);
-        $tbody->appendChild($row);
+        $td->addContent($a);
+        $row->addContent($td);
+        $tbody->addContent($row);
 
         // to
         $row = XMLToolbox::createElement('tr');
         $td = XMLToolbox::createElement('td');
         $td->setAttribute('colspan', '2');
         $td->setAttribute('class', 'formLeft');
-        $td->nodeValue = $language['Modules.PM.To'] . ': ';
-        $row->appendChild($td);
+        $td->addContent($language['Modules.PM.To'] . ': ');
+        $row->addContent($td);
 
         $td = XMLToolbox::createElement('td');
         $a = XMLToolbox::createElement('a');
         $a->setAttribute('href', 'character.php?name=' . $this['pm']['to']);
-        $a->nodeValue = $this['pm']['to'];
+        $a->addContent($this['pm']['to']);
         $td->setAttribute('colspan', '2');
         $td->setAttribute('class', 'formRight');
-        $td->appendChild($a);
-        $row->appendChild($td);
-        $tbody->appendChild($row);
+        $td->addContent($a);
+        $row->addContent($td);
+        $tbody->addContent($row);
 
         // subject
         $row = XMLToolbox::createElement('tr');
         $td = XMLToolbox::createElement('td');
         $td->setAttribute('colspan', '2');
         $td->setAttribute('class', 'formLeft');
-        $td->nodeValue = $language['Modules.PM.Name'] . ': ';
-        $row->appendChild($td);
+        $td->addContent($language['Modules.PM.Name'] . ': ');
+        $row->addContent($td);
 
         $td = XMLToolbox::createElement('td');
         $a = XMLToolbox::createElement('a');
         $td->setAttribute('colspan', '2');
         $td->setAttribute('class', 'formRight');
-        $td->nodeValue = $this['pm']['name'];
-        $row->appendChild($td);
-        $tbody->appendChild($row);
+        $td->addContent($this['pm']['name']);
+        $row->addContent($td);
+        $tbody->addContent($row);
 
         // avatar
         $row = XMLToolbox::createElement('tr');
@@ -109,35 +109,34 @@ class ComponentPM extends TemplateComponent
             $img = XMLToolbox::createElement('img');
             $img->setAttribute('src', $this['pm']['avatar']);
             $img->setAttribute('alt', $this['pm']['from']);
-            $td->appendChild($img);
-            $td->appendChild( XMLToolbox::createElement('br') );
+            $td->addContents($img, XMLToolbox::createElement('br') );
         }
 
-        $td->appendChild( XMLToolbox::createTextNode( date($config['site.date_format'], $this['pm']['date_time']) ) );
+        $td->addContent( date($config['site.date_format'], $this['pm']['date_time']) );
         $td->setAttribute('class', 'formLeft');
-        $row->appendChild($td);
+        $row->addContent($td);
 
         $td = XMLToolbox::createElement('td');
         $a = XMLToolbox::createElement('a');
         $td->setAttribute('colspan', '3');
-        $td->appendChild($this['pm']['content']);
-        $row->appendChild($td);
-        $tbody->appendChild($row);
+        $td->addContent($this['pm']['content']);
+        $row->addContent($td);
+        $tbody->addContent($row);
 
         // action links
         if($this->receiver)
         {
             $delete = XMLToolbox::createElement('a');
             $delete->setAttribute('href', 'priv.php?command=delete&id=' . $this['pm']['id']);
-            $delete->nodeValue = $language['main.admin.DeleteSubmit'];
+            $delete->addContent($language['main.admin.DeleteSubmit']);
 
             $reply = XMLToolbox::createElement('a');
             $reply->setAttribute('href', 'priv.php?command=reply&id=' . $this['pm']['id']);
-            $reply->nodeValue = $language['Modules.PM.ReplySubmit'];
+            $reply->addContent($language['Modules.PM.ReplySubmit']);
 
             $forward = XMLToolbox::createElement('a');
             $forward->setAttribute('href', 'priv.php?command=fw&id=' . $this['pm']['id']);
-            $forward->nodeValue = $language['Modules.PM.ForwardSubmit'];
+            $forward->addContent($language['Modules.PM.ForwardSubmit']);
 
             $row = XMLToolbox::createElement('tr');
             $td = XMLToolbox::createElement('td');
@@ -145,19 +144,15 @@ class ComponentPM extends TemplateComponent
             $td->setAttribute('colspan', '3');
             $td->setAttribute('class', 'right');
 
-            $td->appendChild($delete);
-            $td->appendChild( XMLToolbox::createTextNode(' | ') );
-            $td->appendChild($reply);
-            $td->appendChild( XMLToolbox::createTextNode(' | ') );
-            $td->appendChild($forward);
+            $td->addContents($delete, ' | ', $reply, ' | ', $forward);
 
-            $row->appendChild($td);
-            $tbody->appendChild($row);
+            $row->addContent($td);
+            $tbody->addContent($row);
         }
 
         $table->setAttribute('class', 'formTable');
-        $table->appendChild($tbody);
-        $form->appendChild($table);
+        $table->addContent($tbody);
+        $form->addContent($table);
 
         // outputs only form element
         return XMLToolbox::saveXML($form);

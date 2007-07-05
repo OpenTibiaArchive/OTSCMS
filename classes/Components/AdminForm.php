@@ -65,8 +65,8 @@ class ComponentAdminForm extends TemplateComponent
             {
                 $td = XMLToolbox::createElement('td');
                 $td->setAttribute('class', 'formLeft');
-                $td->nodeValue = $field['label'] . ': ';
-                $row->appendChild($td);
+                $td->addContent($field['label'] . ': ');
+                $row->addContent($td);
             }
 
             // field cell
@@ -88,7 +88,7 @@ class ComponentAdminForm extends TemplateComponent
                         $element->setAttribute('value', $field['value']);
                     }
 
-                    $td->appendChild($element);
+                    $td->addContent($element);
                     break;
 
                 // separator label
@@ -96,7 +96,7 @@ class ComponentAdminForm extends TemplateComponent
                     // modify new row
                     $td->removeAttribute('class');
                     $td->setAttribute('colspan', 2);
-                    $td->appendChild($field['label'] instanceof DOMNode ? $field['label'] : XMLToolbox::createTextNode($field['label']) );
+                    $td->addContent($field['label']);
                     break;
 
                 // drop-down box
@@ -109,7 +109,7 @@ class ComponentAdminForm extends TemplateComponent
                     {
                         $option = XMLToolbox::createElement('option');
                         $option->setAttribute('value', $value);
-                        $option->nodeValue = $label;
+                        $option->addContent($label);
 
                         // default value
                         if( isset($field['value']['selected']) && $field['value']['selected'] == $value)
@@ -117,10 +117,10 @@ class ComponentAdminForm extends TemplateComponent
                             $option->setAttribute('selected', 'selected');
                         }
 
-                        $element->appendChild($option);
+                        $element->addContent($option);
                     }
 
-                    $td->appendChild($element);
+                    $td->addContent($element);
                     break;
 
                 // enabled/disabled switch
@@ -140,12 +140,11 @@ class ComponentAdminForm extends TemplateComponent
                         $input->setAttribute('checked', 'checked');
                     }
 
-                    $element->appendChild($input);
-                    $element->appendChild( XMLToolbox::createTextNode($OnOff['Enable']) );
-                    $td->appendChild($element);
+                    $element->addContents($input, $OnOff['Enable']);
+                    $td->addContent($element);
 
                     // separator
-                    $td->appendChild( XMLToolbox::createTextNode(' ') );
+                    $td->addContent(' ');
 
                     $element = XMLToolbox::createElement('label');
 
@@ -160,9 +159,8 @@ class ComponentAdminForm extends TemplateComponent
                         $input->setAttribute('checked', 'checked');
                     }
 
-                    $element->appendChild($input);
-                    $element->appendChild( XMLToolbox::createTextNode($OnOff['Disable']) );
-                    $td->appendChild($element);
+                    $element->addContents($input, $OnOff['Disable']);
+                    $td->addContent($element);
                     break;
 
                 // large text area
@@ -173,9 +171,9 @@ class ComponentAdminForm extends TemplateComponent
                     $element->setAttribute('rows', '10');
 
                     // field contents
-                    $element->nodeValue = isset($field['value']) ? $field['value'] : '';
+                    $element->addContent( isset($field['value']) ? $field['value'] : '');
 
-                    $td->appendChild($element);
+                    $td->addContent($element);
                     break;
 
                 // radio options
@@ -187,8 +185,7 @@ class ComponentAdminForm extends TemplateComponent
                         $input->setAttribute('name', $field['name']);
                         $input->setAttribute('type', 'radio');
                         $input->setAttribute('value', $value);
-                        $element->appendChild($input);
-                        $element->appendChild( XMLToolbox::createTextNode($label) );
+                        $element->addContents($input, $label);
 
                         // default value
                         if( isset($field['value']['selected']) && $field['value']['selected'] == $value)
@@ -196,8 +193,7 @@ class ComponentAdminForm extends TemplateComponent
                             $input->setAttribute('checked', 'checked');
                         }
 
-                        $td->appendChild($element);
-                        $td->appendChild( XMLToolbox::createElement('br') );
+                        $td->addContents($element, XMLToolbox::createElement('br') );
                     }
                     break;
 
@@ -206,12 +202,12 @@ class ComponentAdminForm extends TemplateComponent
                     $element = XMLToolbox::createElement('input');
                     $element->setAttribute('type', 'file');
                     $element->setAttribute('name', $field['name']);
-                    $td->appendChild($element);
+                    $td->addContent($element);
                     break;
 
                 // just a label
                 case self::FieldLabel:
-                    $td->nodeValue = $field['value'];
+                    $td->addContent($field['value']);
                     break;
 
                 // text input field
@@ -226,7 +222,7 @@ class ComponentAdminForm extends TemplateComponent
                         $element->setAttribute('value', $field['value']);
                     }
 
-                    $td->appendChild($element);
+                    $td->addContent($element);
                     break;
 
                 // colors drop-down
@@ -236,7 +232,7 @@ class ComponentAdminForm extends TemplateComponent
 
                     $option = XMLToolbox::createElement('option');
                     $option->setAttribute('value', '');
-                    $option->nodeValue = $language['Modules.Character.ValueInherit'];
+                    $option->addContent($language['Modules.Character.ValueInherit']);
 
                     // default value
                     if( empty($field['value']) )
@@ -244,7 +240,7 @@ class ComponentAdminForm extends TemplateComponent
                         $option->setAttribute('selected', 'selected');
                     }
 
-                    $element->appendChild($option);
+                    $element->addContent($option);
 
                     // select options
                     foreach( array(0 => 'FFFFFF', 1 => 'FFD4BF', 2 => 'FFE9BF', 3 => 'FFFFBF', 4 => 'E9FFBF', 5 => 'D4FFBF', 6 => 'BFFFBF', 7 => 'BFFFD4', 8 => 'BFFFE9', 9 => 'BFFFFF', 10 => 'BFE9FF', 11 => 'BFD4FF', 12 => 'BFBFFF', 13 => 'D4BFFF', 14 => 'E9BFFF', 15 => 'FFBFFF', 16 => 'FFBFE9', 17 => 'FFBFD4', 18 => 'FFBFBF', 19 => 'DADADA', 20 => 'BF9F8F', 21 => 'BFAF8F', 22 => 'BFBF8F', 23 => 'AFBF8F', 24 => '9FBF8F', 25 => '8FBF8F', 26 => '8FBF9F', 27 => '8FBFAF', 28 => '8FBFBF', 29 => '8FAFBF', 30 => '8F9FBF', 31 => '8F8FBF', 32 => '9F8FBF', 33 => 'AF8FBF', 34 => 'BF8FBF', 35 => 'BF8FAF', 36 => 'BF8F9F', 37 => 'BF8F8F', 38 => 'B6B6B6', 39 => 'BF7F5F', 40 => 'BFAF8F', 41 => 'BFBF5F', 42 => '9FBF5F', 43 => '7FBF5F', 44 => '5FBF5F', 45 => '5FBF7F', 46 => '5FBF9F', 47 => '5FBFBF', 48 => '5F9FBF', 49 => '5F7FBF', 50 => '5F5FBF', 51 => '7F5FBF', 52 => '9F5FBF', 53 => 'BF5FBF', 54 => 'BF5F9F', 55 => 'BF5F7F', 56 => 'BF5F5F', 57 => '919191', 58 => 'BF6A3F', 59 => 'BF943F', 60 => 'BFBF3F', 61 => '94BF3F', 62 => '6ABF3F', 63 => '3FBF3F', 64 => '3FBF6A', 65 => '3FBF94', 66 => '3FBFBF', 67 => '3F94BF', 68 => '3F6ABF', 69 => '3F3FBF', 70 => '6A3FBF', 71 => '943FBF', 72 => 'BF3FBF', 73 => 'BF3F94', 74 => 'BF3F6A', 75 => 'BF3F3F', 76 => '6D6D6D', 77 => 'FF5500', 78 => 'FFAA00', 79 => 'FFFF00', 80 => 'AAFF00', 81 => '54FF00', 82 => '00FF00', 83 => '00FF54', 84 => '00FFAA', 85 => '00FFFF', 86 => '00A9FF', 87 => '0055FF', 88 => '0000FF', 89 => '5500FF', 90 => 'A900FF', 91 => 'FE00FF', 92 => 'FF00AA', 93 => 'FF0055', 94 => 'FF0000', 95 => '484848', 96 => 'BF3F00', 97 => 'BF7F00', 98 => 'BFBF00', 99 => '7FBF00', 100 => '3FBF00', 101 => '00BF00', 102 => '00BF3F', 103 => '00BF7F', 104 => '00BFBF', 105 => '007FBF', 106 => '003FBF', 107 => '0000BF', 108 => '3F00BF', 109 => '7F00BF', 110 => 'BF00BF', 111 => 'BF007F', 112 => 'BF003F', 113 => 'BF0000', 114 => '242424', 115 => '7F2A00', 116 => '7F5500', 117 => '7F7F00', 118 => '557F00', 119 => '2A7F00', 120 => '007F00', 121 => '007F2A', 122 => '007F55', 123 => '007F7F', 124 => '00547F', 125 => '002A7F', 126 => '00007F', 127 => '2A007F', 128 => '54007F', 129 => '7F007F', 130 => '7F0055', 131 => '7F002A', 132 => '7F0000') as $id => $color)
@@ -252,7 +248,7 @@ class ComponentAdminForm extends TemplateComponent
                         $option = XMLToolbox::createElement('option');
                         $option->setAttribute('value', $id);
                         $option->setAttribute('style', 'background-color: #' . $color . ';');
-                        $option->nodeValue = $id;
+                        $option->addContent($id);
 
                         // default value
                         if( isset($field['value']) && $field['value'] == $id)
@@ -260,15 +256,15 @@ class ComponentAdminForm extends TemplateComponent
                             $option->setAttribute('selected', 'selected');
                         }
 
-                        $element->appendChild($option);
+                        $element->addContent($option);
                     }
 
-                    $td->appendChild($element);
+                    $td->addContent($element);
                     break;
             }
 
-            $row->appendChild($td);
-            $tbody->appendChild($row);
+            $row->addContent($td);
+            $tbody->addContent($row);
         }
 
         $row = XMLToolbox::createElement('tr');
@@ -277,13 +273,13 @@ class ComponentAdminForm extends TemplateComponent
         $field->setAttribute('type', 'submit');
         $field->setAttribute('value', $this['submit']);
         $td->setAttribute('colspan', '2');
-        $td->appendChild($field);
-        $row->appendChild($td);
-        $tbody->appendChild($row);
+        $td->addContent($field);
+        $row->addContent($td);
+        $tbody->addContent($row);
 
         $table->setAttribute('class', 'formTable');
-        $table->appendChild($tbody);
-        $form->appendChild($table);
+        $table->addContent($tbody);
+        $form->addContent($table);
 
         // outputs only form element
         return XMLToolbox::saveXML($form);

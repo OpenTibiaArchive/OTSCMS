@@ -142,6 +142,11 @@ switch($config['version'])
     // 3.0.4 and up
     case '3.0.4':
         // updates system version
+        $db->exec('UPDATE [settings] SET `content` = \'3.0.5\' WHERE `name` = \'version\'');
+
+    // 3.0.5 and up
+    case '3.0.5':
+        // updates system version
         $db->exec('UPDATE [settings] SET `content` = \'3.1.0\' WHERE `name` = \'version\'');
 
         // changes directories paths

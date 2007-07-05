@@ -78,16 +78,14 @@ foreach( $db->query('SELECT `id`, `name` FROM {players} WHERE `account_id` = ' .
     $delete = XMLToolbox::createElement('a');
     $delete->setAttribute('href', 'character.php?command=delete&id=' . $character['id']);
     $delete->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Account.DeleteConfirm'] . '\') ) { return pageCharacter.Delete(' . $character['id'] . '); } else { return false; }');
-    $delete->nodeValue = $language['main.admin.DeleteSubmit'];
+    $delete->addContent($language['main.admin.DeleteSubmit']);
 
     // edit link
     $edit = XMLToolbox::createElement('a');
     $edit->setAttribute('href', 'character.php?command=change&id=' . $character['id']);
-    $edit->nodeValue = $language['main.admin.EditSubmit'];
+    $edit->addContent($language['main.admin.EditSubmit']);
 
-    $root->appendChild($delete);
-    $root->appendChild( XMLToolbox::createTextNode(' | ') );
-    $root->appendChild($edit);
+    $root->addContents($delete, ' | ', $edit);
 
     $characters[] = array('id' => $character['id'], 'name' => $character['name'], 'actions' => $root);
 }

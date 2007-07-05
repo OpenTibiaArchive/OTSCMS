@@ -41,8 +41,8 @@ class ComponentForumBar extends TemplateComponent
         $img->setAttribute('alt', $language['Components.ForumBar.newThread']);
         $img->setAttribute('src', $this->owner->getSkinPath() . $config['site.language'] . '/forum_newThread.png');
         $a->setAttribute('href', 'forum.php?module=Topic&command=new&boardid=' . $this['boardid']);
-        $a->appendChild($img);
-        $root->appendChild($a);
+        $a->addContent($img);
+        $root->addContent($a);
 
         // post reply link
         if( isset($this['topicid']) )
@@ -52,8 +52,8 @@ class ComponentForumBar extends TemplateComponent
             $img->setAttribute('alt', $language['Components.ForumBar.newPost']);
             $img->setAttribute('src', $this->owner->getSkinPath() . $config['site.language'] . '/forum_newPost.png');
             $a->setAttribute('href', 'forum.php?module=Topic&command=new&topicid=' . $this['topicid']);
-            $a->appendChild($img);
-            $root->appendChild($a);
+            $a->addContent($img);
+            $root->addContent($a);
         }
 
         // outputs pagination bar

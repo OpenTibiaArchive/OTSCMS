@@ -43,12 +43,12 @@ class ComponentObjectsList extends TemplateComponent
             // object title
             $header = XMLToolbox::createElement('div');
             $header->setAttribute('class', 'contentHeader');
-            $header->appendChild( XMLToolbox::createTextNode($item['name']) );
+            $header->addContent($item['name']);
 
             // admin controll links
             if( User::hasAccess(3) )
             {
-                $header->appendChild( XMLToolbox::createTextNode(' ') );
+                $header->addContent(' ');
 
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
@@ -56,10 +56,8 @@ class ComponentObjectsList extends TemplateComponent
                 $a->setAttribute('onclick', 'return page' . $this['module'] . '.edit(' . $item['id'] . ');');
                 $img->setAttribute('alt', $language['main.admin.EditSubmit']);
                 $img->setAttribute('src', $this->owner->getSkinPath() . 'images/edit.gif');
-                $a->appendChild($img);
-                $header->appendChild($a);
-
-                $header->appendChild( XMLToolbox::createTextNode(' ') );
+                $a->addContent($img);
+                $header->addContents($a, ' ');
 
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
@@ -67,11 +65,9 @@ class ComponentObjectsList extends TemplateComponent
                 $a->setAttribute('onclick', 'if( confirm(Language[0]) ) { return page' . $this['module'] . '.remove(' . $item['id'] . '); } else { return false; }');
                 $img->setAttribute('alt', $language['main.admin.DeleteSubmit']);
                 $img->setAttribute('src', $this->owner->getSkinPath() . 'images/delete.gif');
-                $a->appendChild($img);
-                $header->appendChild($a);
+                $a->addContent($img);
+                $header->addContent($a);
             }
-
-            $div->appendChild($header);
 
             // describe + mini image
             if( isset($this['mini']) )
@@ -83,8 +79,8 @@ class ComponentObjectsList extends TemplateComponent
                 $img->setAttribute('src', $this['file'] . '?command=' . $this['mini'] . '&id=' . $item['id']);
                 $img->setAttribute('alt', $item['name']);
                 $img->setAttribute('class', 'galleryMini');
-                $a->appendChild($img);
-                $layer->appendChild($a);
+                $a->addContent($img);
+                $layer->addContent($a);
             }
             // standard describtion
             else
@@ -94,20 +90,19 @@ class ComponentObjectsList extends TemplateComponent
             }
 
             // describe
-            $layer->appendChild($item['content'] instanceof DOMNode ? $item['content'] : XMLToolbox::createTextNode($item['content']) );
-            $div->appendChild($layer);
+            $layer->addContent($item['content']);
 
             // download link layer
             $download = XMLToolbox::createElement('div');
             $download->setAttribute('class', 'right');
             $a = XMLToolbox::createElement('a');
             $a->setAttribute('href', $this['file'] . '?command=download&id=' . $item['id']);
-            $a->nodeValue = $language['Modules.' . $this['module'] . '.DownloadSubmit'];
+            $a->addContent($language['Modules.' . $this['module'] . '.DownloadSubmit']);
 
-            $download->appendChild($a);
-            $div->appendChild($download);
+            $download->addContent($a);
+            $div->addContents($header, $layer, $download);
 
-            $root->appendChild($div);
+            $root->addContent($div);
         }
 
         // outputs message block

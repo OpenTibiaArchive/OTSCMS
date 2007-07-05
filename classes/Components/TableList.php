@@ -44,8 +44,8 @@ class ComponentTableList extends TemplateComponent
         if( isset($this['caption']) )
         {
             $caption = XMLToolbox::createElement('caption');
-            $caption->nodeValue = $this['caption'];
-            $table->appendChild($caption);
+            $caption->addContent($this['caption']);
+            $table->addContent($caption);
         }
 
         // headers
@@ -55,20 +55,20 @@ class ComponentTableList extends TemplateComponent
         foreach($this->fields as $name => $label)
         {
             $th = XMLToolbox::createElement('th');
-            $th->nodeValue = $label;
-            $tr->appendChild($th);
+            $th->addContent($label);
+            $tr->addContent($th);
         }
 
         // checks if there are actions for this table
         if( !empty($this->actions) )
         {
             $th = XMLToolbox::createElement('th');
-            $th->nodeValue = $language['main.admin.Actions'];
-            $tr->appendChild($th);
+            $th->addContent($language['main.admin.Actions']);
+            $tr->addContent($th);
         }
 
-        $thead->appendChild($tr);
-        $table->appendChild($thead);
+        $thead->addContent($tr);
+        $table->addContent($thead);
 
         $tbody = XMLToolbox::createElement('tbody');
 
@@ -88,8 +88,8 @@ class ComponentTableList extends TemplateComponent
             foreach($this->fields as $name => $label)
             {
                 $td = XMLToolbox::createElement('td');
-                $td->appendChild($item[$name] instanceof DOMNode ? $item[$name] : XMLToolbox::createTextNode( htmlspecialchars($item[$name]) ) );
-                $row->appendChild($td);
+                $td->addContent($item[$name]);
+                $row->addContent($td);
             }
 
             // actions
@@ -105,7 +105,7 @@ class ComponentTableList extends TemplateComponent
                     // separator
                     if($next)
                     {
-                        $td->appendChild( XMLToolbox::createTextNode(' | ') );
+                        $td->addContent(' | ');
                     }
 
                     // action link
@@ -113,19 +113,19 @@ class ComponentTableList extends TemplateComponent
                     $a->setAttribute('href', 'admin.php?module=' . $this->module . '&command=' . $action . '&id=' . $item['id']);
                     // remove action needs confirmation
                     $a->setAttribute('onclick', $action == 'remove' || $action == 'pop' ? 'if( confirm(Language[0]) ) { return page' . $this->module . '.' . $action . '(' . $item['id'] . '); } else { return false; }' : 'return page' . $this->module . '.' . $action . '(' . $item['id'] . ');');
-                    $a->nodeValue = $label;
-                    $td->appendChild($a);
+                    $a->addContent($label);
+                    $td->addContent($a);
 
                     $next = true;
                 }
 
-                $row->appendChild($td);
+                $row->addContent($td);
             }
 
-            $tbody->appendChild($row);
+            $tbody->addContent($row);
         }
 
-        $table->appendChild($tbody);
+        $table->addContent($tbody);
 
         // outputs table
         return XMLToolbox::saveXML($table);

@@ -42,8 +42,8 @@ class ComponentTableData extends TemplateComponent
         if( isset($this['caption']) )
         {
             $caption = XMLToolbox::createElement('caption');
-            $caption->nodeValue = $this['caption'];
-            $table->appendChild($caption);
+            $caption->addContent($this['caption']);
+            $table->addContent($caption);
         }
 
         // form fields
@@ -55,25 +55,25 @@ class ComponentTableData extends TemplateComponent
             // label cell
             $td = XMLToolbox::createElement('td');
             $td->setAttribute('class', 'formLeft');
-            $td->nodeValue = $label . ': ';
-            $row->appendChild($td);
+            $td->addContent($label . ': ');
+            $row->addContent($td);
 
             // field cell
             $td = XMLToolbox::createElement('td');
             $td->setAttribute('class', 'formRight');
 
             // appends complete
-            $td->appendChild($content instanceof DOMNode ? $content : XMLToolbox::createTextNode($content) );
+            $td->addContent($content);
 
-            $row->appendChild($td);
-            $tbody->appendChild($row);
+            $row->addContent($td);
+            $tbody->addContent($row);
         }
 
         $table->setAttribute('class', 'formTable');
-        $table->appendChild($tbody);
+        $table->addContent($tbody);
 
         // outputs only table element
-        echo XMLToolbox::saveXML($table);
+        return XMLToolbox::saveXML($table);
     }
 }
 

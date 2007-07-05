@@ -38,8 +38,8 @@ class ComponentPollVoting extends TemplateComponent
         // question describe
         $p = XMLToolbox::createElement('p');
         $p->setAttribute('class', 'indented');
-        $p->nodeValue = $this['content'];
-        $div->appendChild($p);
+        $p->addContent($this['content']);
+        $div->addContent($p);
 
         // form table
         $table = XMLToolbox::createElement('table');
@@ -53,7 +53,7 @@ class ComponentPollVoting extends TemplateComponent
             $root->setAttribute('id', 'pollForm');
             $root->setAttribute('action', 'poll.php?command=vote');
             $root->setAttribute('method', 'post');
-            $root->appendChild($table);
+            $root->addContent($table);
         }
         // otherwise table is our root element
         else
@@ -62,8 +62,8 @@ class ComponentPollVoting extends TemplateComponent
         }
 
         $caption = XMLToolbox::createElement('caption');
-        $caption->nodeValue = $this['name'];
-        $table->appendChild($caption);
+        $caption->addContent($this['name']);
+        $table->addContent($caption);
 
         // poll options
         foreach($this['options'] as $option)
@@ -74,8 +74,8 @@ class ComponentPollVoting extends TemplateComponent
             // label cell
             $td = XMLToolbox::createElement('td');
             $td->setAttribute('class', 'formLeft');
-            $td->nodeValue = $option['name'] . ': ';
-            $row->appendChild($td);
+            $td->addContent($option['name'] . ': ');
+            $row->addContent($td);
 
             // field cell
             $td = XMLToolbox::createElement('td');
@@ -88,17 +88,17 @@ class ComponentPollVoting extends TemplateComponent
                 $input->setAttribute('type', 'radio');
                 $input->setAttribute('name', 'id');
                 $input->setAttribute('value', $option['id']);
-                $td->appendChild($input);
+                $td->addContent($input);
                 $td->setAttribute('id', 'pollOption_' . $option['id']);
             }
             // just display votes count
             else
             {
-                $td->nodeValue = $option['count'];
+                $td->addContent($option['count']);
             }
 
-            $row->appendChild($td);
-            $tbody->appendChild($row);
+            $row->addContent($td);
+            $tbody->addContent($row);
         }
 
         // voting submit
@@ -110,20 +110,20 @@ class ComponentPollVoting extends TemplateComponent
             $input = XMLToolbox::createElement('input');
             $input->setAttribute('type', 'submit');
             $input->setAttribute('value', $language['Modules.Poll.VoteSubmit']);
-            $td->appendChild($input);
+            $td->addContent($input);
             $td->setAttribute('colspan', '2');
 
-            $row->appendChild($td);
+            $row->addContent($td);
             $row->setAttribute('id', 'pollSubmit');
-            $tbody->appendChild($row);
+            $tbody->addContent($row);
         }
 
         $table->setAttribute('class', 'formTable');
-        $table->appendChild($tbody);
-        $div->appendChild($root);
+        $table->addContent($tbody);
+        $div->addContent($root);
 
         // outputs only table element
-        echo XMLToolbox::saveXML($div);
+        return XMLToolbox::saveXML($div);
     }
 }
 

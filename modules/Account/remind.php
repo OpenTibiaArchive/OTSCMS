@@ -63,9 +63,8 @@ else
         $root = XMLToolbox::createDocumentFragment();
         $span = XMLToolbox::createElement('span');
         $span->setAttribute('class', 'accountNumber');
-        $span->nodeValue = $password;
-        $root->appendChild( XMLToolbox::createTextNode($language['Modules.Account.SignupMail_Content'] . ': ') );
-        $root->appendChild($span);
+        $span->addContent($password);
+        $root->addContents($language['Modules.Account.SignupMail_Content'] . ': ', $span);
         $message['place'] = $root;
     }
 }

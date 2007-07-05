@@ -62,7 +62,7 @@ foreach( $db->query('SELECT `id`, `name`, `level` FROM {guild_ranks} WHERE `guil
     $link = XMLToolbox::createElement('a');
     $link->setAttribute('href', 'guild.php?command=delete&id=' . $rank['id']);
     $link->setAttribute('onclick', 'if( confirm(\'' . $language['main.admin.ConfirmDelete'] . '\') ) { return pageGuilds.Delete(' . $rank['id'] . '); } else { return false; }');
-    $link->nodeValue = $language['main.admin.DeleteSubmit'];
+    $link->addContent($language['main.admin.DeleteSubmit']);
 
     $ranks[] = array('id' => $rank['id'], 'name' => $rank['name'] . ' (' . $language['Modules.Guilds.Level_' . $rank['level'] ] . ')', 'actions' => $link);
 }

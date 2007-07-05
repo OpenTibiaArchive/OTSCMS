@@ -35,14 +35,10 @@ class ComponentNewsList extends TemplateComponent
         {
             $header = XMLToolbox::createElement('div');
             $header->setAttribute('class', 'contentHeader');
-            $header->nodeValue = $news['name'] . ' (' . $news['date_time'] . ')';
+            $header->addContent($news['name'] . ' (' . $news['date_time'] . ')');
 
             // content
-            $root->appendChild($header);
-            $root->appendChild( XMLToolbox::createEntityReference('nbsp') );
-            $root->appendChild( XMLToolbox::createEntityReference('nbsp') );
-            $root->appendChild( XMLToolbox::createEntityReference('nbsp') );
-            $root->appendChild( XMLToolbox::createTextNode($news['content']) );
+            $root->addContents($header, XMLToolbox::createEntityReference('nbsp'), XMLToolbox::createEntityReference('nbsp'), XMLToolbox::createEntityReference('nbsp'), $news['content']);
         }
 
         // outputs pagination bar

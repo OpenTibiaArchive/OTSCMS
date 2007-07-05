@@ -37,8 +37,8 @@ class ComponentPollOptions extends TemplateComponent
         $table->setAttribute('id', 'optionsList');
 
         $caption = XMLToolbox::createElement('caption');
-        $caption->nodeValue = $language['Modules.Poll.EditOptions'];
-        $table->appendChild($caption);
+        $caption->addContent($language['Modules.Poll.EditOptions']);
+        $table->addContent($caption);
 
         // form fields
         foreach($this['options'] as $id => $option)
@@ -56,8 +56,8 @@ class ComponentPollOptions extends TemplateComponent
             $input->setAttribute('type', 'text');
             $input->setAttribute('value', $option);
 
-            $td->appendChild($input);
-            $row->appendChild($td);
+            $td->addContent($input);
+            $row->addContent($td);
 
             // control cell
             $td = XMLToolbox::createElement('td');
@@ -69,7 +69,7 @@ class ComponentPollOptions extends TemplateComponent
             $input->setAttribute('value', $language['main.admin.UpdateSubmit']);
             $input->setAttribute('onclick', 'return pageOptions.update(' . $id . ');');
 
-            $td->appendChild($input);
+            $td->addContent($input);
 
             $input = XMLToolbox::createElement('input');
 
@@ -77,10 +77,10 @@ class ComponentPollOptions extends TemplateComponent
             $input->setAttribute('value', $language['main.admin.DeleteSubmit']);
             $input->setAttribute('onclick', 'if( confirm(Language[0]) ) { return pageOptions.remove(' . $id . '); } else { return false; }');
 
-            $td->appendChild($input);
+            $td->addContent($input);
 
-            $row->appendChild($td);
-            $tbody->appendChild($row);
+            $row->addContent($td);
+            $tbody->addContent($row);
         }
 
         // new option row
@@ -92,8 +92,8 @@ class ComponentPollOptions extends TemplateComponent
         $input->setAttribute('id', 'optionNew');
         $input->setAttribute('type', 'text');
 
-        $td->appendChild($input);
-        $row->appendChild($td);
+        $td->addContent($input);
+        $row->addContent($td);
 
         $td = XMLToolbox::createElement('td');
         $input = XMLToolbox::createElement('input');
@@ -102,12 +102,12 @@ class ComponentPollOptions extends TemplateComponent
         $input->setAttribute('value', $language['main.admin.InsertSubmit']);
         $input->setAttribute('onclick', 'return pageOptions.insert();');
 
-        $td->appendChild($input);
-        $row->appendChild($td);
-        $tbody->appendChild($row);
+        $td->addContent($input);
+        $row->addContent($td);
+        $tbody->addContent($row);
 
         $table->setAttribute('class', 'formTable');
-        $table->appendChild($tbody);
+        $table->addContent($tbody);
 
         // outputs only form element
         return XMLToolbox::saveXML($table);

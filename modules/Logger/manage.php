@@ -44,7 +44,7 @@ $list['list'] = $logs;
 $a = XMLToolbox::createElement('a');
 $a->setAttribute('href', 'admin.php?module=Logger&command=clean');
 $a->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Logger.ConfirmClean'] . '\') ) { return pageLogger.run(); } else { return false; }');
-$a->nodeValue = $language['Modules.Logger.CleanSubmit'];
+$a->addContent($language['Modules.Logger.CleanSubmit']);
 
 // puts link into template
 $clear = $template->createComponent('Message');

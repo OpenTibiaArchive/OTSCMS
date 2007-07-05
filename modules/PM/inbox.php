@@ -41,44 +41,38 @@ foreach( $db->query('SELECT `id`, `name`, `read`, `date_time`, `from` FROM [priv
     {
         $span = XMLToolbox::createElement('span');
         $span->setAttribute('style', 'font-weight: bold;');
-        $span->nodeValue = $language['Modules.PM.unread'];
+        $span->addContent($language['Modules.PM.unread']);
 
-        $root->appendChild( XMLToolbox::createTextNode('[') );
-        $root->appendChild($span);
-        $root->appendChild( XMLToolbox::createTextNode('] ') );
+        $root->addContents('[', $span, '] ');
     }
 
     // display link
     $a = XMLToolbox::createElement('a');
     $a->setAttribute('href', 'priv.php?command=display&id=' . $pm['id']);
-    $a->nodeValue = $pm['name'];
-    $root->appendChild($a);
+    $a->addContent($pm['name']);
+    $root->addContent($a);
 
     // author profile link
     $link = XMLToolbox::createElement('a');
     $link->setAttribute('href', 'character.php?name=' . urlencode($pm['from']) );
-    $link->nodeValue = $pm['from'];
+    $link->addContent($pm['from']);
 
     // delete link
     $delete = XMLToolbox::createElement('a');
     $delete->setAttribute('href', 'priv.php?command=delete&id=' . $pm['id']);
     $delete->setAttribute('onclick', 'if( confirm(Language[0]) ) { return pagePM.Delete(' . $pm['id'] . '); } else { return false; }');
-    $delete->nodeValue = $language['main.admin.DeleteSubmit'];
+    $delete->addContent($language['main.admin.DeleteSubmit']);
 
     $reply = XMLToolbox::createElement('a');
     $reply->setAttribute('href', 'priv.php?command=reply&id=' . $pm['id']);
-    $reply->nodeValue = $language['Modules.PM.ReplySubmit'];
+    $reply->addContent($language['Modules.PM.ReplySubmit']);
 
     $forward = XMLToolbox::createElement('a');
     $forward->setAttribute('href', 'priv.php?command=fw&id=' . $pm['id']);
-    $forward->nodeValue = $language['Modules.PM.ForwardSubmit'];
+    $forward->addContent($language['Modules.PM.ForwardSubmit']);
 
     $actions = XMLToolbox::createDocumentFragment();
-    $actions->appendChild($delete);
-    $actions->appendChild( XMLToolbox::createTextNode(' | ') );
-    $actions->appendChild($reply);
-    $actions->appendChild( XMLToolbox::createTextNode(' | ') );
-    $actions->appendChild($forward);
+    $actions->addContents($delete, ' | ', $reply, ' | ', $forward);
 
     $pms[] = array('id' => $pm['id'], 'name' => $root, 'from' => $link, 'date_time' => date($config['site.date_format'], $pm['date_time']), 'actions' => $actions);
 }

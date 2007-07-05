@@ -42,30 +42,30 @@ class ComponentBoardTopics extends TemplateComponent
         $tr = XMLToolbox::createElement('tr');
 
         $th = XMLToolbox::createElement('th');
-        $th->nodeValue = $language['Modules.Forum.Topic'];
-        $tr->appendChild($th);
+        $th->addContent($language['Modules.Forum.Topic']);
+        $tr->addContent($th);
 
         $th = XMLToolbox::createElement('th');
-        $th->nodeValue = $language['Modules.Forum.Author'];
-        $tr->appendChild($th);
+        $th->addContent($language['Modules.Forum.Author']);
+        $tr->addContent($th);
 
         $th = XMLToolbox::createElement('th');
-        $th->nodeValue = $language['Modules.Forum.Replies'];
-        $tr->appendChild($th);
+        $th->addContent($language['Modules.Forum.Replies']);
+        $tr->addContent($th);
 
         $th = XMLToolbox::createElement('th');
-        $th->nodeValue = $language['Modules.Forum.LastPost'];
-        $tr->appendChild($th);
+        $th->addContent($language['Modules.Forum.LastPost']);
+        $tr->addContent($th);
 
         if($this->admin)
         {
             $th = XMLToolbox::createElement('th');
-            $th->nodeValue = $language['main.admin.Actions'];
-            $tr->appendChild($th);
+            $th->addContent($language['main.admin.Actions']);
+            $tr->addContent($th);
         }
 
-        $thead->appendChild($tr);
-        $table->appendChild($thead);
+        $thead->addContent($tr);
+        $table->addContent($thead);
 
         $tbody = XMLToolbox::createElement('tbody');
 
@@ -84,13 +84,13 @@ class ComponentBoardTopics extends TemplateComponent
             // pinned
             if($topic['pinned'])
             {
-                $td->appendChild( XMLToolbox::createTextNode('[' . $language['Modules.Forum.PINNED'] . '] ') );
+                $td->addContent('[' . $language['Modules.Forum.PINNED'] . '] ');
             }
 
             // topic link
             $a = XMLToolbox::createElement('a');
             $a->setAttribute('href', 'forum.php?module=Topic&command=view&id=' . $topic['id']);
-            $a->nodeValue = $topic['name'];
+            $a->addContent($topic['name']);
 
             // topic closed
             if($topic['closed'])
@@ -98,21 +98,21 @@ class ComponentBoardTopics extends TemplateComponent
                 $a->setAttribute('class', 'closed');
             }
 
-            $td->appendChild($a);
-            $row->appendChild($td);
+            $td->addContent($a);
+            $row->addContent($td);
 
             // author
             $td = XMLToolbox::createElement('td');
             $a = XMLToolbox::createElement('a');
             $a->setAttribute('href', 'character.php?name=' . urlencode($topic['poster']) );
-            $a->appendChild( XMLToolbox::createTextNode($topic['poster']) );
-            $td->appendChild($a);
-            $row->appendChild($td);
+            $a->addContent($topic['poster']);
+            $td->addContent($a);
+            $row->addContent($td);
 
             // replies count
             $td = XMLToolbox::createElement('td');
-            $td->nodeValue = ForumToolbox::countReplies($topic['id']);
-            $row->appendChild($td);
+            $td->addContent( ForumToolbox::countReplies($topic['id']) );
+            $row->addContent($td);
 
             $lastPost = ForumToolbox::getLastTopicPost($topic['id']);
 
@@ -126,24 +126,21 @@ class ComponentBoardTopics extends TemplateComponent
                 $a->setAttribute('href', 'forum.php?module=Topic&command=view&id=' . $topic['id']);
                 $img->setAttribute('src', $this->owner->getSkinPath() . 'images/arrow.png');
                 $img->setAttribute('alt', $language['Modules.Forum.LastPost']);
-                $a->appendChild($img);
-                $td->appendChild($a);
-                $td->appendChild( XMLToolbox::createTextNode( date( $config['site.date_format'], $lastPost['date_time']) ) );
-                $td->appendChild( XMLToolbox::createElement('br') );
-                $td->appendChild( XMLToolbox::createTextNode($language['Modules.Forum.by'] . ' ') );
+                $a->addContent($img);
+                $td->addContents($a, date( $config['site.date_format'], $lastPost['date_time']), XMLToolbox::createElement('br'), $language['Modules.Forum.by'] . ' ');
 
                 $a = XMLToolbox::createElement('a');
                 $a->setAttribute('href', 'character.php?name=' . urlencode($lastPost['poster']) );
-                $a->nodeValue = $lastPost['poster'];
-                $td->appendChild($a);
+                $a->addContent($lastPost['poster']);
+                $td->addContent($a);
             }
             // no replies
             else
             {
-                $td->nodeValue = $language['Modules.Forum.NoPosts'];
+                $td->addContent($language['Modules.Forum.NoPosts']);
             }
 
-            $row->appendChild($td);
+            $row->addContent($td);
 
             // actions
             if($this->admin)
@@ -154,32 +151,28 @@ class ComponentBoardTopics extends TemplateComponent
                 $a = XMLToolbox::createElement('a');
                 $a->setAttribute('href', 'admin.php?module=Topic&command=remove&id=' . $topic['id']);
                 $a->setAttribute('onclick', 'if( confirm(Language[0]) ) { return pageForum.Delete(' . $topic['id'] . '); } else { return false; }');
-                $a->nodeValue = $language['main.admin.DeleteSubmit'];
-                $td->appendChild($a);
-
-                $td->appendChild( XMLToolbox::createTextNode(' | ') );
+                $a->addContent($language['main.admin.DeleteSubmit']);
+                $td->addContents($a, ' | ');
 
                 // pin/unpin
                 $a = XMLToolbox::createElement('a');
                 $a->setAttribute('href', 'admin.php?module=Topic&command=' . ($topic['pinned'] ? 'unpin' : 'pin') . '&id=' . $topic['id']);
-                $a->nodeValue = $language['Modules.Forum.' . ($topic['pinned'] ? 'Unpin' : 'Pin') . 'Submit'];
-                $td->appendChild($a);
-
-                $td->appendChild( XMLToolbox::createTextNode(' | ') );
+                $a->addContent($language['Modules.Forum.' . ($topic['pinned'] ? 'Unpin' : 'Pin') . 'Submit']);
+                $td->addContents($a, ' | ');
 
                 // open/close
                 $a = XMLToolbox::createElement('a');
                 $a->setAttribute('href', 'admin.php?module=Topic&command=' . ($topic['closed'] ? 'open' : 'close') . '&id=' . $topic['id']);
-                $a->nodeValue = $language['Modules.Forum.' . ($topic['closed'] ? 'Open' : 'Close') . 'Submit'];
-                $td->appendChild($a);
+                $a->addContent($language['Modules.Forum.' . ($topic['closed'] ? 'Open' : 'Close') . 'Submit']);
+                $td->addContent($a);
 
-                $row->appendChild($td);
+                $row->addContent($td);
             }
 
-            $tbody->appendChild($row);
+            $tbody->addContent($row);
         }
 
-        $table->appendChild($tbody);
+        $table->addContent($tbody);
 
         // outputs table
         return XMLToolbox::saveXML($table);

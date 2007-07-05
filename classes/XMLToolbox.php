@@ -32,6 +32,8 @@ class XMLToolbox
     public static function init()
     {
         self::$xml = new DOMDocument('1.0', 'utf-8');
+        self::$xml->registerNodeClass('DOMElement', 'XMLElement');
+        self::$xml->registerNodeClass('DOMDocumentFragment', 'XMLDocumentFragment');
         self::$xml->formatOutput = true;
     }
 

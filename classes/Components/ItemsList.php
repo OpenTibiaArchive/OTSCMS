@@ -36,8 +36,8 @@ class ComponentItemsList extends TemplateComponent
         // header
         $div = XMLToolbox::createElement('div');
         $div->setAttribute('class', 'contentHeader');
-        $div->nodeValue = $this['header'];
-        $root->appendChild($div);
+        $div->addContent($this['header']);
+        $root->addContent($div);
 
         // list
         $ul = XMLToolbox::createElement('ul');
@@ -65,20 +65,20 @@ class ComponentItemsList extends TemplateComponent
                     $a->setAttribute('id', $this['rowID'] . $key . '_a');
                 }
 
-                $a->nodeValue = $item;
+                $a->addContent($item);
 
-                $li->appendChild($a);
+                $li->addContent($a);
             }
             // simple element
             else
             {
-                $li->nodeValue = $item;
+                $li->addContent($item);
             }
 
             // admin actions
             if($this->actions)
             {
-                $li->appendChild( XMLToolbox::createTextNode(' ') );
+                $li->addContent(' ');
 
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
@@ -86,10 +86,8 @@ class ComponentItemsList extends TemplateComponent
                 $a->setAttribute('onclick', 'return page' . $this->module . '.edit(' . $key . ');');
                 $img->setAttribute('alt', $language['main.admin.EditSubmit']);
                 $img->setAttribute('src', $this->owner->getSkinPath() . 'images/edit.gif');
-                $a->appendChild($img);
-                $li->appendChild($a);
-
-                $li->appendChild( XMLToolbox::createTextNode(' ') );
+                $a->addContent($img);
+                $li->addContents($a, ' ');
 
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
@@ -97,14 +95,14 @@ class ComponentItemsList extends TemplateComponent
                 $a->setAttribute('onclick', 'if( confirm(Language[0]) ) { return page' . $this['module'] . '.remove(' . $key . '); } else { return false; }');
                 $img->setAttribute('alt', $language['main.admin.DeleteSubmit']);
                 $img->setAttribute('src', $this->owner->getSkinPath() . 'images/delete.gif');
-                $a->appendChild($img);
-                $li->appendChild($a);
+                $a->addContent($img);
+                $li->addContent($a);
             }
 
-            $ul->appendChild($li);
+            $ul->addContent($li);
         }
 
-        $root->appendChild($ul);
+        $root->addContent($ul);
 
         // outputs message block
         return XMLToolbox::saveXML($root);

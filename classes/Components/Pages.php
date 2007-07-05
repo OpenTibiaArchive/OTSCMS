@@ -39,7 +39,7 @@ class ComponentPages extends TemplateComponent
 
         $root = XMLToolbox::createElement('div');
         $root->setAttribute('class', 'pages');
-        $root->nodeValue = $language['Components.Pages.Pages'] . ': ';
+        $root->addContent($language['Components.Pages.Pages'] . ': ');
 
         // page links
         for($i = 1; $i <= $this['pages']; $i++)
@@ -50,7 +50,7 @@ class ComponentPages extends TemplateComponent
             if($i == $this['page'])
             {
                 $span->setAttribute('class', 'pagesCurrent');
-                $span->nodeValue = $i;
+                $span->addContent($i);
             }
             else
             {
@@ -58,11 +58,11 @@ class ComponentPages extends TemplateComponent
 
                 $a = XMLToolbox::createElement('a');
                 $a->setAttribute('href', $this['link'] . '&page=' . $i);
-                $a->nodeValue = $i;
-                $span->appendChild($a);
+                $a->addContent($i);
+                $span->addContent($a);
             }
 
-            $root->appendChild($span);
+            $root->addContent($span);
         }
 
         // outputs pagination bar

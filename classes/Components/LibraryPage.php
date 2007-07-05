@@ -33,8 +33,8 @@ class ComponentLibraryPage extends TemplateComponent
         // header
         $div = XMLToolbox::createElement('div');
         $div->setAttribute('class', 'contentHeader');
-        $div->nodeValue = $this['header'];
-        $root->appendChild($div);
+        $div->addContent($this['header']);
+        $root->addContent($div);
 
         // image
         $image = XMLToolbox::createElement('img');
@@ -43,16 +43,14 @@ class ComponentLibraryPage extends TemplateComponent
         $image->setAttribute('alt', $this['name']);
         $div = XMLToolbox::createElement('div');
         $div->setAttribute('style', 'width: 100%; text-align: right;');
-        $div->appendChild($image);
-        $root->appendChild($div);
+        $div->addContent($image);
+        $root->addContent($div);
 
         // name
         $p = XMLToolbox::createElement('p');
-        $bold = XMLToolbox::createElement('span');
-        $bold->setAttribute('style', 'font-weight: bold;');
-        $bold->nodeValue = $this['name'];
-        $p->appendChild($bold);
-        $root->appendChild($p);
+        $p->setAttribute('style', 'font-weight: bold;');
+        $p->addContent($this['name']);
+        $root->addContent($p);
 
         // labels
         foreach($this->labels as $field => $label)
@@ -60,11 +58,9 @@ class ComponentLibraryPage extends TemplateComponent
             $p = XMLToolbox::createElement('p');
             $bold = XMLToolbox::createElement('span');
             $bold->setAttribute('style', 'font-weight: bold;');
-            $bold->nodeValue = $label . ':';
-            $p->appendChild($bold);
-            $p->appendChild( XMLToolbox::createTextNode(' ') );
-            $p->appendChild($this[$field] instanceof DOMNode ? $this[$field] : XMLToolbox::createTextNode($this[$field]) );
-            $root->appendChild($p);
+            $bold->addContent($label . ':');
+            $p->addContents($bold, ' ', $this[$field]);
+            $root->addContent($p);
         }
 
         // outputs message block

@@ -47,19 +47,16 @@ class ComponentForumTrace extends TemplateComponent
         // first step
         $a = XMLToolbox::createElement('a');
         $a->setAttribute('href', 'forum.php');
-        $a->nodeValue = $language['main.forum'];
-        $div->appendChild($a);
+        $a->addContent($language['main.forum']);
+        $div->addContent($a);
 
         // composes forum path
         foreach( array_reverse($path) as $step)
         {
             $a = XMLToolbox::createElement('a');
             $a->setAttribute('href', 'forum.php?id=' . $step['id']);
-            $a->nodeValue = $step['name'];
-            $div->appendChild( XMLToolbox::createTextNode(' ') );
-            $div->appendChild( XMLToolbox::createEntityReference('raquo') );
-            $div->appendChild( XMLToolbox::createTextNode(' ') );
-            $div->appendChild($a);
+            $a->addContent($step['name']);
+            $div->addContents(' ', XMLToolbox::createEntityReference('raquo'), ' ', $a);
         }
 
         // outputs trace links

@@ -59,11 +59,9 @@ foreach( $db->query('SELECT `id`, `name`, `content` FROM [boards] WHERE `upperid
     $root = XMLToolbox::createDocumentFragment();
     $a = XMLToolbox::createElement('a');
     $a->setAttribute('href', 'forum.php?id=' . $sub['id']);
-    $a->nodeValue = $sub['name'];
+    $a->addContent($sub['name']);
 
-    $root->appendChild($a);
-    $root->appendChild( XMLToolbox::createElement('br') );
-    $root->appendChild( XMLToolbox::createTextNode($sub['content']) );
+    $root->addContents($a, XMLToolbox::createElement('br'), $sub['content']);
 
     // last post on given board
     $lastPost = ForumToolbox::getLastForumPost($sub['id']);
@@ -78,16 +76,13 @@ foreach( $db->query('SELECT `id`, `name`, `content` FROM [boards] WHERE `upperid
         $a->setAttribute('href', 'forum.php?module=Topic&command=view&id=' . $lastPost['id']);
         $img->setAttribute('src', $template->getSkinPath() . 'images/arrow.png');
         $img->setAttribute('alt', $language['Modules.Forum.LastPost']);
-        $a->appendChild($img);
-        $last->appendChild($a);
-        $last->appendChild( XMLToolbox::createTextNode( date($config['site.date_format'], $lastPost['date_time']) ) );
-        $last->appendChild( XMLToolbox::createElement('br') );
-        $last->appendChild( XMLToolbox::createTextNode($language['Modules.Forum.by'] . ' ') );
+        $a->addContent($img);
+        $last->addContents($a, date($config['site.date_format'], $lastPost['date_time']), XMLToolbox::createElement('br'), $language['Modules.Forum.by'] . ' ');
 
         $a = XMLToolbox::createElement('a');
         $a->setAttribute('href', 'character.php?name=' . urlencode($lastPost['poster']) );
-        $a->nodeValue = $lastPost['poster'];
-        $last->appendChild($a);
+        $a->addContent($lastPost['poster']);
+        $last->addContent($a);
     }
     // no posts message
     else

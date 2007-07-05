@@ -60,10 +60,9 @@ if( isset($name) )
         $guild = $db->query('SELECT {guilds}.`id` AS `id`, {guilds}.`name` AS `name`, {guild_ranks}.`name` AS `rank` FROM {guilds}, {guild_ranks} WHERE {guilds}.`id` = {guild_ranks}.`guild_id` AND {guild_ranks}.`id` = ' . $character['rank_id'])->fetch();
 
         $a->setAttribute('href', 'guild.php?command=display&id=' . $guild['id']);
-        $a->nodeValue = $guild['name'];
+        $a->addContent($guild['name']);
 
-        $root->appendChild( XMLToolbox::createTextNode($guild['rank'] . ' ' . $language['Modules.Character.InGuild'] . ' ') );
-        $root->appendChild($a);
+        $root->addContents($guild['rank'] . ' ' . $language['Modules.Character.InGuild'] . ' ', $a);
 
         $data[ $language['Modules.Character.Guild'] ] = $root;
     }
@@ -94,7 +93,7 @@ if( isset($name) )
         // website link
         $a = XMLToolbox::createElement('a');
         $a->setAttribute('href', $profile['website']);
-        $a->nodeValue = $profile['website'];
+        $a->addContent($profile['website']);
         $data[ $language['Modules.Account.Website'] ] = $a;
     }
 

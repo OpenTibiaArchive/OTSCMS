@@ -74,8 +74,8 @@ foreach( $db->query('SELECT `id`, `name`, `guildnick`, `rank`, `rank_id`, `level
         // edition link
         $edit = XMLToolbox::createElement('a');
         $edit->setAttribute('href', 'guild.php?command=edit&id=' . $row['id']);
-        $edit->nodeValue = $language['main.admin.EditSubmit'];
-        $actions->appendChild($edit);
+        $edit->addContent($language['main.admin.EditSubmit']);
+        $actions->addContent($edit);
 
         // kick link
         if($row['level'] < 3)
@@ -83,9 +83,8 @@ foreach( $db->query('SELECT `id`, `name`, `guildnick`, `rank`, `rank_id`, `level
             $kick = XMLToolbox::createElement('a');
             $kick->setAttribute('href', 'guild.php?command=kick&id=' . $row['id']);
             $kick->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Guilds.ConfirmKick'] . '\') ) { return pageGuilds.kick(' . $row['id'] . '); } else { return false; }');
-            $kick->nodeValue = $language['Modules.Guilds.KickSubmit'];
-            $actions->appendChild( XMLToolbox::createTextNode(' | ') );
-            $actions->appendChild($kick);
+            $kick->addContent($language['Modules.Guilds.KickSubmit']);
+            $actions->addContents(' | ', $kick);
         }
     }
     else
@@ -97,13 +96,13 @@ foreach( $db->query('SELECT `id`, `name`, `guildnick`, `rank`, `rank_id`, `level
     $name = XMLToolbox::createDocumentFragment();
     $link = XMLToolbox::createElement('a');
     $link->setAttribute('href', 'character.php?name=' . urlencode($row['name']) );
-    $link->nodeValue = $row['name'];
-    $name->appendChild($link);
+    $link->addContent($row['name']);
+    $name->addContent($link);
 
     // guild nick
     if( !empty($row['guildnick']) )
     {
-        $name->appendChild( XMLToolbox::createTextNode(' (' . $row['guildnick'] . ')') );
+        $name->addContent(' (' . $row['guildnick'] . ')');
     }
 
     // only first row of given rank will be labeled

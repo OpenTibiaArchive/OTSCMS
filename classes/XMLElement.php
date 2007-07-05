@@ -20,40 +20,24 @@
 */
 
 /*
-    Simple message object.
+    DOMElement additional routines.
 */
 
-class ComponentMessage extends TemplateComponent
+class XMLElement extends DOMElement
 {
-    // displays component
-    public function display()
+    // adds content into element
+    public function addContent($content)
     {
-        // message part
-        $message = XMLToolbox::createDocumentFragment();
+        $this->appendChild($content instanceof DOMNode ? ( $this->ownerDocument->isSameNode($content->ownerDocument) ? $content : $this->ownerDocument->importNode($content, true) ) : $this->ownerDocument->createTextNode($content) );
+    }
 
-        // first pharagraph
-        $p = XMLToolbox::createElement('p');
-        $p->addContent($this['message']);
-        $message->addContent($p);
-
-        // optional debug info
-        if( isset($this['debug']) )
+    // adds many pieces of content
+    public function addContents()
+    {
+        foreach( func_get_args() as $content)
         {
-            $pre = XMLToolbox::createElement('pre');
-            $pre->addContent( htmlspecialchars($this['debug']) );
-            $message->addContent($pre);
+            $this->addContent($content);
         }
-
-        // optional place info
-        if( isset($this['place']) )
-        {
-            $p = XMLToolbox::createElement('p');
-            $p->addContent($this['place']);
-            $message->addContent($p);
-        }
-
-        // outputs message block
-        return XMLToolbox::saveXML($message);
     }
 }
 

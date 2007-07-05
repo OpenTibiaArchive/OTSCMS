@@ -49,7 +49,7 @@ foreach( $db->query('SELECT `ip`, `mask` FROM {bans} WHERE `type` = 1') as $ipba
     $actions = XMLToolbox::createElement('a');
     $actions->setAttribute('href', 'admin.php?module=IPBan&command=remove&ipban[ip]=' . $ipban['ip'] . '&ipban[mask]=' . $ipban['mask']);
     $actions->setAttribute('onclick', 'if( confirm(Language[0]) ) { return pageIPBan.remove(' . $ipban['ip'] . ', ' . $ipban['mask'] . '); } else { return false; }');
-    $actions->nodeValue = $language['Modules.IPBan.Unban'];
+    $actions->addContent($language['Modules.IPBan.Unban']);
 
     $ipbans[] = array('ip' => long2ip($ipban['ip']), 'mask' => long2ip($ipban['mask']), 'actions' => $actions);
 }

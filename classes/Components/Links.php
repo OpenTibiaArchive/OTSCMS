@@ -36,17 +36,16 @@ class ComponentLinks extends TemplateComponent
         if( count($this['links']) == 1)
         {
             $link = current($this['links']);
-            $a = XMLToolbox::createElement('a');
-            $a->setAttribute('href', $link['link']);
+            $p = XMLToolbox::createElement('a');
+            $p->setAttribute('href', $link['link']);
 
             // confirmation question
             if( isset($link['confirm']) )
             {
-                $a->setAttribute('onclick', 'return confirm(\'' . $link['confirm'] . '\');');
+                $p->setAttribute('onclick', 'return confirm(\'' . $link['confirm'] . '\');');
             }
 
-            $a->nodeValue = $link['label'];
-            $div->appendChild($a);
+            $p->addContent($link['label']);
         }
         // single link
         else
@@ -63,11 +62,12 @@ class ComponentLinks extends TemplateComponent
                     $a->setAttribute('onclick', 'return confirm(\'' . $link['confirm'] . '\');');
                 }
 
-                $a->nodeValue = $link['label'];
-                $p->appendChild($a);
-                $div->appendChild($p);
+                $a->addContent($link['label']);
+                $p->addContent($a);
             }
         }
+
+        $div->addContent($p);
 
         // outputs only form element
         return XMLToolbox::saveXML($div);

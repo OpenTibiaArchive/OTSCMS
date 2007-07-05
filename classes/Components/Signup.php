@@ -29,8 +29,6 @@ class ComponentSignup extends TemplateComponent
     public function display()
     {
         $div = XMLToolbox::createElement('div');
-        $div->appendChild( XMLToolbox::createTextNode($this['text']) );
-        $div->appendChild( XMLToolbox::createElement('br') );
 
         // form elements
         $input = XMLToolbox::createElement('input');
@@ -38,21 +36,18 @@ class ComponentSignup extends TemplateComponent
         $input->setAttribute('name', $this['name']);
         $input->setAttribute('id', $this['name']);
 
-        $div->appendChild($input);
-        $div->appendChild( XMLToolbox::createTextNode(' ') );
+        $submit = XMLToolbox::createElement('input');
+        $submit->setAttribute('type', 'submit');
+        $submit->setAttribute('value', $this['submit']);
 
-        $input = XMLToolbox::createElement('input');
-        $input->setAttribute('type', 'submit');
-        $input->setAttribute('value', $this['submit']);
-
-        $div->appendChild($input);
+        $div->addContents($this['text'], XMLToolbox::createElement('br'), $input, ' ', $submit);
 
         // signup form
         $form = XMLToolbox::createElement('form');
         $form->setAttribute('action', $this['action']);
         $form->setAttribute('method', 'post');
         $form->setAttribute('onsubmit', $this['onsubmit']);
-        $form->appendChild($div);
+        $form->addContent($div);
 
         // outputs component XHTML
         return XMLToolbox::saveXML($form);

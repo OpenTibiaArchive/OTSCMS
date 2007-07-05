@@ -54,9 +54,8 @@ class ComponentTopic extends TemplateComponent
 
             $a = XMLToolbox::createElement('a');
             $a->setAttribute('href', 'character.php?name=' . $post['poster']);
-            $a->nodeValue = $post['poster'];
-            $td->appendChild($a);
-            $td->appendChild( XMLToolbox::createElement('br') );
+            $a->addContent($post['poster']);
+            $td->addContents($a, XMLToolbox::createElement('br') );
 
             // avatar if exists
             if($post['avatar'])
@@ -64,26 +63,20 @@ class ComponentTopic extends TemplateComponent
                 $img = XMLToolbox::createElement('img');
                 $img->setAttribute('src', $post['avatar']);
                 $img->setAttribute('alt', $post['poster']);
-                $td->appendChild($img);
-                $td->appendChild( XMLToolbox::createElement('br') );
+                $td->addContents($img, XMLToolbox::createElement('br') );
             }
 
             // posts count and posting date
             $select->execute( array(':poster' => $post['author']) );
             $count = $select->fetch();
 
-            $td->appendChild( XMLToolbox::createTextNode($language['Modules.Topic.PostsCount'] . ': ' . $count['count']) );
-            $td->appendChild( XMLToolbox::createElement('br') );
-            $td->appendChild( XMLToolbox::createTextNode( date($config['site.date_format'], $post['date_time']) ) );
-
-            $row->appendChild($td);
+            $td->addContents($language['Modules.Topic.PostsCount'] . ': ' . $count['count'], XMLToolbox::createElement('br'), date($config['site.date_format'], $post['date_time']) );
 
             // post content
-            $td = XMLToolbox::createElement('td');
-
-            $td->appendChild( XMLToolbox::inparse( BBParser::parse($post['content'] . "\n" . '____________________' . "\n" . $post['signature']) ) );
-            $row->appendChild($td);
-            $tbody->appendChild($row);
+            $content = XMLToolbox::createElement('td');
+            $content->addContent( XMLToolbox::inparse( BBParser::parse($post['content'] . "\n" . '____________________' . "\n" . $post['signature']) ) );
+            $row->addContents($td, $content);
+            $tbody->addContent($row);
 
             // post options bar
             $row = XMLToolbox::createElement('tr');
@@ -96,9 +89,8 @@ class ComponentTopic extends TemplateComponent
                 $a = XMLToolbox::createElement('a');
                 $a->setAttribute('href', 'forum.php?module=Topic&command=remove&id=' . $post['id']);
                 $a->setAttribute('onclick', 'return confirm(Language[0]);');
-                $a->nodeValue = $language['main.admin.DeleteSubmit'];
-                $td->appendChild($a);
-                $td->appendChild( XMLToolbox::createTextNode(' | ') );
+                $a->addContent($language['main.admin.DeleteSubmit']);
+                $td->addContents($a, ' | ');
             }
 
             // normal user options
@@ -106,24 +98,23 @@ class ComponentTopic extends TemplateComponent
             {
                 $a = XMLToolbox::createElement('a');
                 $a->setAttribute('href', 'forum.php?module=Topic&command=new&topicid=' . $this['id'] . '&quoteid=' . $post['id']);
-                $a->nodeValue = $language['Modules.Topic.QuoteSubmit'];
-                $td->appendChild($a);
-                $td->appendChild( XMLToolbox::createTextNode(' | ') );
+                $a->addContent($language['Modules.Topic.QuoteSubmit']);
+                $td->addContents($a, ' | ');
 
                 $a = XMLToolbox::createElement('a');
                 $a->setAttribute('href', 'priv.php?command=new&to=' . $post['poster']);
-                $a->nodeValue = $language['Modules.Account.PMSubmit'];
-                $td->appendChild($a);
+                $a->addContent($language['Modules.Account.PMSubmit']);
+                $td->addContent($a);
             }
 
-            $row->appendChild($td);
-            $tbody->appendChild($row);
+            $row->addContent($td);
+            $tbody->addContent($row);
         }
 
         $table->setAttribute('class', 'listTable');
-        $table->appendChild($tbody);
+        $table->addContent($tbody);
 
-        $root->appendChild($table);
+        $root->addContent($table);
 
         // admin options
         if($this->admin)
@@ -131,22 +122,18 @@ class ComponentTopic extends TemplateComponent
             $remove = XMLToolbox::createElement('a');
             $remove->setAttribute('href', 'forum.php?module=Topic&command=remove&id=' . $this['id']);
             $remove->setAttribute('onclick', 'return confirm(Language[0]);');
-            $remove->nodeValue = $language['main.admin.DeleteSubmit'];
+            $remove->addContent($language['main.admin.DeleteSubmit']);
 
             $openClose = XMLToolbox::createElement('a');
             $openClose->setAttribute('href', 'forum.php?module=Topic&command=' . ($this['closed'] ? 'open' : 'close') . '&id=' . $this['id']);
-            $openClose->nodeValue = $this['closed'] ? $language['Modules.Forum.OpenSubmit'] : $language['Modules.Forum.CloseSubmit'];
+            $openClose->addContent($this['closed'] ? $language['Modules.Forum.OpenSubmit'] : $language['Modules.Forum.CloseSubmit']);
 
             $pinUnpin = XMLToolbox::createElement('a');
             $pinUnpin->setAttribute('href', 'forum.php?module=Topic&command=' . ($this['pinned'] ? 'unpin' : 'pin') . '&id=' . $this['id']);
-            $pinUnpin->nodeValue = $this['pinned'] ? $language['Modules.Forum.UnpinSubmit'] : $language['Modules.Forum.PinSubmit'];
+            $pinUnpin->addContent($this['pinned'] ? $language['Modules.Forum.UnpinSubmit'] : $language['Modules.Forum.PinSubmit']);
 
             // appends links and separators to root element
-            $root->appendChild($remove);
-            $root->appendChild( XMLToolbox::createTextNode(' | ') );
-            $root->appendChild($openClose);
-            $root->appendChild( XMLToolbox::createTextNode(' | ') );
-            $root->appendChild($pinUnpin);
+            $root->addContents($remove, ' | ', $openClose, ' | ', $pinUnpin);
         }
 
         // outputs table

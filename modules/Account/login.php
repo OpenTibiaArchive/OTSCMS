@@ -30,8 +30,7 @@ $input = XMLToolbox::createElement('input');
 $input->setAttribute('type', 'checkbox');
 $input->setAttribute('name', 'userusecookielogin');
 $input->setAttribute('value', '1');
-$cookie->appendChild($input);
-$cookie->appendChild( XMLToolbox::createTextNode(' ' . $language['Modules.Account.Cookies']) );
+$cookie->addContents($input, ' ' . $language['Modules.Account.Cookies']);
 
 // form fields
 $form->addField('useraccount', ComponentAdminForm::FieldPassword, $language['Modules.Account.Login_Number']);

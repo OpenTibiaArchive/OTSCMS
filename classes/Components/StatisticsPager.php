@@ -44,15 +44,15 @@ class ComponentStatisticsPager extends TemplateComponent
             $a = XMLToolbox::createElement('a');
             $a->setAttribute('href', 'statistics.php?command=highscores&list=' . $this['list'] . '&page=' . ($this['page'] - 1) );
             $a->setAttribute('onclick', 'return pageStatistics.move(\'' . $this['list'] . '\', ' . ($this['page'] - 1) . ');');
-            $a->nodeValue = $language['Modules.Statistics.HighscoresRanks'] . ' ' . $this['left']['from'] . ' - ' . $this['left']['to'];
-            $div->appendChild($a);
+            $a->addContent($language['Modules.Statistics.HighscoresRanks'] . ' ' . $this['left']['from'] . ' - ' . $this['left']['to']);
+            $div->addContent($a);
         }
         else
         {
-            $div->appendChild( XMLToolbox::createTextNode(' ') );
+            $div->addContent(' ');
         }
 
-        $root->appendChild($div);
+        $root->addContent($div);
 
         $div = XMLToolbox::createElement('div');
         $div->setAttribute('id', 'pagerRight');
@@ -63,15 +63,15 @@ class ComponentStatisticsPager extends TemplateComponent
             $a = XMLToolbox::createElement('a');
             $a->setAttribute('href', 'statistics.php?command=highscores&list=' . $this['list'] . '&page=' . ($this['page'] + 1) );
             $a->setAttribute('onclick', 'return pageStatistics.move(\'' . $this['list'] . '\', ' . ($this['page'] + 1) . ');');
-            $a->nodeValue = $language['Modules.Statistics.HighscoresRanks'] . ' ' . $this['right']['from'] . ' - ' . $this['right']['to'];
-            $div->appendChild($a);
+            $a->addContent($language['Modules.Statistics.HighscoresRanks'] . ' ' . $this['right']['from'] . ' - ' . $this['right']['to']);
+            $div->addContent($a);
         }
         else
         {
-            $div->appendChild( XMLToolbox::createTextNode(' ') );
+            $div->addContent(' ');
         }
 
-        $root->appendChild($div);
+        $root->addContent($div);
 
         $table = XMLToolbox::createElement('table');
         $tbody = XMLToolbox::createElement('tbody');
@@ -79,26 +79,26 @@ class ComponentStatisticsPager extends TemplateComponent
         $tr = XMLToolbox::createElement('tr');
 
         $th = XMLToolbox::createElement('th');
-        $th->nodeValue = $language['Modules.Statistics.HighscoresRank'];
-        $tr->appendChild($th);
+        $th->addContent($language['Modules.Statistics.HighscoresRank']);
+        $tr->addContent($th);
 
         $th = XMLToolbox::createElement('th');
-        $th->nodeValue = $language['Modules.Character.Name'];
-        $tr->appendChild($th);
+        $th->addContent($language['Modules.Character.Name']);
+        $tr->addContent($th);
 
         $th = XMLToolbox::createElement('th');
-        $th->nodeValue = $language['Modules.Statistics.HighscoresScore'];
-        $tr->appendChild($th);
+        $th->addContent($language['Modules.Statistics.HighscoresScore']);
+        $tr->addContent($th);
 
         // only in experience list
         if($this['list'] == 'experience')
         {
             $th = XMLToolbox::createElement('th');
-            $th->nodeValue = $language['Modules.Character.Level'];
-            $tr->appendChild($th);
+            $th->addContent($language['Modules.Character.Level']);
+            $tr->addContent($th);
         }
 
-        $tbody->appendChild($tr);
+        $tbody->addContent($tr);
 
         // form fields
         foreach($this['scores'] as $rank => $score)
@@ -108,36 +108,36 @@ class ComponentStatisticsPager extends TemplateComponent
 
             // lp. cell
             $td = XMLToolbox::createElement('td');
-            $td->nodeValue = $rank;
-            $row->appendChild($td);
+            $td->addContent($rank);
+            $row->addContent($td);
 
             $td = XMLToolbox::createElement('td');
             $a = XMLToolbox::createElement('a');
             $a->setAttribute('href', 'character.php?name=' . $score['name']);
-            $a->nodeValue = $score['name'];
-            $td->appendChild($a);
-            $row->appendChild($td);
+            $a->addContent($score['name']);
+            $td->addContent($a);
+            $row->addContent($td);
 
             $td = XMLToolbox::createElement('td');
-            $td->nodeValue = $score['value'];
-            $row->appendChild($td);
+            $td->addContent($score['value']);
+            $row->addContent($td);
 
             if($this['list'] == 'experience')
             {
                 $td = XMLToolbox::createElement('td');
-                $td->nodeValue = $score['level'];
-                $row->appendChild($td);
+                $td->addContent($score['level']);
+                $row->addContent($td);
             }
 
-            $tbody->appendChild($row);
+            $tbody->addContent($row);
         }
 
         $table->setAttribute('id', 'statisticsPager');
-        $table->appendChild($tbody);
-        $root->appendChild($table);
+        $table->addContent($tbody);
+        $root->addContent($table);
 
         // outputs only table element
-        echo XMLToolbox::saveXML($root);
+        return XMLToolbox::saveXML($root);
     }
 }
 
