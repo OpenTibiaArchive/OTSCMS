@@ -20,13 +20,13 @@
 */
 
 return array(
-    'Count' => 'Ilo¶æ graczy na ktrórych mia³a wp³yw ta zmiana',
+    'Count' => 'IloÅ›Ä‡ graczy na ktrÃ³rych miaÅ‚a wpÅ‚yw ta zmiana',
     'From' => 'Z lokacji',
     'To' => 'Do lokacji',
     'X' => 'X',
     'Y' => 'Y',
     'Z' => 'Z',
-    'ChangeSubmit' => 'Zmieñ',
+    'ChangeSubmit' => 'ZmieÅ„',
 );
 
 ?>

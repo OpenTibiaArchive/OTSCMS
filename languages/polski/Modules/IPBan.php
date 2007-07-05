@@ -22,8 +22,8 @@
 return array(
     'Name' => 'Numer IP',
     'Mask' => 'Maska',
-    'Caption' => '',
-    'Unban' => '',
+    'Caption' => 'Zbanowane numery IP',
+    'Unban' => 'Odbanuj',
 );
 
 ?>

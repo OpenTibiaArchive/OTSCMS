@@ -20,12 +20,12 @@
 */
 
 return array(
-    'Caption' => 'Logi b³êdów',
-    'Name' => 'Nazwa wyj±tku',
+    'Caption' => 'Logi bÅ‚Ä™dÃ³w',
+    'Name' => 'Nazwa wyjÄ…tku',
     'Content' => 'Adres IP',
-    'DateTime' => 'Data wyst±pienia',
-    'CleanSubmit' => 'Wyczy¶æ logi',
-    'ConfirmClean' => 'Na pewno chcesz usun±æ wszystkie logi?',
+    'DateTime' => 'Data wystÄ…pienia',
+    'CleanSubmit' => 'WyczyÅ›Ä‡ logi',
+    'ConfirmClean' => 'Na pewno chcesz usunÄ…Ä‡ wszystkie logi?',
 );
 
 ?>

@@ -53,8 +53,7 @@ class OTSTemplate extends DataContainer
         header('Content-Type: text/xml');
 
         // XML document
-        $language = OTSCMS::getResource('Language');
-        $xml = new DOMDocument('1.0', $language['main.charset']);
+        $xml = new DOMDocument('1.0', 'utf-8');
 
         // root element
         $data = $xml->createElement('otscms');

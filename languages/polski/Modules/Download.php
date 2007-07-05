@@ -24,9 +24,9 @@ return array(
     'Content' => 'Opis',
     'File' => 'Plik',
     'Binary' => 'Tryb',
-    'BinaryLink' => 'Link zewnêtrzny',
-    'BinaryFile' => 'Wrzuæ plik z mojego komputera',
-    'DownloadSubmit' => '¦ci±gnij',
+    'BinaryLink' => 'Link zewnÄ™trzny',
+    'BinaryFile' => 'WrzuÄ‡ plik z mojego komputera',
+    'DownloadSubmit' => 'ÅšciÄ…gnij',
 );
 
 ?>

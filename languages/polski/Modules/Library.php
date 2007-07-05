@@ -20,21 +20,21 @@
 */
 
 return array(
-    'SpellsList' => 'Lista czarów',
+    'SpellsList' => 'Lista czarÃ³w',
     'SpellInformation' => 'Informacje o czarze',
     'SpellName' => 'Nazwa czaru',
-    'SpellWords' => 'Zaklêcie',
+    'SpellWords' => 'ZaklÄ™cie',
     'SpellMLevel' => 'Wymagany poziom magii do rzucania czaru',
-    'SpellMana' => 'Zu¿ycie many',
-    'SpellVocations' => 'Dostêpny dla profesji',
+    'SpellMana' => 'ZuÅ¼ycie many',
+    'SpellVocations' => 'DostÄ™pny dla profesji',
     'MonstersList' => 'Potwory',
     'MonsterInformation' => 'Informacje',
-    'MonsterExperience' => 'Do¶wiadczenie',
-    'MonsterHealth' => 'Punkty ¿ycia',
+    'MonsterExperience' => 'DoÅ›wiadczenie',
+    'MonsterHealth' => 'Punkty Å¼ycia',
     'MonsterAttacks' => 'Ataki',
-    'MonsterVoices' => 'D¼wiêki',
-    'MonsterDefenses' => 'Odporno¶ci',
-    'MonsterLoot' => '£up',
+    'MonsterVoices' => 'DÅºwiÄ™ki',
+    'MonsterDefenses' => 'OdpornoÅ›ci',
+    'MonsterLoot' => 'Åup',
 );
 
 ?>

@@ -20,7 +20,7 @@
 */
 
 return array(
-    'Name' => 'Tytu³ strony',
+    'Name' => 'TytuÅ‚ strony',
     'Content' => 'Adres strony',
 );
 

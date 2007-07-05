@@ -20,11 +20,11 @@
 */
 
 return array(
-    'Archive' => 'Archiwum newsów',
-    'Name' => 'Tytu³',
-    'Content' => 'Tre¶æ',
+    'Archive' => 'Archiwum newsÃ³w',
+    'Name' => 'TytuÅ‚',
+    'Content' => 'TreÅ›Ä‡',
     'DateTime' => 'Data',
-    'Caption' => 'Lista newsów',
+    'Caption' => 'Lista newsÃ³w',
 );
 
 ?>

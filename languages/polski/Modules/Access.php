@@ -20,13 +20,13 @@
 */
 
 return array(
-    'Module' => 'Modu³',
-    'Command' => 'Komenda (* odnosi siê do ca³ego modu³u)',
-    'Name' => 'Regu³a dla',
-    'Content' => 'Wymagana grupa (wszystkie wy¿sze grupy równie¿ bêd± mia³y dostêp)',
-    'Caption' => 'Poziom dostêpu',
+    'Module' => 'ModuÅ‚',
+    'Command' => 'Komenda (* odnosi siÄ™ do caÅ‚ego moduÅ‚u)',
+    'Name' => 'ReguÅ‚a dla',
+    'Content' => 'Wymagana grupa (wszystkie wyÅ¼sze grupy rÃ³wnieÅ¼ bÄ™dÄ… miaÅ‚y dostÄ™p)',
+    'Caption' => 'Poziom dostÄ™pu',
     'Level-1' => 'Wszyscy',
-    'Level0' => 'Zalogowani u¿ytkownicy',
+    'Level0' => 'Zalogowani uÅ¼ytkownicy',
     'Level3' => 'Game masters',
 );
 

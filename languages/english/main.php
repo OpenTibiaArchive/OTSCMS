@@ -24,8 +24,6 @@
 */
 
 return array(
-    'charset' => 'iso-8859-1',
-
     'home' => 'Home Page',
     'forum' => 'Forum',
     'community' => 'Community',

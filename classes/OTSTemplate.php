@@ -56,7 +56,7 @@ class OTSTemplate extends DataContainer
     {
         $language = OTSCMS::getResource('Language');
         $config = OTSCMS::getResource('Config');
-        header('Content-Type: text/html; charset=' . $language['main.charset']);
+        header('Content-Type: text/html; charset="utf-8"');
         include($this->skin . 'main.php');
     }
 

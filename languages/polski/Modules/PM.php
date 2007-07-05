@@ -22,14 +22,14 @@
 return array(
     'unread' => 'NOWE',
     'Name' => 'Temat',
-    'Content' => 'Tre¶æ',
-    'DateTime' => 'Data wys³ania',
+    'Content' => 'TreÅ›Ä‡',
+    'DateTime' => 'Data wysÅ‚ania',
     'From' => 'Od',
     'To' => 'Do',
     'ReplySubmit' => 'Odpowiedz',
-    'ForwardSubmit' => 'Prze¶lij dalej',
-    'Error' => 'Wyst±pi³ b³±d. Wiadomo¶æ nie zosta³a wys³ana!',
-    'SendSubmit' => 'Wy¶lij',
+    'ForwardSubmit' => 'PrzeÅ›lij dalej',
+    'Error' => 'WystÄ…piÅ‚ bÅ‚Ä…d. WiadomoÅ›Ä‡ nie zostaÅ‚a wysÅ‚ana!',
+    'SendSubmit' => 'WyÅ›lij',
 );
 
 ?>

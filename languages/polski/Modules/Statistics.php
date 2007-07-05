@@ -20,8 +20,8 @@
 */
 
 return array(
-    'CensusGender' => 'Podzia³ p³ci',
-    'CensusVocation' => 'Podzia³ profesji',
+    'CensusGender' => 'PodziaÅ‚ pÅ‚ci',
+    'CensusVocation' => 'PodziaÅ‚ profesji',
     'HighscoresRanks' => 'Pozycje',
     'HighscoresRank' => 'Pozycja',
     'HighscoresScore' => 'Wynik',

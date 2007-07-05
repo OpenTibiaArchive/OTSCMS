@@ -29,9 +29,9 @@ class XMLToolbox
     private static $xml;
 
     // initializes document instance
-    public static function init($charset)
+    public static function init()
     {
-        self::$xml = new DOMDocument('1.0', $charset);
+        self::$xml = new DOMDocument('1.0', 'utf-8');
         self::$xml->formatOutput = true;
     }
 
@@ -117,7 +117,7 @@ class XMLToolbox
     public static function inparse($text)
     {
         // document for parsing text tree
-        $xml = DOMDocument::loadXML('<?xml version="1.0" encoding="' . self::$xml->encoding . '"?><root>' . $text . '</root>');
+        $xml = DOMDocument::loadXML('<?xml version="1.0" encoding="utf-8"?><root>' . $text . '</root>');
 
         // container for loaded tree
         $tree = self::createDocumentFragment();
@@ -133,8 +133,7 @@ class XMLToolbox
     }
 }
 
-// initializes XML toolbox with default system charset
-$language = OTSCMS::getResource('Language');
-XMLToolbox::init($language['main.charset']);
+// initializes XML toolbox
+XMLToolbox::init();
 
 ?>

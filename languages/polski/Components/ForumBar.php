@@ -21,7 +21,7 @@
 
 return array(
     'newThread' => 'Zacznij nowy temat',
-    'newPost' => 'Napisz opowied¼',
+    'newPost' => 'Napisz opowiedÅº',
 );
 
 ?>

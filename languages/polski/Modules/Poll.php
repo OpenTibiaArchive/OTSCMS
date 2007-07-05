@@ -20,11 +20,11 @@
 */
 
 return array(
-    'AlreadyVoted' => 'G³osowa³e¶ ju¿ w tej sondzie. Mo¿esz zag³osowaæ tylko raz na dane konto w ka¿dej sondzie.',
-    'NoPoll' => 'Aktualnie nie ma ¿adnej sondy.',
-    'VoteSubmit' => 'Zag³osuj',
+    'AlreadyVoted' => 'GÅ‚osowaÅ‚eÅ› juÅ¼ w tej sondzie. MoÅ¼esz zagÅ‚osowaÄ‡ tylko raz na dane konto w kaÅ¼dej sondzie.',
+    'NoPoll' => 'Aktualnie nie ma Å¼adnej sondy.',
+    'VoteSubmit' => 'ZagÅ‚osuj',
     'Name' => 'Pytanie sondy',
-    'Content' => 'Bardziej szczegó³owy opis',
+    'Content' => 'Bardziej szczegÃ³Å‚owy opis',
     'PollsList' => 'Lista sond',
     'EditOptions' => 'Edytuj opcje sondy',
     'OptionUpdated' => 'Opcja uaktualniona.',

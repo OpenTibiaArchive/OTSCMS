@@ -24,15 +24,14 @@
 */
 
 return array(
-    'charset' => 'iso-8859-2',
-    'home' => 'Strona G³ówna',
+    'home' => 'Strona GÅ‚Ã³wna',
     'forum' => 'Forum',
-    'community' => 'Spo³eczno¶æ',
+    'community' => 'SpoÅ‚ecznoÅ›Ä‡',
     'statistics' => 'Statystyki',
     'library' => 'Biblioteka',
     'gender0' => 'Kobieta',
-    'gender1' => 'Mê¿czyzna',
-    'vocation0' => '¯adna',
+    'gender1' => 'MÄ™Å¼czyzna',
+    'vocation0' => 'Å»adna',
     'vocation1' => 'Mag',
     'vocation2' => 'Druid',
     'vocation3' => 'Paladyn',
@@ -45,22 +44,22 @@ return array(
             'Settings_CMS' => 'Ustawienia CMSa',
             'News' => 'Newsy',
             'IPBan' => 'Banowanie IP',
-            'Access' => 'Prawa Dostêpu',
-            'PM' => 'Prywatne Wiadomo¶ci',
-            'Logger' => 'Logi B³êdów',
-            'MSP' => 'Szybka zmiana spawnów',
+            'Access' => 'Prawa DostÄ™pu',
+            'PM' => 'Prywatne WiadomoÅ›ci',
+            'Logger' => 'Logi BÅ‚Ä™dÃ³w',
+            'MSP' => 'Szybka zmiana spawnÃ³w',
         ),
 
         'Account' => array(
             'Signup' => 'Join Us',
             'Manage' => 'Twoje Konto',
-            'Character' => 'Stwórz Postaæ',
-            'Forgot' => 'Zapomnia³em Has³a',
-            'Suspend' => 'Usuñ Konto',
+            'Character' => 'StwÃ³rz PostaÄ‡',
+            'Forgot' => 'ZapomniaÅ‚em HasÅ‚a',
+            'Suspend' => 'UsuÅ„ Konto',
         ),
 
         'Character' => array(
-            'Display' => 'Podgl±d Postacii',
+            'Display' => 'PodglÄ…d Postacii',
         ),
 
         'Guild' => array(
@@ -68,20 +67,20 @@ return array(
         ),
 
         'Poll' => array(
-            'Latest' => 'G³osowanie',
+            'Latest' => 'GÅ‚osowanie',
             'List' => 'Poprzednie Sondy',
         ),
 
         'PM' => array(
             'Inbox' => 'Odebrane',
-            'Sent' => 'Wys³ane',
-            'New' => 'Nowa Wiadomo¶æ',
+            'Sent' => 'WysÅ‚ane',
+            'New' => 'Nowa WiadomoÅ›Ä‡',
         ),
 
         'News' => array(
-            'Home' => 'Strona G³ówna',
+            'Home' => 'Strona GÅ‚Ã³wna',
             'List' => 'Newsy',
-            'Archive' => 'Archiwum Newsów',
+            'Archive' => 'Archiwum NewsÃ³w',
         ),
 
         'Download' => array(
@@ -94,16 +93,16 @@ return array(
         ),
 
         'Statistics' => array(
-            'HighscoresExperience' => 'Do¶wiadczenie',
+            'HighscoresExperience' => 'DoÅ›wiadczenie',
             'HighscoresMagic' => 'Magia',
-            'HighscoresShielding' => 'U¿ywanie Tarczy',
+            'HighscoresShielding' => 'UÅ¼ywanie Tarczy',
             'HighscoresDistance' => 'Walka z Dystansu',
             'HighscoresSword' => 'Walka Mieczem',
-            'HighscoresClub' => 'Walka Maczug±',
+            'HighscoresClub' => 'Walka MaczugÄ…',
             'HighscoresAxe' => 'Walka Toporem',
-            'HighscoresFist' => 'Walka Wrêcz',
-            'HighscoresFishing' => 'Wêdkowanie',
-            'Census' => 'Podzia³ Ludno¶ci',
+            'HighscoresFist' => 'Walka WrÄ™cz',
+            'HighscoresFishing' => 'WÄ™dkowanie',
+            'Census' => 'PodziaÅ‚ LudnoÅ›ci',
         ),
 
         'Gallery' => array(
@@ -116,9 +115,9 @@ return array(
         'Actions' => 'Akcje',
         'InsertSubmit' => 'Dodaj',
         'EditSubmit' => 'Edytuj',
-        'DeleteSubmit' => 'Usuñ',
+        'DeleteSubmit' => 'UsuÅ„',
         'UpdateSubmit' => 'Zapisz zmiany',
-        'ConfirmDelete' => 'Na pewno to chcesz usun±c?',
+        'ConfirmDelete' => 'Na pewno to chcesz usunÄ…c?',
     ),
 );
 

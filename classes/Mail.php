@@ -60,7 +60,7 @@ class Mail
         $header .= 'X-Mailer: OTSCMS/' . $config['version'] . "\r\n";
         $header .= 'MIME-Version: 1.0' . "\r\n";
         $header .= 'Content-Transfer-Encoding: 8bit' . "\r\n";
-        $header .= 'Content-Type: text/plain; charset="' . OTSCMS::getResource('Language')->__get('main.charset') . '"' . "\r\n";
+        $header .= 'Content-Type: text/plain; charset="utf-8"' . "\r\n";
 
         // message content that should fit email line limit
         $content = str_replace("\n", "\r\n", str_replace("\r", "\n", str_replace("\r\n", "\n", wordwrap($content, 70) ) ) );

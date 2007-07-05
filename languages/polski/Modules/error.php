@@ -20,15 +20,15 @@
 */
 
 return array(
-    'NotOwner' => 'Nie jeste¶ w³a¶cicielem tej postaci.',
-    'IPBan' => 'Twoje IP jest zbanowane. Skontaktuj siê z administratorem.',
-    'AccountBlocked' => 'Nie mo¿esz siê zablokowaæ na to konto - jest zablokowane. Skontaktuj siê z GameMasterem.',
-    'WrongPassword' => 'Poda³e¶ nieprawid³owe has³o do konta, albo podane przez ciebie nowe has³a ró¿ni± siê.',
-    'NoAccess' => 'Twój poziom dostêpu nie pozwala ci na dostêp do tej strony. Mo¿liwe tak¿e, ¿e komenda, któr± naprawdê wywo³a³e¶ przekierowa³a ciê do innej.',
-    'NotToDisplay' => 'Obiekt o podanej nazwie nie istnieje, lub administrator wy³±czy³ mo¿liwo¶æ jego wy¶wietlania.',
-    'WrongPassword' => 'Poda³e¶ nieprawid³owe has³o do konta, albo podane przez ciebie nowe has³a ró¿ni± siê.',
-    'OutOfNumbers' => 'W tym momencie brak wolnych numerów konta - mo¿esz spróbowaæ za kilka dni.',
-    'NameUsed' => 'Postaæ, albo gildia o takiej nazwie ju¿ istnieje. Przejd¼ wstecz i wybierz inne imiê.',
+    'NotOwner' => 'Nie jesteÅ› wÅ‚aÅ›cicielem tej postaci.',
+    'IPBan' => 'Twoje IP jest zbanowane. Skontaktuj siÄ™ z administratorem.',
+    'AccountBlocked' => 'Nie moÅ¼esz siÄ™ zablokowaÄ‡ na to konto - jest zablokowane. Skontaktuj siÄ™ z GameMasterem.',
+    'WrongPassword' => 'PodaÅ‚eÅ› nieprawidÅ‚owe hasÅ‚o do konta, albo podane przez ciebie nowe hasÅ‚a rÃ³Å¼niÄ… siÄ™.',
+    'NoAccess' => 'TwÃ³j poziom dostÄ™pu nie pozwala ci na dostÄ™p do tej strony. MoÅ¼liwe takÅ¼e, Å¼e komenda, ktÃ³rÄ… naprawdÄ™ wywoÅ‚aÅ‚eÅ› przekierowaÅ‚a ciÄ™ do innej.',
+    'NotToDisplay' => 'Obiekt o podanej nazwie nie istnieje, lub administrator wyÅ‚Ä…czyÅ‚ moÅ¼liwoÅ›Ä‡ jego wyÅ›wietlania.',
+    'WrongPassword' => 'PodaÅ‚eÅ› nieprawidÅ‚owe hasÅ‚o do konta, albo podane przez ciebie nowe hasÅ‚a rÃ³Å¼niÄ… siÄ™.',
+    'OutOfNumbers' => 'W tym momencie brak wolnych numerÃ³w konta - moÅ¼esz sprÃ³bowaÄ‡ za kilka dni.',
+    'NameUsed' => 'PostaÄ‡, albo gildia o takiej nazwie juÅ¼ istnieje. PrzejdÅº wstecz i wybierz inne imiÄ™.',
 );
 
 ?>

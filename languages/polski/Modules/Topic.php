@@ -20,13 +20,13 @@
 */
 
 return array(
-    'Name' => 'Tytu³',
-    'Content' => 'Tre¶æ postu',
-    'From' => 'Wybierz postaæ',
-    'SendSubmit' => 'Wy¶lij',
-    'Closed' => 'Nie po¿esz pisaæ w tym temacie, poniewa¿ jest on zamkniêty.',
-    'EmptyName' => 'Nie mo¿esz pisaæ nowych w±tków bez tytu³u.',
-    'PostsCount' => 'Postów',
+    'Name' => 'TytuÅ‚',
+    'Content' => 'TreÅ›Ä‡ postu',
+    'From' => 'Wybierz postaÄ‡',
+    'SendSubmit' => 'WyÅ›lij',
+    'Closed' => 'Nie poÅ¼esz pisaÄ‡ w tym temacie, poniewaÅ¼ jest on zamkniÄ™ty.',
+    'EmptyName' => 'Nie moÅ¼esz pisaÄ‡ nowych wÄ…tkÃ³w bez tytuÅ‚u.',
+    'PostsCount' => 'PostÃ³w',
     'QuoteSubmit' => 'Zacytuj',
 );
 

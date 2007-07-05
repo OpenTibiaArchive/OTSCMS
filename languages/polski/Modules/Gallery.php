@@ -20,10 +20,10 @@
 */
 
 return array(
-    'Name' => 'Tytu³ obrazu',
+    'Name' => 'TytuÅ‚ obrazu',
     'Content' => 'Opis',
     'File' => 'Obraz',
-    'DownloadSubmit' => 'Poka¿',
+    'DownloadSubmit' => 'PokaÅ¼',
 );
 
 ?>

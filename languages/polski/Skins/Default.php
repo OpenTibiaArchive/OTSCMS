@@ -26,17 +26,17 @@
 return array(
     'OnlineHeader' => 'Gracze online',
     'Logout' => 'Wyloguj',
-    'Inbox' => 'Masz now± wiadomo¶æ',
+    'Inbox' => 'Masz nowÄ… wiadomoÅ›Ä‡',
     'account' => 'Numer konta',
-    'password' => 'Has³o',
-    'cookies' => 'Zapamiêtaj mnie (ciasteczka)',
+    'password' => 'HasÅ‚o',
+    'cookies' => 'ZapamiÄ™taj mnie (ciasteczka)',
     'logIn' => 'Loguj',
     'register' => 'Jeszcze nie masz konta?<br />
-    <a href="account.php?command=signup">Kliknij tutaj</a> aby siê zarejestrowaæ.<br />
+    <a href="account.php?command=signup">Kliknij tutaj</a> aby siÄ™ zarejestrowaÄ‡.<br />
     <br />
-    Zapomnia³e¶ has³a?<br />
-    Zmieñ na nowe <a href="account.php?command=forgot">tutaj</a>.',
-    'SuspendConfirm' => 'Czy na pewno chcesz siê pozbyæ tego konta wraz ze wszystkimi jego postaciami NATYCHMIAST i NIEODWRACALNIE?',
+    ZapomniaÅ‚eÅ› hasÅ‚a?<br />
+    ZmieÅ„ na nowe <a href="account.php?command=forgot">tutaj</a>.',
+    'SuspendConfirm' => 'Czy na pewno chcesz siÄ™ pozbyÄ‡ tego konta wraz ze wszystkimi jego postaciami NATYCHMIAST i NIEODWRACALNIE?',
 );
 
 ?>
