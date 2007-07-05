@@ -1,0 +1,166 @@
+.listTable
+{
+    width: 100%;
+}
+
+.listTable caption
+{
+    width: 100%;
+    text-align: center;
+}
+
+.listTable th
+{
+    text-align: center;
+    font-weight: bold;
+}
+
+.formTable
+{
+    width: 100%;
+}
+
+.formLeft
+{
+    width: 50%;
+    text-align: right;
+}
+
+.formRight
+{
+    width: 50%;
+    text-align: left;
+}
+
+.formTable td[colspan="2"]
+{
+    width: 100%;
+    text-align: center;
+}
+
+.Message
+{
+    width: 100%;
+}
+
+.contentHeader
+{
+    width: 100%;
+    border: 1px dotted #000000;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+#pagerLeft
+{
+    width: 50%;
+    float: left;
+}
+
+#pagerRight
+{
+    width: 50%;
+    float: right;
+}
+
+#statisticsPager
+{
+    clear: both;
+    width: 100%;
+}
+
+.indented
+{
+    text-align: justify;
+    text-indent: 30px;
+}
+
+.right
+{
+    width: 100%;
+    text-align: right;
+    clear: both;
+}
+
+.galleryMini
+{
+    float: left;
+    margin-right: 2px;
+}
+
+.pages
+{
+    width: 100%;
+    float: right;
+}
+
+.pagesLink
+{
+    padding: 3px;
+    border: 1px solid #000000;
+    background-color: #505050;
+    color: #FFFFFF;
+}
+
+.pagesCurrent
+{
+    font-weight: bold;
+    padding: 3px;
+    border: 1px solid #000000;
+    background-color: #505050;
+    color: #FFFFFF;
+}
+
+.forumBar
+{
+    text-align: right;
+    width: 100%;
+    height: 20px;
+    background-color: #505050;
+    color: #FFFFFF;
+}
+
+.closed
+{
+    color: #FF0000;
+}
+
+#bbtable
+{
+    width: 400px;
+}
+
+#bbtable row
+{
+    width: 100%;
+}
+
+.bbseparator
+{
+    width: 6px;
+    height: 20px;
+}
+
+.bbbutton:hover
+{
+    cursor: pointer;
+}
+
+.postAuthor
+{
+    vertical-align: top;
+}
+
+.postBar
+{
+    width: 80%;
+    text-align: right;
+}
+
+.accountNumber
+{
+    font-weight: bold;
+    font-size: x-large;
+}
