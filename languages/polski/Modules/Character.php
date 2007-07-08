@@ -43,6 +43,7 @@ return array(
     'OtherCharacter' => 'Inne postacie na tym koncie',
     'InsertSubmit' => 'Stwórz',
     'City' => 'Miasto',
+    'House' => 'Domek',
     'WrongName' => 'Nazwa postaci podana przez ciebie jest nieprawidłowa. Imię musi się składać wyłącznie z liter alfabetu łacińskiego i spacji, a każdy jego wyraz musi zaczynać się wielką literą. W wyrazie nie może wystąpić więcej wielkich liter. Musi także być nie krótsze, niż minimalna dozwolona długość nicku.',
     'Updated' => 'Ustawienia zapisane.',
     'SettingsHelp' => 'Pozostaw pole puste, lub wybierz "dziedziczone" z listy rozwijanej aby ustawić pole jako dziedziczone z profilu ogólnego.',

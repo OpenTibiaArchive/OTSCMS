@@ -43,6 +43,7 @@ return array(
     'OtherCharacter' => 'Other characters assigned to this account',
     'InsertSubmit' => 'Create',
     'City' => 'City',
+    'House' => 'House',
     'WrongName' => 'Name you typed is invalid. Character name can contain only latin letters and spaces. It must also contain not less characters then minimum allowed nick length.',
     'Updated' => 'Settings updated.',
     'SettingsHelp' => 'Leave field blank, or select "inherit" in drop-down lists to make this field inherited from wildcard profile.',

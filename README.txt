@@ -9,6 +9,3 @@ OTSCMS Monitor:
 
 OTSCMS Documentation:
     http://documentation.otscms.com/
-
-OTSCMS Translations:
-    http://translations.otscms.com/

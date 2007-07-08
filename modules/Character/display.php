@@ -44,11 +44,34 @@ if( isset($name) )
         return;
     }
 
+    // cities names
+    $spawns = new SpawnsReader($config['directories.data'] . 'world/' . $config['system.map']);
+
     // character info table
     $table = $template->createComponent('TableData');
     $table['caption'] = $language['Modules.Character.CharacterData'];
 
-    $data = array($language['Modules.Character.Name'] => $character['name'], $language['Modules.Character.Gender'] => $language['main.gender' . $character['sex'] ], $language['Modules.Character.Vocation'] => $language['main.vocation' . $character['vocation'] ], $language['Modules.Character.Experience'] => $character['experience'], $language['Modules.Character.Level'] => $character['level'], $language['Modules.Character.MagicLevel'] => $character['maglevel']);
+    $data = array($language['Modules.Character.Name'] => $character['name'], $language['Modules.Character.Gender'] => $language['main.gender' . $character['sex'] ], $language['Modules.Character.Vocation'] => $language['main.vocation' . $character['vocation'] ], $language['Modules.Character.Experience'] => $character['experience'], $language['Modules.Character.Level'] => $character['level'], $language['Modules.Character.MagicLevel'] => $character['maglevel'],
+    $language['Modules.Character.City'] => $spawns[ $character['id_town'] ]);
+
+    // house
+    $house = $db->query('SELECT `id` FROM {houses} WHERE `owner` = ' . $character['id'])->fetch();
+
+    if( !empty($house) )
+    {
+        $xml = new DOMDocument();
+        $xml->load($config['directories.data'] . 'world/' . preg_replace('/\.otbm$/', '-house.xml', $config['system.map']) );
+
+        foreach( $xml->getElementsByTagName('house') as $element)
+        {
+            if( $element->getAttribute('houseid') == $house['id'])
+            {
+                $data[ $language['Modules.Character.House'] ] = $element->getAttribute('name');
+
+                break;
+            }
+        }
+    }
 
     // reads guild information if there is any
     if($character['rank_id'])
