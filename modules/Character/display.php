@@ -52,7 +52,7 @@ if( isset($name) )
     $table['caption'] = $language['Modules.Character.CharacterData'];
 
     $data = array($language['Modules.Character.Name'] => $character['name'], $language['Modules.Character.Gender'] => $language['main.gender' . $character['sex'] ], $language['Modules.Character.Vocation'] => $language['main.vocation' . $character['vocation'] ], $language['Modules.Character.Experience'] => $character['experience'], $language['Modules.Character.Level'] => $character['level'], $language['Modules.Character.MagicLevel'] => $character['maglevel'],
-    $language['Modules.Character.City'] => $spawns[ $character['id_town'] ]);
+    $language['Modules.Character.City'] => $spawns[ $character['town_id'] ]);
 
     // house
     $house = $db->query('SELECT `id` FROM {houses} WHERE `owner` = ' . $character['id'])->fetch();
