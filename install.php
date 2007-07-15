@@ -23,7 +23,7 @@
 $php = explode('.', PHP_VERSION);
 if($php[0] < 5 || $php[1] < 2)
 {
-    die('<b>! Critical: you have to install PHP version 5.2 or newer.</b>');
+    die('<b>! Critical: you have to install PHP version <i>5.2</i> or newer.</b>');
 }
 
 // checks if mgaic quotes are turned off
@@ -62,6 +62,18 @@ if( !extension_loaded('pcre') )
     die('<b>! Critical: you have to install <i>PCRE</i> (Perl Compatible Regular Expression) extension.</b>');
 }
 
+if( !file_exists('config.php') )
+{
+    // we cann't do anything without configuration
+    die('<b>! Critical: could not load configuration file.</b>');
+}
+
+// checks if system has already been installed
+if( md5_file('config.php') != '88b5cf84c95b683c0a5ebe07407b81ef')
+{
+    die('<b>! Critical: you already installed system once - in order to reinstall you need to copy clean <i>config.php</i> file from <i>OTSCMS Lite</i> package.</b>');
+}
+
 // checking if config.php file is writable
 if( !is_writable('config.php') )
 {
@@ -73,11 +85,7 @@ if( !is_writable('config.php') )
 define('OTSCMS_INSTALL', '1');
 
 // loads basic configuration from config.php
-if( !@include('config.php') )
-{
-    // we cann't do anything without configuration
-    die('<b>! Critical: could not load configuration file.</b>');
-}
+include('config.php');
 
 $command = $_REQUEST['command'];
 
