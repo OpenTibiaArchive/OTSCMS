@@ -205,6 +205,15 @@ while(50 / 3 * pow($level + 1, 3) - 100 * pow($level + 1, 2) + (850 / 3) * ($lev
     $level++;
 }
 
+// fixes NULLs
+foreach($profile as $key => $value)
+{
+    if( is_null($value) )
+    {
+        $profile[$key] = 0;
+    }
+}
+
 // continues player data inserting from profile
 $player['experience'] = $profile['experience'];
 $player['level'] = $level;
