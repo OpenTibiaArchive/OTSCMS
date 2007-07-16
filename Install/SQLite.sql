@@ -160,7 +160,10 @@ CREATE TABLE [profiles] (
     `manaspent` INT,
     `soul` INT,
     `cap` INT,
-    `food` INT
+    `food` INT,
+    `loss_experience` INT,
+    `loss_mana` INT,
+    `loss_skills` INT
 );
 
 DROP TABLE [containers];

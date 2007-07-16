@@ -93,11 +93,10 @@ $player['lookaddons'] = 0;
 $player['town_id'] = $system['rook']['enabled'] ? $system['rook']['id'] : $character['town'];
 
 // prepared query for reading profile
-$read = $db->prepare('SELECT `id`, `name`, `skill0`, `skill1`, `skill2`, `skill3`, `skill4`, `skill5`, `skill6`, `health`, `healthmax`, `direction`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `cap`, `food` FROM [profiles] WHERE `name` = :name');
+$read = $db->prepare('SELECT `id`, `name`, `skill0`, `skill1`, `skill2`, `skill3`, `skill4`, `skill5`, `skill6`, `health`, `healthmax`, `direction`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `cap`, `food`, `loss_experience`, `loss_mana`, `loss_skills` FROM [profiles] WHERE `name` = :name');
 
 // reads deafult character profile
-$read->execute( array(':name' => '*.*') );
-$profile = $read->fetch();
+$profile = new CMS_Profile('*.*');
 
 // reads default equipment
 $list = array();
@@ -110,8 +109,7 @@ if( is_array($profile) )
 }
 
 // reads profile for gender
-$read->execute( array(':name' => $player['sex'] . '.*') );
-$gender = $read->fetch();
+$gender = new CMS_Profile($player['sex'] . '.*');
 
 // overwrites default profile settings
 if( is_array($gender) )
@@ -141,8 +139,7 @@ if($gender['id'])
 }
 
 // reads profile for vocation
-$read->execute( array(':name' => '*.' . $player['vocation']) );
-$profession = $read->fetch();
+$profession = new CMS_Profile('*.' . $player['vocation']);
 
 // overwrites profile settings
 if( is_array($profession) )
@@ -172,8 +169,7 @@ if($profession['id'])
 }
 
 // reads detailed profile
-$read->execute( array(':name' => $player['sex'] . '.' . $player['vocation']) );
-$detail = $read->fetch();
+$detail = new CMS_Profile($player['sex'] . '.' . $player['vocation']);
 
 // creates final profile
 if( is_array($detail) )
@@ -226,6 +222,9 @@ $player['lookhead'] = $profile['lookhead'];
 $player['looklegs'] = $profile['looklegs'];
 $player['looktype'] = $profile['looktype'];
 $player['cap'] = $profile['cap'];
+$player['loss_experience'] = $profile['loss_experience'];
+$player['loss_mana'] = $profile['loss_mana'];
+$player['loss_skills'] = $profile['loss_skills'];
 
 // saves record
 $player->save();

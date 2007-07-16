@@ -144,6 +144,11 @@ switch($config['version'])
         // updates system version
         $db->exec('UPDATE [settings] SET `content` = \'3.0.5\' WHERE `name` = \'version\'');
 
+        // adds loss fields
+        $db->exec('ALTER TABLE [profiles] ADD `loss_experience` INT');
+        $db->exec('ALTER TABLE [profiles] ADD `loss_mana` INT');
+        $db->exec('ALTER TABLE [profiles] ADD `loss_skills` INT');
+
     // 3.0.5 and up
     case '3.0.5':
         // updates system version

@@ -83,6 +83,9 @@ $form->addField('profile[looklegs]', ComponentAdminForm::FieldColors, $language[
 $form->addField('profile[lookfeet]', ComponentAdminForm::FieldColors, $language['Modules.Character.FieldLookFeet'], $profile['lookfeet']);
 $form->addField('profile[cap]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldCap'], $profile['cap']);
 $form->addField('profile[food]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldFood'], $profile['food']);
+$form->addField('profile[loss_experience]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldLossExperience'], $profile['loss_experience']);
+$form->addField('profile[loss_mana]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldLossMana'], $profile['loss_mana']);
+$form->addField('profile[loss_skills]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldLossSkills'], $profile['loss_skills']);
 
 // info about inheritance
 $message = $template->createComponent('Message');

@@ -176,6 +176,9 @@ CREATE TABLE [profiles] (
     `soul` INT,
     `cap` INT,
     `food` INT,
+    `loss_experience` INT,
+    `loss_mana` INT,
+    `loss_skills` INT,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 

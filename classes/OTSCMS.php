@@ -33,7 +33,7 @@ class OTSCMS
         self::setResource('Config', $config);
 
         // adds OTSCMS classes directory to includes direcotry
-        ini_set('include_path', ini_get('include_path') . PATH_SEPARATOR . $config['directories.classes']);
+        set_include_path( get_include_path() . PATH_SEPARATOR . $config['directories.classes']);
 
         // sets default critical exteptions handler
         set_exception_handler( array('OTSCMS', 'exceptionHandler') );
