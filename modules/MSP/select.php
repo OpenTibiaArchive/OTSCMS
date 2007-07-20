@@ -23,7 +23,7 @@ $template->addJavaScript('msp');
 
 // coords form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'admin.php?module=MSP&command=change';
+$form['action'] = '/admin/module=MSP&command=change';
 $form['submit'] = $language['Modules.MSP.ChangeSubmit'];
 $form['id'] = 'mspForm';
 

@@ -31,16 +31,15 @@ class CMS_Profile extends ActiveRecord
         if( preg_match('/^[0-9]+$/', $id) )
         {
             $load = $this->db->prepare('SELECT `id`, `name`, `skill0`, `skill1`, `skill2`, `skill3`, `skill4`, `skill5`, `skill6`, `health`, `healthmax`, `direction`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `cap`, `food`, `loss_experience`, `loss_mana`, `loss_skills` FROM [profiles] WHERE `id` = :id');
-            $load->execute( array(':id' => $id) );
-            $this->data = $load->fetch();
         }
         // loads by name
         else
         {
             $load = $this->db->prepare('SELECT `id`, `name`, `skill0`, `skill1`, `skill2`, `skill3`, `skill4`, `skill5`, `skill6`, `health`, `healthmax`, `direction`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `cap`, `food`, `loss_experience`, `loss_mana`, `loss_skills` FROM [profiles] WHERE `name` = :id');
-            $load->execute( array(':id' => $id) );
-            $this->data = $load->fetch();
         }
+
+        $load->execute( array(':id' => $id) );
+        $this->data = $load->fetch();
     }
 
     // saves current record

@@ -58,7 +58,7 @@ foreach( $db->query('SELECT `id`, `name`, `content` FROM [boards] WHERE `upperid
     // composes forum link
     $root = XMLToolbox::createDocumentFragment();
     $a = XMLToolbox::createElement('a');
-    $a->setAttribute('href', 'forum.php?id=' . $sub['id']);
+    $a->setAttribute('href', '/forum/' . $sub['id']);
     $a->addContent($sub['name']);
 
     $root->addContents($a, XMLToolbox::createElement('br'), $sub['content']);
@@ -73,14 +73,14 @@ foreach( $db->query('SELECT `id`, `name`, `content` FROM [boards] WHERE `upperid
 
         $a = XMLToolbox::createElement('a');
         $img = XMLToolbox::createElement('img');
-        $a->setAttribute('href', 'forum.php?module=Topic&command=view&id=' . $lastPost['id']);
-        $img->setAttribute('src', $template->getSkinPath() . 'images/arrow.png');
+        $a->setAttribute('href', '/posts/' . $lastPost['id']);
+        $img->setAttribute('src', $template['baseHref'] . 'images/arrow.png');
         $img->setAttribute('alt', $language['Modules.Forum.LastPost']);
         $a->addContent($img);
         $last->addContents($a, date($config['site.date_format'], $lastPost['date_time']), XMLToolbox::createElement('br'), $language['Modules.Forum.by'] . ' ');
 
         $a = XMLToolbox::createElement('a');
-        $a->setAttribute('href', 'character.php?name=' . urlencode($lastPost['poster']) );
+        $a->setAttribute('href', '/characters/' . urlencode($lastPost['poster']) );
         $a->addContent($lastPost['poster']);
         $last->addContent($a);
     }
@@ -90,7 +90,8 @@ foreach( $db->query('SELECT `id`, `name`, `content` FROM [boards] WHERE `upperid
         $last = $language['Modules.Forum.NoPosts'];
     }
 
-    $subs[] = array('id' => $sub['id'], 'name' => $root, 'posts' => ForumToolbox::countPosts($sub['id']), 'topics' => ForumToolbox::countTopics($sub['id']), 'lastPost' => $last);
+    $count = $db->query('SELECT COUNT(DISTINCT [posts].`id`) AS `count` FROM [posts], (SELECT `id` FROM [posts] WHERE `istopic` = 1 AND `upperid` = ' . $sub['id'] . ') AS `topics` WHERE ([posts].`istopic` = 1 AND [posts].`upperid` = ' . $sub['id'] . ') OR ([posts].`istopic` = 0 AND [posts].`upperid` = `topics`.`id`)')->fetch();
+    $subs[] = array('id' => $sub['id'], 'name' => $root, 'posts' => $count['count'], 'topics' => ForumToolbox::countTopics($sub['id']), 'lastPost' => $last);
 }
 
 $subBoards['list'] = $subs;
@@ -100,7 +101,7 @@ if( User::hasAccess(3) )
 {
     // new sub-board form
     $form = $template->createComponent('AdminForm');
-    $form['action'] = 'forum.php?command=insert&board[upperid]=' . (int) $id;
+    $form['action'] = '/admin/module=Forum&command=insert&board[upperid]=' . (int) $id;
     $form['submit'] = $language['main.admin.InsertSubmit'];
     $form['id'] = 'forumForm';
 
@@ -118,7 +119,7 @@ if($id)
     // pagination if required
     $pages = $template->createComponent('Pages');
     $pages['page'] = $page;
-    $pages['link'] = 'forum.php?id=' . $id;
+    $pages['link'] = '/forum/' . $id;
 
     // counts of pages
     $count = $db->query('SELECT COUNT(`id`) / ' . $config['forum.limit'] . ' AS `count` FROM [posts] WHERE `istopic` = 1 AND `upperid` = ' . $id)->fetch();

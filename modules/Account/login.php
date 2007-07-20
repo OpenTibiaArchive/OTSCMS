@@ -21,7 +21,7 @@
 
 // login form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'account.php';
+$form['action'] = '/account/';
 $form['submit'] = $language['Modules.Account.Login'];
 
 // cookie checkbox

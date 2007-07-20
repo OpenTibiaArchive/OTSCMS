@@ -166,7 +166,7 @@ function GuildsAJAX()
 
                 // delete action link
                 deleteLink = document.createElement("a");
-                deleteLink.href = "admin.php?module=Guilds&command=delete&id=" + ID;
+                deleteLink.href = "/admin/module=Guilds&command=delete&id=" + ID;
                 deleteLink.onclick = new Function("if( confirm(Language[0]) ) { return pageGuilds.Delete(" + ID + "); } else { return false; }");
                 deleteLink.appendChild( document.createTextNode(Language[2]) );
 

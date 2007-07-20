@@ -48,27 +48,27 @@ foreach( $db->query('SELECT `id`, `name`, `read`, `date_time`, `from` FROM [priv
 
     // display link
     $a = XMLToolbox::createElement('a');
-    $a->setAttribute('href', 'priv.php?command=display&id=' . $pm['id']);
+    $a->setAttribute('href', '/message/' . $pm['id']);
     $a->addContent($pm['name']);
     $root->addContent($a);
 
     // author profile link
     $link = XMLToolbox::createElement('a');
-    $link->setAttribute('href', 'character.php?name=' . urlencode($pm['from']) );
+    $link->setAttribute('href', '/characters/' . urlencode($pm['from']) );
     $link->addContent($pm['from']);
 
     // delete link
     $delete = XMLToolbox::createElement('a');
-    $delete->setAttribute('href', 'priv.php?command=delete&id=' . $pm['id']);
+    $delete->setAttribute('href', '/message/' . $pm['id'] . '/delete');
     $delete->setAttribute('onclick', 'if( confirm(Language[0]) ) { return pagePM.Delete(' . $pm['id'] . '); } else { return false; }');
     $delete->addContent($language['main.admin.DeleteSubmit']);
 
     $reply = XMLToolbox::createElement('a');
-    $reply->setAttribute('href', 'priv.php?command=reply&id=' . $pm['id']);
+    $reply->setAttribute('href', '/message/' . $pm['id'] . '/reply');
     $reply->addContent($language['Modules.PM.ReplySubmit']);
 
     $forward = XMLToolbox::createElement('a');
-    $forward->setAttribute('href', 'priv.php?command=fw&id=' . $pm['id']);
+    $forward->setAttribute('href', '/message/' . $pm['id'] . '/forward');
     $forward->addContent($language['Modules.PM.ForwardSubmit']);
 
     $actions = XMLToolbox::createDocumentFragment();

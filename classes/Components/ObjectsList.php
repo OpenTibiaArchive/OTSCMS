@@ -52,19 +52,19 @@ class ComponentObjectsList extends TemplateComponent
 
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
-                $a->setAttribute('href', $this['file'] . '?command=edit&id=' . $item['id']);
+                $a->setAttribute('href', '/admin/module=' . $this['module'] . '&command=edit&id=' . $item['id']);
                 $a->setAttribute('onclick', 'return page' . $this['module'] . '.edit(' . $item['id'] . ');');
                 $img->setAttribute('alt', $language['main.admin.EditSubmit']);
-                $img->setAttribute('src', $this->owner->getSkinPath() . 'images/edit.gif');
+                $img->setAttribute('src', $this['baseHref'] . 'images/edit.gif');
                 $a->addContent($img);
                 $header->addContents($a, ' ');
 
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
-                $a->setAttribute('href', $this['file'] . '?command=remove&id=' . $item['id']);
+                $a->setAttribute('href', '/admin/module=' . $this['module'] . '&command=remove&id=' . $item['id']);
                 $a->setAttribute('onclick', 'if( confirm(Language[0]) ) { return page' . $this['module'] . '.remove(' . $item['id'] . '); } else { return false; }');
                 $img->setAttribute('alt', $language['main.admin.DeleteSubmit']);
-                $img->setAttribute('src', $this->owner->getSkinPath() . 'images/delete.gif');
+                $img->setAttribute('src', $this['baseHref'] . 'images/delete.gif');
                 $a->addContent($img);
                 $header->addContent($a);
             }
@@ -74,9 +74,9 @@ class ComponentObjectsList extends TemplateComponent
             {
                 $layer = XMLToolbox::createElement('div');
                 $a = XMLToolbox::createElement('a');
-                $a->setAttribute('href', $this['file'] . '?command=download&id=' . $item['id']);
+                $a->setAttribute('href', '/admin/module=' . $this['module'] . '&command=download&id=' . $item['id']);
                 $img = XMLToolbox::createElement('img');
-                $img->setAttribute('src', $this['file'] . '?command=' . $this['mini'] . '&id=' . $item['id']);
+                $img->setAttribute('src', '/admin/module=' . $this['module'] . '&command=' . $this['mini'] . '&id=' . $item['id']);
                 $img->setAttribute('alt', $item['name']);
                 $img->setAttribute('class', 'galleryMini');
                 $a->addContent($img);
@@ -96,7 +96,7 @@ class ComponentObjectsList extends TemplateComponent
             $download = XMLToolbox::createElement('div');
             $download->setAttribute('class', 'right');
             $a = XMLToolbox::createElement('a');
-            $a->setAttribute('href', $this['file'] . '?command=download&id=' . $item['id']);
+            $a->setAttribute('href', '/admin/module=' . $this['module'] . '&command=download&id=' . $item['id']);
             $a->addContent($language['Modules.' . $this['module'] . '.DownloadSubmit']);
 
             $download->addContent($a);

@@ -147,7 +147,7 @@ function LinksAJAX()
 
         a = document.createElement("a");
         a.onclick = new Function("return pageLinks.edit(" + ID + ");");
-        a.href = "admin.php?module=Links&command=edit&id=" + ID;
+        a.href = "/admin/module=Links&command=edit&id=" + ID;
 
         img = document.createElement("img");
         img.alt = Language[1];
@@ -158,7 +158,7 @@ function LinksAJAX()
 
         a = document.createElement("a");
         a.onclick = new Function("if( confirm(Language[0]) ) { return pageLinks.remove(" + ID + "); } else { return false; }");
-        a.href = "admin.php?module=Links&command=remove&id=" + ID;
+        a.href = "/admin/module=Links&command=remove&id=" + ID;
 
         img = document.createElement("img");
         img.alt = Language[2];
@@ -179,7 +179,7 @@ function LinksAJAX()
     this.onEdit = function()
     {
         // prepares edition form
-        LinksFormEdit.action = "admin.php?module=Links&command=update&id=" + this.lastData;
+        LinksFormEdit.action = "/admin/module=Links&command=update&id=" + this.lastData;
         LinksFormEdit.onsubmit = new Function("return pageLinks.update(" + this.lastData + ");");
 
         oldLink = this.root.getElementByTagName("data");

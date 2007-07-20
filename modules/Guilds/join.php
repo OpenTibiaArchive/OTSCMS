@@ -21,7 +21,7 @@
 
 // guild creation form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'guild.php?command=add';
+$form['action'] = '/guild/add';
 $form['submit'] = $language['Modules.Guilds.JoinSubmit'];
 
 $form->addField('id', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.JoinCharacter'], array('options' => Toolbox::dumpRecords( $db->query('SELECT [invites].`id` AS `key`, {players}.`name` AS `value` FROM [invites], {players} WHERE [invites].`name` = {players}.`id` AND [invites].`content` = ' . (int) InputData::read('id') ) ) ) );

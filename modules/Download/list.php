@@ -26,7 +26,7 @@ $template->addJavaScript('download');
 if( User::hasAccess(3) )
 {
     $form = $template->createComponent('AdminForm');
-    $form['action'] = 'admin.php?module=Download&command=insert';
+    $form['action'] = '/admin/module=Download&command=insert';
     $form['submit'] = $language['main.admin.InsertSubmit'];
     $form['id'] = 'downloadForm';
     $form['enctype'] = 'multipart/form-data';
@@ -41,7 +41,6 @@ if( User::hasAccess(3) )
 // objects list template
 $list = $template->createComponent('ObjectsList');
 $list['module'] = 'Download';
-$list['file'] = 'download.php';
 
 $download = array();
 

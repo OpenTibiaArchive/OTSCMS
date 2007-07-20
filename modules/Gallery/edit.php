@@ -27,7 +27,7 @@ $gallery = new CMS_Gallery( (int) InputData::read('id') );
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'admin.php?module=Gallery&command=update&id=' . $gallery['id'];
+$form['action'] = '/admin/module=Gallery&command=update&id=' . $gallery['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 $form['id'] = 'galleryForm';
 $form['enctype'] = 'multipart/form-data';

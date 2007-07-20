@@ -100,7 +100,7 @@ function AccessAJAX()
 
                 // delete action link
                 a = document.createElement("a");
-                a.href = "admin.php?module=Access&command=remove&id=" + ID;
+                a.href = "/admin/module=Access&command=remove&id=" + ID;
                 a.onclick = new Function("if( confirm(Language[0]) ) { return pageAccess.remove(" + ID + "); } else { return false; }");
                 a.appendChild( document.createTextNode(Language[2]) );
 

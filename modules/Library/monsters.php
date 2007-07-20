@@ -44,6 +44,6 @@ foreach( $monsters->getElementsByTagName('monster') as $monster)
 
 // puts monsters into template
 $list['list'] = $temp;
-$list['link'] = 'library.php?command=monster&name=';
+$list['link'] = '/monsters/';
 
 ?>

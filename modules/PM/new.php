@@ -21,7 +21,7 @@
 
 // bb message editor
 $form = $template->createComponent('BBEditor');
-$form['action'] = 'priv.php?command=send';
+$form['action'] = '/send';
 $form['fields'] = array('name' => InputData::read('name'), 'content' => InputData::read('content'), 'to' => InputData::read('to') );
 $form['characters'] = $db->query('SELECT `name` FROM {players} WHERE `account_id` = ' . User::$number);
 $form->module = 'PM';

@@ -42,7 +42,7 @@ class ComponentStatisticsPager extends TemplateComponent
         if($this['left']['show'])
         {
             $a = XMLToolbox::createElement('a');
-            $a->setAttribute('href', 'statistics.php?command=highscores&list=' . $this['list'] . '&page=' . ($this['page'] - 1) );
+            $a->setAttribute('href', '/statistics/' . $this['list'] . '/page' . ($this['page'] - 1) );
             $a->setAttribute('onclick', 'return pageStatistics.move(\'' . $this['list'] . '\', ' . ($this['page'] - 1) . ');');
             $a->addContent($language['Modules.Statistics.HighscoresRanks'] . ' ' . $this['left']['from'] . ' - ' . $this['left']['to']);
             $div->addContent($a);
@@ -61,7 +61,7 @@ class ComponentStatisticsPager extends TemplateComponent
         if($this['right']['show'])
         {
             $a = XMLToolbox::createElement('a');
-            $a->setAttribute('href', 'statistics.php?command=highscores&list=' . $this['list'] . '&page=' . ($this['page'] + 1) );
+            $a->setAttribute('href', '/statistics/' . $this['list'] . '/page' . ($this['page'] + 1) );
             $a->setAttribute('onclick', 'return pageStatistics.move(\'' . $this['list'] . '\', ' . ($this['page'] + 1) . ');');
             $a->addContent($language['Modules.Statistics.HighscoresRanks'] . ' ' . $this['right']['from'] . ' - ' . $this['right']['to']);
             $div->addContent($a);
@@ -113,7 +113,7 @@ class ComponentStatisticsPager extends TemplateComponent
 
             $td = XMLToolbox::createElement('td');
             $a = XMLToolbox::createElement('a');
-            $a->setAttribute('href', 'character.php?name=' . $score['name']);
+            $a->setAttribute('href', '/characters/' . $score['name']);
             $a->addContent($score['name']);
             $td->addContent($a);
             $row->addContent($td);

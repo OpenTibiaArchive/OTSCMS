@@ -21,7 +21,7 @@
 
 // loads topic for update
 $post = new CMS_Post( (int) InputData::read('id') );
-$post->closed = 0;
+$post['closed'] = 0;
 $post->save();
 
 // redirects to topic page

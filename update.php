@@ -154,6 +154,70 @@ switch($config['version'])
         // updates system version
         $db->exec('UPDATE [settings] SET `content` = \'3.1.0\' WHERE `name` = \'version\'');
 
+        // URLs table
+        $db->exec('CREATE TABLE [urls] (`name` VARCHAR(255), `content` VARCHAR(255), `order` INT) ENGINE = InnoDB');
+
+        $query = $db->prepare('INSERT INTO [urls] (`name`, `content`, `order`) VALUES (:name, :content, :order)');
+
+        $query->execute( array(':name' => '^.*$', ':content' => 'module=News&command=home', ':order' => 100) );
+        $query->execute( array(':name' => '^admin/?(.*)$', ':content' => '$1', ':order' => 10) );
+        $query->execute( array(':name' => '^logout/?$', ':content' => 'module=Account&command=account&userlogout=1', ':order' => 50) );
+        $query->execute( array(':name' => '^vote/?$', ':content' => 'module=Poll&command=vote', ':order' => 50) );
+        $query->execute( array(':name' => '^library/?$', ':content' => 'module=Library&command=main', ':order' => 50) );
+        $query->execute( array(':name' => '^download/?$', ':content' => 'module=Download&command=list', ':order' => 50) );
+        $query->execute( array(':name' => '^gallery/?$', ':content' => 'module=Gallery&command=list', ':order' => 50) );
+        $query->execute( array(':name' => '^signup/?$', ':content' => 'module=Account&command=signup', ':order' => 50) );
+        $query->execute( array(':name' => '^signup/submit$', ':content' => 'module=Account&command=create', ':order' => 20) );
+        $query->execute( array(':name' => '^password/forgot$', ':content' => 'module=Account&command=forgot', ':order' => 20) );
+        $query->execute( array(':name' => '^password/remind$', ':content' => 'module=Account&command=remind', ':order' => 20) );
+        $query->execute( array(':name' => '^password/change$', ':content' => 'module=Account&command=change', ':order' => 20) );
+        $query->execute( array(':name' => '^account/?$', ':content' => 'module=Account&command=account', ':order' => 50) );
+        $query->execute( array(':name' => '^account/save$', ':content' => 'module=Account&command=save', ':order' => 20) );
+        $query->execute( array(':name' => '^account/suspend$', ':content' => 'module=Account&command=suspend', ':order' => 20) );
+        $query->execute( array(':name' => '^archive/?$', ':content' => 'module=News&command=archive', ':order' => 50) );
+        $query->execute( array(':name' => '^news/?$', ':content' => 'module=News&command=list', ':order' => 50) );
+        $query->execute( array(':name' => '^news/([0-9]+)$', ':content' => 'module=News&command=display&id=$1', ':order' => 30) );
+        $query->execute( array(':name' => '^spells/?$', ':content' => 'module=Library&command=spells', ':order' => 50) );
+        $query->execute( array(':name' => '^spells/(.+)$', ':content' => 'module=Library&command=spell&name=$1', ':order' => 40) );
+        $query->execute( array(':name' => '^monsters/?$', ':content' => 'module=Library&command=monsters', ':order' => 50) );
+        $query->execute( array(':name' => '^monsters/(.+)$', ':content' => 'module=Library&command=monster&name=$1', ':order' => 40) );
+        $query->execute( array(':name' => '^characters/?$', ':content' => 'module=Character&command=display', ':order' => 50) );
+        $query->execute( array(':name' => '^characters/([0-9]+)/delete$', ':content' => 'module=Character&command=delete&id=$1', ':order' => 10) );
+        $query->execute( array(':name' => '^characters/([0-9]+)/change$', ':content' => 'module=Character&command=change&id=$1', ':order' => 10) );
+        $query->execute( array(':name' => '^characters/([0-9]+)/save$', ':content' => 'module=Character&command=save&id=$1', ':order' => 10) );
+        $query->execute( array(':name' => '^characters/create$', ':content' => 'module=Character&command=create', ':order' => 20) );
+        $query->execute( array(':name' => '^characters/insert$', ':content' => 'module=Character&command=insert', ':order' => 20) );
+        $query->execute( array(':name' => '^characters/(.+)$', ':content' => 'module=Character&command=display&name=$1', ':order' => 40) );
+        $query->execute( array(':name' => '^characters/(.+)/message$', ':content' => 'module=PM&command=new&to=$1', ':order' => 30) );
+        $query->execute( array(':name' => '^statistics/?$', ':content' => 'module=Statistics&command=census', ':order' => 50) );
+        $query->execute( array(':name' => '^statistics/(.*)$', ':content' => 'module=Statistics&command=highscores&list=$1', ':order' => 40) );
+        $query->execute( array(':name' => '^statistics/(.*)/page([0-9]+)$', ':content' => 'module=Statistics&command=highscores&list=$1&page=$2', ':order' => 30) );
+        $query->execute( array(':name' => '^guild/quit$', ':content' => 'module=Guilds&command=quit', ':order' => 20) );
+        $query->execute( array(':name' => '^guild/add$', ':content' => 'module=Guilds&command=add', ':order' => 20) );
+        $query->execute( array(':name' => '^guild/insert$', ':content' => 'module=Guilds&command=insert', ':order' => 20) );
+        $query->execute( array(':name' => '^guild/create$', ':content' => 'module=Guilds&command=create', ':order' => 20) );
+        $query->execute( array(':name' => '^guilds/?$', ':content' => 'module=Guilds&command=list', ':order' => 50) );
+        $query->execute( array(':name' => '^guilds/([0-9]+)$', ':content' => 'module=Guilds&command=display&id=$1', ':order' => 30) );
+        $query->execute( array(':name' => '^forum/?$', ':content' => 'module=Forum&command=board&id=0', ':order' => 50) );
+        $query->execute( array(':name' => '^forum/([0-9]+)$', ':content' => 'module=Forum&command=board&id=$1', ':order' => 40) );
+        $query->execute( array(':name' => '^forum/([0-9]+)/page([0-9]+)$', ':content' => 'module=Forum&command=board&id=$1&page=$2', ':order' => 30) );
+        $query->execute( array(':name' => '^forum/([0-9]+)/reply$', ':content' => 'module=Topic&command=new&boardid=$1', ':order' => 20) );
+        $query->execute( array(':name' => '^posts/([0-9]+)$', ':content' => 'module=Topic&command=view&id=$1', ':order' => 40) );
+        $query->execute( array(':name' => '^posts/([0-9]+)/page([0-9]+)$', ':content' => 'module=Topic&command=view&id=$1&page=$2', ':order' => 30) );
+        $query->execute( array(':name' => '^posts/([0-9]+)/reply$', ':content' => 'module=Topic&command=new&topicid=$1', ':order' => 20) );
+        $query->execute( array(':name' => '^posts/([0-9]+)/quote/([0-9]+)$', ':content' => 'module=Topic&command=new&topicid=$1&quoteid=$2', ':order' => 10) );
+        $query->execute( array(':name' => '^poll/?$', ':content' => 'module=Poll&command=latest', ':order' => 60) );
+        $query->execute( array(':name' => '^polls/?$', ':content' => 'module=Poll&command=list', ':order' => 50) );
+        $query->execute( array(':name' => '^polls/([0-9]+)$', ':content' => 'module=Poll&command=display&id=$1', ':order' => 40) );
+        $query->execute( array(':name' => '^inbox/?$', ':content' => 'module=PM&command=inbox', ':order' => 50) );
+        $query->execute( array(':name' => '^outbox/?$', ':content' => 'module=PM&command=sent', ':order' => 50) );
+        $query->execute( array(':name' => '^message/([0-9]+)$', ':content' => 'module=PM&command=display&id=$1', ':order' => 30) );
+        $query->execute( array(':name' => '^message/([0-9]+)/delete$', ':content' => 'module=PM&command=delete&id=$1', ':order' => 20) );
+        $query->execute( array(':name' => '^message/([0-9]+)/reply$', ':content' => 'module=PM&command=reply&id=$1', ':order' => 20) );
+        $query->execute( array(':name' => '^message/([0-9]+)/forward$', ':content' => 'module=PM&command=fw&id=$1', ':order' => 20) );
+        $query->execute( array(':name' => '^message/new$', ':content' => 'module=PM&command=new', ':order' => 20) );
+        $query->execute( array(':name' => '^send/?$', ':content' => 'module=PM&command=send', ':order' => 50) );
+
         // changes directories paths
         $query = $db->prepare('UPDATE [settings] SET `content` = :content WHERE `name` = :name');
         $query->execute( array(':name' => 'directories.languages', ':content' => 'languages/') );

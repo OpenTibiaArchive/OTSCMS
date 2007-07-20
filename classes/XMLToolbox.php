@@ -59,11 +59,6 @@ class XMLToolbox
         return self::$xml->createEntityReference($entity);
     }
 
-    public static function importNode(DOMNode $node)
-    {
-        return $node->ownerDocument->isSameNode(self::$xml) ? $node : self::$xml->importNode($node, true);
-    }
-
     public static function saveXML(DOMNode $node)
     {
         return self::$xml->saveXML($node);
@@ -127,7 +122,7 @@ class XMLToolbox
         // loads tree into current container
         foreach( $xml->childNodes->item(0)->childNodes as $child)
         {
-            $tree->appendChild( self::importNode($child) );
+            $tree->addContent($child);
         }
 
         // returns parsed tree

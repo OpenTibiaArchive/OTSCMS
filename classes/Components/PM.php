@@ -53,7 +53,7 @@ class ComponentPM extends TemplateComponent
 
         $td = XMLToolbox::createElement('td');
         $a = XMLToolbox::createElement('a');
-        $a->setAttribute('href', 'character.php?name=' . $this['pm']['from']);
+        $a->setAttribute('href', '/characters/' . $this['pm']['from']);
         $a->addContent($this['pm']['from']);
         $td->setAttribute('colspan', '2');
         $td->setAttribute('class', 'formRight');
@@ -71,7 +71,7 @@ class ComponentPM extends TemplateComponent
 
         $td = XMLToolbox::createElement('td');
         $a = XMLToolbox::createElement('a');
-        $a->setAttribute('href', 'character.php?name=' . $this['pm']['to']);
+        $a->setAttribute('href', '/characters/' . $this['pm']['to']);
         $a->addContent($this['pm']['to']);
         $td->setAttribute('colspan', '2');
         $td->setAttribute('class', 'formRight');
@@ -127,15 +127,15 @@ class ComponentPM extends TemplateComponent
         if($this->receiver)
         {
             $delete = XMLToolbox::createElement('a');
-            $delete->setAttribute('href', 'priv.php?command=delete&id=' . $this['pm']['id']);
+            $delete->setAttribute('href', '/message/' . $this['pm']['id'] . '/delete');
             $delete->addContent($language['main.admin.DeleteSubmit']);
 
             $reply = XMLToolbox::createElement('a');
-            $reply->setAttribute('href', 'priv.php?command=reply&id=' . $this['pm']['id']);
+            $reply->setAttribute('href', '/message/' . $this['pm']['id'] . '/reply');
             $reply->addContent($language['Modules.PM.ReplySubmit']);
 
             $forward = XMLToolbox::createElement('a');
-            $forward->setAttribute('href', 'priv.php?command=fw&id=' . $this['pm']['id']);
+            $forward->setAttribute('href', '/message/' . $this['pm']['id'] . '/forward');
             $forward->addContent($language['Modules.PM.ForwardSubmit']);
 
             $row = XMLToolbox::createElement('tr');

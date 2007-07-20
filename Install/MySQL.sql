@@ -75,7 +75,7 @@ CREATE TABLE [download] (
     `id` SERIAL,
     `name` VARCHAR(255),
     `content` TEXT,
-    `binary` TINYINT,
+    `binary` BOOLEAN,
     `file` BLOB,
     PRIMARY KEY (`id`)
 );
@@ -86,7 +86,7 @@ CREATE TABLE [gallery] (
     `id` SERIAL,
     `name` VARCHAR(255),
     `content` TEXT,
-    `binary` TINYINT,
+    `binary` BOOLEAN,
     `file` BLOB,
     PRIMARY KEY (`id`)
 );
@@ -136,10 +136,10 @@ DROP TABLE IF EXISTS [posts];
 CREATE TABLE [posts] (
     `id` SERIAL,
     `name` VARCHAR(255),
-    `istopic` TINYINT,
+    `istopic` BOOLEAN,
     `upperid` INT,
-    `closed` TINYINT,
-    `pinned` TINYINT,
+    `closed` BOOLEAN,
+    `pinned` BOOLEAN,
     `content` TEXT,
     `poster` INT NOT NULL,
     `date_time` INT UNSIGNED,
@@ -204,6 +204,14 @@ CREATE TABLE [news] (
     `date_time` INT,
     PRIMARY KEY (`id`)
 );
+
+DROP TABLE IF EXISTS [urls];
+
+CREATE TABLE [urls] (
+    `name` VARCHAR(255),
+    `content` VARCHAR(255),
+    `order` INT
+) ENGINE = InnoDB;
 
 DROP TABLE IF EXISTS [invites];
 

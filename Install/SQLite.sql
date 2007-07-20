@@ -186,6 +186,14 @@ CREATE TABLE [news] (
     `date_time` INT
 );
 
+DROP TABLE [urls];
+
+CREATE TABLE [urls] (
+    `name` VARCHAR(255),
+    `content` VARCHAR(255),
+    `order` INT
+);
+
 DROP TABLE [invites];
 
 CREATE TABLE [invites] (

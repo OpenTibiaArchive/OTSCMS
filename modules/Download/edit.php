@@ -27,7 +27,7 @@ $download = new CMS_Download( (int) InputData::read('id') );
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'admin.php?module=Download&command=update&id=' . $download['id'];
+$form['action'] = '/admin/module=Download&command=update&id=' . $download['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 $form['id'] = 'downloadForm';
 $form['enctype'] = 'multipart/form-data';

@@ -82,19 +82,19 @@ class ComponentItemsList extends TemplateComponent
 
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
-                $a->setAttribute('href', 'admin.php?module=' . $this->module . '&command=edit&id=' . $key);
+                $a->setAttribute('href', '/admin/module=' . $this->module . '&command=edit&id=' . $key);
                 $a->setAttribute('onclick', 'return page' . $this->module . '.edit(' . $key . ');');
                 $img->setAttribute('alt', $language['main.admin.EditSubmit']);
-                $img->setAttribute('src', $this->owner->getSkinPath() . 'images/edit.gif');
+                $img->setAttribute('src', $this['baseHref'] . 'images/edit.gif');
                 $a->addContent($img);
                 $li->addContents($a, ' ');
 
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
-                $a->setAttribute('href', 'admin.php?module=' . $this->module . '&command=remove&id=' . $key);
+                $a->setAttribute('href', '/admin/module=' . $this->module . '&command=remove&id=' . $key);
                 $a->setAttribute('onclick', 'if( confirm(Language[0]) ) { return page' . $this['module'] . '.remove(' . $key . '); } else { return false; }');
                 $img->setAttribute('alt', $language['main.admin.DeleteSubmit']);
-                $img->setAttribute('src', $this->owner->getSkinPath() . 'images/delete.gif');
+                $img->setAttribute('src', $this['baseHref'] . 'images/delete.gif');
                 $a->addContent($img);
                 $li->addContent($a);
             }

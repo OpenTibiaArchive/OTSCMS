@@ -175,7 +175,7 @@ function CharacterAJAX()
 
                 // delete action link
                 a = document.createElement("a");
-                a.href = "admin.php?module=Character&command=pop&id=" + ID;
+                a.href = "/admin/module=Character&command=pop&id=" + ID;
                 a.onclick = new Function("if( confirm(Language[0]) ) { return pageCharacter.pop(" + ID + "); } else { return false; }");
                 a.appendChild( document.createTextNode(Language[2]) );
 

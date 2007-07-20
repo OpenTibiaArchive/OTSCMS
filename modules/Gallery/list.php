@@ -26,7 +26,7 @@ $template->addJavaScript('gallery');
 if( User::hasAccess(3) )
 {
     $form = $template->createComponent('AdminForm');
-    $form['action'] = 'admin.php?module=Gallery&command=insert';
+    $form['action'] = '/admin/module=Gallery&command=insert';
     $form['submit'] = $language['main.admin.InsertSubmit'];
     $form['id'] = 'galleryForm';
     $form['enctype'] = 'multipart/form-data';
@@ -41,7 +41,6 @@ if( User::hasAccess(3) )
 // objects list template
 $list = $template->createComponent('ObjectsList');
 $list['module'] = 'Gallery';
-$list['file'] = 'gallery.php';
 $list['mini'] = 'mini';
 
 $gallery = array();

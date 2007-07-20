@@ -48,7 +48,7 @@ else
 
 // bb message editor
 $form = $template->createComponent('BBEditor');
-$form['action'] = 'forum.php?module=Topic&command=insert&bb[upperid]=' . $id . '&bb[istopic]=' . $newTopic;
+$form['action'] = '/admin/module=Topic&command=insert&bb[upperid]=' . $id . '&bb[istopic]=' . $newTopic;
 $form['fields'] = array('content' => $post);
 $form['characters'] = $db->query('SELECT `name` FROM {players} WHERE `account_id` = ' . User::$number);
 $form->module = 'Topic';

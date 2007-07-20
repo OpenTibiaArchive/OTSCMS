@@ -32,10 +32,10 @@ return array(
     'cookies' => 'Remember me (use cookies)',
     'logIn' => 'Login',
     'register' => 'Not a member yet?<br />
-    <a href="account.php?command=signup">Click here</a> to register.<br />
+    <a href="/signup">Click here</a> to register.<br />
     <br />
     Forgotten your password?<br />
-    Request a new one <a href="account.php?command=forgot">here</a>.',
+    Request a new one <a href="/password/forgot">here</a>.',
     'SuspendConfirm' => 'Are you sure you want to suspend account and all it\\\'s characters IMMEDIATELY and UNRECOVERABLE?',
 );
 

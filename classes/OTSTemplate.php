@@ -35,6 +35,7 @@ class OTSTemplate extends DataContainer
     public function __construct($skin)
     {
         $this->skin = $skin;
+        $this['baseHref'] = '/' . $this->skin;
     }
 
     // loads component class as component
@@ -58,22 +59,6 @@ class OTSTemplate extends DataContainer
         $config = OTSCMS::getResource('Config');
         header('Content-Type: text/html; charset="utf-8"');
         include($this->skin . 'main.php');
-    }
-
-    // inserts all components
-    private function run()
-    {
-        foreach($this->components as $component)
-        {
-            $component['baseHref'] = $this->skin;
-            echo $component->display();
-        }
-    }
-
-    // path to skin directory for outside URLs
-    public function getSkinPath()
-    {
-        return $this->skin;
     }
 
     // JavaScript files

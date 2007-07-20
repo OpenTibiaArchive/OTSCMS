@@ -30,10 +30,10 @@ abstract class SQL_Base extends PDO
     protected $rightDelimiter;
 
     // prefix for OTSCMS tables
-    protected $cms_prefix = '';
+    protected $cms_prefix;
 
     // prefix for OTServ tables
-    protected $ots_prefix = '';
+    protected $ots_prefix;
 
     // universal constructor
     public function __construct($host, $user, $password, $database, $cms_prefix, $ots_prefix)

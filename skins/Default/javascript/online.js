@@ -149,7 +149,7 @@ function OnlineAJAX()
 
         a = document.createElement("a");
         a.onclick = new Function("return pageOnline.edit(" + ID + ");");
-        a.href = "admin.php?module=Online&command=edit&id=" + ID;
+        a.href = "/admin/module=Online&command=edit&id=" + ID;
 
         img = document.createElement("img");
         img.alt = Language[1];
@@ -160,7 +160,7 @@ function OnlineAJAX()
 
         a = document.createElement("a");
         a.onclick = new Function("if( confirm(Language[0]) ) { return pageOnline.remove(" + ID + "); } else { return false; }");
-        a.href = "admin.php?module=Online&command=remove&id=" + ID;
+        a.href = "/admin/module=Online&command=remove&id=" + ID;
 
         img = document.createElement("img");
         img.alt = Language[2];
@@ -181,7 +181,7 @@ function OnlineAJAX()
     this.onEdit = function()
     {
         // prepares edition form
-        OnlinesFormEdit.action = "admin.php?module=Online&command=update&id=" + this.lastData;
+        OnlinesFormEdit.action = "/admin/module=Online&command=update&id=" + this.lastData;
         OnlinesFormEdit.onsubmit = new Function("return pageOnline.update(" + this.lastData + ");");
 
         oldOnline = this.root.getElementByTagName("data");

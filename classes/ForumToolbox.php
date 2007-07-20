@@ -36,24 +36,6 @@ class ForumToolbox
         self::$subForums = $db->prepare('SELECT `id` FROM [boards] WHERE `upperid` = :id');
     }
 
-    // returns number of replies in topic
-    // it won't include starting post
-    public static function countReplies($id)
-    {
-        // returns number of replies
-        $count = OTSCMS::getResource('DB')->query('SELECT COUNT(`id`) AS `count` FROM [posts] WHERE `istopic` = 0 AND `upperid` = ' . $id)->fetchAll();
-        return $count[0]['count'];
-        // return $count[0]['count'] + 1; // this line will return number of all posts including starting one
-    }
-
-    // returns number of posts in forum including subforums
-    public static function countPosts($id)
-    {
-        // dropped recursion - now database handle calculations
-        $topics = OTSCMS::getResource('DB')->query('SELECT COUNT(DISTINCT [posts].`id`) AS `count` FROM [posts], (SELECT `id` FROM [posts] WHERE `istopic` = 1 AND `upperid` = ' . $id . ') AS `topics` WHERE ([posts].`istopic` = 1 AND [posts].`upperid` = ' . $id . ') OR ([posts].`istopic` = 0 AND [posts].`upperid` = `topics`.`id`)')->fetchAll();
-        return $topics[0]['count'];
-    }
-
     // returns number of topics in forum
     public static function countTopics($id)
     {

@@ -24,7 +24,7 @@ $template->addJavaScript('ipban');
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'admin.php?module=IPBan&command=insert';
+$form['action'] = '/admin/module=IPBan&command=insert';
 $form['submit'] = $language['main.admin.InsertSubmit'];
 $form['id'] = 'ipbanForm';
 
@@ -47,7 +47,7 @@ foreach( $db->query('SELECT `ip`, `mask` FROM {bans} WHERE `type` = 1') as $ipba
 {
     // creates actions links
     $actions = XMLToolbox::createElement('a');
-    $actions->setAttribute('href', 'admin.php?module=IPBan&command=remove&ipban[ip]=' . $ipban['ip'] . '&ipban[mask]=' . $ipban['mask']);
+    $actions->setAttribute('href', '/admin/module=IPBan&command=remove&ipban[ip]=' . $ipban['ip'] . '&ipban[mask]=' . $ipban['mask']);
     $actions->setAttribute('onclick', 'if( confirm(Language[0]) ) { return pageIPBan.remove(' . $ipban['ip'] . ', ' . $ipban['mask'] . '); } else { return false; }');
     $actions->addContent($language['Modules.IPBan.Unban']);
 

@@ -57,7 +57,7 @@ class ComponentPages extends TemplateComponent
                 $span->setAttribute('class', 'pagesLink');
 
                 $a = XMLToolbox::createElement('a');
-                $a->setAttribute('href', $this['link'] . '&page=' . $i);
+                $a->setAttribute('href', $this['link'] . '/page' . $i);
                 $a->addContent($i);
                 $span->addContent($a);
             }

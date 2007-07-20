@@ -24,7 +24,7 @@ $template->addJavaScript('access');
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'admin.php?module=Access&command=insert';
+$form['action'] = '/admin/module=Access&command=insert';
 $form['submit'] = $language['main.admin.InsertSubmit'];
 $form['id'] = 'accessForm';
 

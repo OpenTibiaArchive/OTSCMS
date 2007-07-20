@@ -37,7 +37,7 @@ XMLHttpRequest.prototype.request = function(requestMethod, requestModule, reques
         }
 
         // opens connection
-        this.open(requestMethod, "ajax.php?module=" + requestModule + "&command=" + requestCommand, false);
+        this.open(requestMethod, "/ajax.php?module=" + requestModule + "&command=" + requestCommand, false);
 
         // POST method header
         if(requestMethod == "POST")

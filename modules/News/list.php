@@ -33,6 +33,6 @@ $display['list'] = $news;
 
 // archive link
 $link = $template->createComponent('Links');
-$link['links'] = array( array('label' => $language['Modules.News.Archive'], 'link' => 'index.php?command=archive') );
+$link['links'] = array( array('label' => $language['Modules.News.Archive'], 'link' => '/archive') );
 
 ?>

@@ -31,6 +31,7 @@ class OTSTemplate extends DataContainer
     // for compatibility purposes
     public function __construct($skin)
     {
+        $this['baseHref'] = '/' . $this->skin;
     }
 
     // returns own instance to handle data assigning
@@ -79,14 +80,6 @@ class OTSTemplate extends DataContainer
     }
 
     // for compatibility purposes
-    private function run()
-    {
-    }
-
-    public function getSkinPath()
-    {
-    }
-
     public function addJavaScript($file)
     {
     }

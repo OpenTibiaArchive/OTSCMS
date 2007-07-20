@@ -23,7 +23,7 @@ $template->addJavaScript('settings');
 
 // control panel
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'admin.php?module=Settings&command=update';
+$form['action'] = '/admin/module=Settings&command=update';
 $form['submit'] = $language['Modules.Settings.UpdateSubmit'];
 $form['id'] = 'settingsForm';
 

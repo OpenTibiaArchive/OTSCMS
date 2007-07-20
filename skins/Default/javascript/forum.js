@@ -174,7 +174,7 @@ function ForumAJAX()
         cell = row.insertCell(-1);
         a = document.createElement("a");
         a.onclick = new Function("return pageForum.edit(" + ID + ");");
-        a.href = "admin.php?module=Forum&command=edit&id=" + ID;
+        a.href = "/admin/module=Forum&command=edit&id=" + ID;
         a.appendChild( document.createTextNode(Language[1]) );
         cell.appendChild(a);
 
@@ -182,7 +182,7 @@ function ForumAJAX()
 
         a = document.createElement("a");
         a.onclick = new Function("if( confirm(Language[0]) ) { return pageForum.remove(" + ID + "); } else { return false; }");
-        a.href = "admin.php?module=Forum&command=remove&id=" + ID;
+        a.href = "/admin/module=Forum&command=remove&id=" + ID;
         a.appendChild( document.createTextNode(Language[2]) );
         cell.appendChild(a);
 
@@ -195,7 +195,7 @@ function ForumAJAX()
     this.onEdit = function()
     {
         // prepares edition form
-        BoardsFormEdit.action = "admin.php?module=Forum&command=update&id=" + this.lastData;
+        BoardsFormEdit.action = "/admin/module=Forum&command=update&id=" + this.lastData;
         BoardsFormEdit.onsubmit = new Function("return pageForum.update(" + this.lastData + ");");
 
         oldBoard = this.root.getElementByTagName("data");

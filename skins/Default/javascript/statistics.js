@@ -62,7 +62,7 @@ function StatisticsAJAX()
 
             // character link
             a = document.createElement("a");
-            a.href = "character.php?name=" + Name;
+            a.href = "/characters/" + Name;
             a.appendChild( document.createTextNode(Name) );
 
             // character name
@@ -108,7 +108,7 @@ function StatisticsAJAX()
                 }
 
                 // prepares new link
-                a.href = "statistics.php?command=highscores&list=" + List + "&page=" + (Page - 1);
+                a.href = "/statistics/" + List + "/page" + (Page - 1);
                 a.onclick = new Function("return pageStatistics.move(\"" + List + "\", " + (Page - 1) + ");");
                 a.appendChild( document.createTextNode(Language[4] + " " + Left.getTagValue("from") + " - " + Left.getTagValue("to") ) );
             }
@@ -147,7 +147,7 @@ function StatisticsAJAX()
                 }
 
                 // prepares new link
-                a.href = "statistics.php?command=highscores&list=" + List + "&page=" + (Page + 1);
+                a.href = "/statistics/" + List + "/page" + (Page + 1);
                 a.onclick = new Function("return pageStatistics.move(\"" + List + "\", " + (Page + 1) + ");");
                 a.appendChild( document.createTextNode(Language[4] + " " + Right.getTagValue("from") + " - " + Right.getTagValue("to") ) );
             }

@@ -25,11 +25,10 @@ include('config.php');
 // loads system core
 include($config['directories']['classes'] . 'OTSCMS.php');
 
-// default startup
-$config = OTSCMS::getResource('Config');
-$config['default.command'] = 'home';
+// freidnly URL rewrite
+OTSCMS::setDriver('InputData', 'FriendlyURL');
 
 // starts system
-OTSCMS::run('News');
+OTSCMS::run();
 
 ?>

@@ -22,11 +22,11 @@
 // news display component
 $list = $template->createComponent('ItemsList');
 $list['header'] = $language['Modules.Guilds.GuildsList'];
-$list['link'] = 'guild.php?command=display&id=';
+$list['link'] = '/guilds/';
 $list['list'] = Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM {guilds} ORDER BY `name`') );
 
 // archive link
 $link = $template->createComponent('Links');
-$link['links'] = array( array('label' => $language['Modules.Guilds.CreateSubmit'], 'link' => 'guild.php?command=create') );
+$link['links'] = array( array('label' => $language['Modules.Guilds.CreateSubmit'], 'link' => '/guild/create') );
 
 ?>

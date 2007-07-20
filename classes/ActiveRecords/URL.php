@@ -19,17 +19,28 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// loads system configuration
-include('config.php');
+/*
+    Rewritten URL object.
+*/
 
-// loads system core
-include($config['directories']['classes'] . 'OTSCMS.php');
+class CMS_URL extends ActiveRecord
+{
+    // loads record by given ID
+    public function load($id)
+    {
+        $load = $this->db->prepare('SELECT `name`, `content`, `order` FROM [urls] WHERE :id REGEXP `name` ORDER BY `order`');
+        $load->execute( array(':id' => $id) );
+        $this->data = $load->fetch();
+    }
 
-// default startup
-$config = OTSCMS::getResource('Config');
-$config['default.command'] = 'account';
-
-// starts system
-OTSCMS::run('Account');
+    // saves current record
+    public function save()
+    {
+        // inserts it as new row
+        $save = $this->db->prepare('INSERT INTO [urls] (`name`, `content`, `order`) VALUES (:name, :content, :order)');
+        $save->execute( array(':name' => $this->data['name'], ':content' => $this->data['content'], ':order' => $this->data['order']) );
+        $this->data['id'] = $this->db->lastInsertId();
+    }
+}
 
 ?>

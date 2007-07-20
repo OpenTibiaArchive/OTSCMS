@@ -28,36 +28,16 @@ class InputData
     // URL data
     private static $data = array();
 
-    // friendly URL
-    private static $friendly = array();
-
     // initiates URL data
     public static function init()
     {
         // saves current variables
         self::$data = $_REQUEST;
-
-        // splits firendly URL into array
-        if( isset($_SERVER['PATH_INFO']) )
-        {
-            // we have to skip first / character in PATH_INFO, otherwise there will be blank first character
-            self::$friendly = explode('/', substr($_SERVER['PATH_INFO'], 1) );
-
-            // sets PHP_SELF variable to real path without friendly URL
-            $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'];
-        }
     }
 
     // returns HTTP data variable
     public static function read($name)
     {
-        // check if there is variable in GET/POST method request
-        if( !isset(self::$data[$name]) )
-        {
-            // if not get it from friendly URL data
-            self::$data[$name] = array_shift(self::$friendly);
-        }
-
         return self::$data[$name];
     }
 

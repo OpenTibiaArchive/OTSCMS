@@ -82,7 +82,7 @@ if( isset($name) )
 
         $guild = $db->query('SELECT {guilds}.`id` AS `id`, {guilds}.`name` AS `name`, {guild_ranks}.`name` AS `rank` FROM {guilds}, {guild_ranks} WHERE {guilds}.`id` = {guild_ranks}.`guild_id` AND {guild_ranks}.`id` = ' . $character['rank_id'])->fetch();
 
-        $a->setAttribute('href', 'guild.php?command=display&id=' . $guild['id']);
+        $a->setAttribute('href', '/guilds/' . $guild['id']);
         $a->addContent($guild['name']);
 
         $root->addContents($guild['rank'] . ' ' . $language['Modules.Character.InGuild'] . ' ', $a);
@@ -130,7 +130,7 @@ if( isset($name) )
 
     // PM link
     $link = $template->createComponent('Links');
-    $link['links'] = array( array('link' => 'priv.php?command=new&to=' . urlencode($character['name']), 'label' => $language['Modules.Account.PMSubmit']) );
+    $link['links'] = array( array('link' => '/characters/' . urlencode($character['name']) . '/message', 'label' => $language['Modules.Account.PMSubmit']) );
 
     // other characters list
     $others = Toolbox::dumpRecords( $db->query('SELECT `name` AS `key`, `name` AS `value` FROM {players} WHERE `account_id` = ' . $character['account_id'] . ' AND `id` != ' . $character['id']) );
@@ -138,7 +138,7 @@ if( isset($name) )
     if( !empty($others) )
     {
         $list = $template->createComponent('ItemsList');
-        $list['link'] = 'character.php?name=';
+        $list['link'] = '/characters/';
         $list['list'] = $others;
         $list['header'] = $language['Modules.Character.OtherCharacter'];
     }
@@ -146,7 +146,7 @@ if( isset($name) )
 
 // character search form
 $form = $template->createComponent('Signup');
-$form['action'] = 'character.php';
+$form['action'] = '/characters/';
 $form['text'] = $language['Modules.Character.TypeName'];
 $form['name'] = 'name';
 $form['submit'] = $language['Modules.Character.DisplaySubmit'];

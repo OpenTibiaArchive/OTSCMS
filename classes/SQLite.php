@@ -34,12 +34,19 @@ class SQL extends SQL_Base
     {
         parent::__construct($host, $user, $password, $database, $cms_prefix, $ots_prefix);
         $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('SQLite_Results') );
+        $this->sqliteCreateFunction('regexp', array($this, 'regexp') );
     }
 
     // SQLite connection DNS
     protected function DNS($host, $user, $password, $database)
     {
         return 'sqlite:' . $host;
+    }
+
+    // REGEXP operator for SQLite
+    private function regexp($name, $content)
+    {
+        return (bool) preg_match('#' . $name . '#', $content);
     }
 }
 

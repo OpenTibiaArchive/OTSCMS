@@ -21,7 +21,7 @@
 
 // guild creation form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'guild.php?command=quit';
+$form['action'] = '/guild/quit';
 $form['submit'] = $language['Modules.Guilds.LeaveSubmit'];
 
 // loads all non-leader members of this guild that belongs to currently logged account

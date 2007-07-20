@@ -23,7 +23,7 @@ $template->addJavaScript('account');
 
 // signup form
 $form = $template->createComponent('Signup');
-$form['action'] = 'account.php?command=create';
+$form['action'] = '/signup/submit';
 $form['text'] = $language['Modules.Account.SignupText'];
 $form['name'] = 'email';
 $form['submit'] = $language['Modules.Account.SignupSubmit'];

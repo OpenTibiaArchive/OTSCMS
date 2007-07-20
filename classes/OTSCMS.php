@@ -60,28 +60,6 @@ class OTSCMS
 
     private static $drivers = array();
 
-    // allows to use alternative drivers for system classes to change behavior
-    public static function getDriver($class)
-    {
-        // defined class driver
-        if(self::$drivers[$class])
-        {
-            return self::$drivers[$class];
-        }
-
-        // checks all drivers handlers if this class matches any of them
-        foreach(self::$handlers as $handler)
-        {
-            if( $handler->match($class) )
-            {
-                return $handler->$class;
-            }
-        }
-
-        // by default returns basic class name
-        return $class;
-    }
-
     public static function setDriver($class, $driver)
     {
         self::$drivers[$class] = $driver;
@@ -105,8 +83,27 @@ class OTSCMS
     {
         $config = self::getResource('Config');
 
-        // class file name
-        $file = self::getDriver($class) . '.php';
+        // default driver
+        $file = $class;
+
+        // defined class driver
+        if(self::$drivers[$class])
+        {
+            $file = self::$drivers[$class];
+        }
+        else
+        {
+            // checks all drivers handlers if this class matches any of them
+            foreach(self::$handlers as $handler)
+            {
+                if( $handler->match($class) )
+                {
+                    $file = $handler->$class;
+                }
+            }
+        }
+
+        $file .= '.php';
 
         // to prevent from ugly error messages from PHP
         if( !file_exists($config['directories.classes'] . $file) )
@@ -152,7 +149,7 @@ class OTSCMS
         // checks if module exists
         if( !file_exists($config['directories.modules'] . $module . '/' . $command . '.php') )
         {
-            Toolbox::redirect('index.php');
+            Toolbox::redirect('/');
         }
 
         // runs module
@@ -160,7 +157,7 @@ class OTSCMS
     }
 
     // runs system
-    public static function run($module = false, $command = false)
+    public static function run()
     {
         // allows to use session and cookies calls without care of output
         ob_start();
@@ -343,7 +340,7 @@ class OTSCMS
             }
 
             // loads startup module
-            self::call($module ? $module : ( InputData::read('module') ? basename( InputData::read('module') ) : $config['default.module']), $command ? $command : ( InputData::read('command') ? basename( InputData::read('command') ) : $config['default.command']) );
+            self::call( InputData::read('module'), InputData::read('command') );
         }
         // access deny exception
         catch(NoAccessException $error)
@@ -351,7 +348,7 @@ class OTSCMS
             // not-logged users may just need to log-in to receive access
             if(!User::$logged)
             {
-                Toolbox::redirect('account.php?command=login');
+                Toolbox::redirect('/account');
             }
 
             // logs exception

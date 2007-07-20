@@ -19,18 +19,41 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// loads system configuration
-include('config.php');
+/*
+    Friendly URL data handler.
+*/
 
-// loads system core
-include($config['directories']['classes'] . 'OTSCMS.php');
+class InputData
+{
+    // URL data
+    private static $data = array();
 
-// default startup
-$config = OTSCMS::getResource('Config');
-$config['default.module'] = 'Forum';
-$config['default.command'] = 'board';
+    // initiates URL data
+    public static function init()
+    {
+        $url = new CMS_URL($_REQUEST['run']);
 
-// starts system
-OTSCMS::run();
+        // creates real query
+        parse_str( preg_replace('#' . $url['name'] . '#', $url['content'], $_REQUEST['run']), $data);
+
+        // saves current variables
+        self::$data = array_merge($data, $_REQUEST);
+    }
+
+    // returns HTTP data variable
+    public static function read($name)
+    {
+        return self::$data[$name];
+    }
+
+    // sets new value for given input variable
+    public static function write($name, $value)
+    {
+        self::$data[$name] = $value;
+    }
+}
+
+// startup initialization
+InputData::init();
 
 ?>

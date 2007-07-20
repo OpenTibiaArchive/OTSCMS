@@ -30,7 +30,7 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($member['guild_id'], User::$numb
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'guild.php?command=update&id=' . $member['id'];
+$form['action'] = '/admin/module=Guilds&command=update&id=' . $member['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
 $form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Guilds.EditCharacter'], $member['name']);

@@ -24,7 +24,7 @@ $player = new OTS_Player( (int) InputData::read('id') );
 
 // creates edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'admin.php?module=Character&command=update&id=' . $player['id'];
+$form['action'] = '/admin/module=Character&command=update&id=' . $player['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
 // edition fields

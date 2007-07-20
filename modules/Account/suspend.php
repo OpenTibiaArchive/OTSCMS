@@ -23,6 +23,6 @@
 $db->exec('DELETE FROM {accounts} WHERE `id` = ' . User::$number);
 
 // redirects to logout page
-Toolbox::redirect('account.php?userlogout=1');
+Toolbox::redirect('/logout');
 
 ?>

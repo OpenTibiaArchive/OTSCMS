@@ -24,7 +24,7 @@ $account = new OTS_Account( (int) InputData::read('id') );
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = 'admin.php?module=Account&command=update&id=' . $account['id'];
+$form['action'] = '/admin/module=Account&command=update&id=' . $account['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
 // form fields

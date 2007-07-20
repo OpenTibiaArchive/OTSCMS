@@ -45,6 +45,6 @@ foreach( $spells->getElementsByTagName('*') as $spell)
 
 // puts spells into template
 $list['list'] = $temp;
-$list['link'] = '/Spell/';
+$list['link'] = '/spells/';
 
 ?>

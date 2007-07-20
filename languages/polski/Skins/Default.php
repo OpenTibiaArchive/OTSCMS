@@ -32,10 +32,10 @@ return array(
     'cookies' => 'Zapamiętaj mnie (ciasteczka)',
     'logIn' => 'Loguj',
     'register' => 'Jeszcze nie masz konta?<br />
-    <a href="account.php?command=signup">Kliknij tutaj</a> aby się zarejestrować.<br />
+    <a href="/signup">Kliknij tutaj</a> aby się zarejestrować.<br />
     <br />
     Zapomniałeś hasła?<br />
-    Zmień na nowe <a href="account.php?command=forgot">tutaj</a>.',
+    Zmień na nowe <a href="/password/forgot">tutaj</a>.',
     'SuspendConfirm' => 'Czy na pewno chcesz się pozbyć tego konta wraz ze wszystkimi jego postaciami NATYCHMIAST i NIEODWRACALNIE?',
 );
 
