@@ -192,7 +192,7 @@ class Toolbox
             if( substr($string, 0, strlen($language) + 4) == '__' . $language . '__')
             {
                 // 've found it
-                return substr($string, strlen($language) + 4);
+                return nl2br( substr($string, strlen($language) + 4) );
             }
         }
     }
