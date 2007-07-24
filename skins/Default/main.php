@@ -148,7 +148,7 @@ Language[14] = "<?php echo $language['Modules.Account.PleaseEMail']; ?>";
     &nbsp;&nbsp;.: <a href="/inbox" style="font-weight: bold;"><?php echo $language['Skins.Default.Inbox']; ?></a> :.<br />
     <?php endif; ?>
     &nbsp;&nbsp;.: <a href="/account"><?php echo $language['main.menu.Account.Manage']; ?></a> :.<br />
-    &nbsp;&nbsp;.: <a href="/characters/insert"><?php echo $language['main.menu.Account.Character']; ?></a> :.<br />
+    &nbsp;&nbsp;.: <a href="/characters/create"><?php echo $language['main.menu.Account.Character']; ?></a> :.<br />
     &nbsp;&nbsp;.: <a href="/logout"><?php echo $language['Skins.Default.Logout']; ?></a> :.<br />
     &nbsp;&nbsp;.: <a href="/account/suspend" style="color: #FF0000;" onclick="return confirm('<?php echo $language['Skins.Default.SuspendConfirm']; ?>');"><?php echo $language['main.menu.Account.Suspend']; ?></a> :.
 <?php else: ?>
