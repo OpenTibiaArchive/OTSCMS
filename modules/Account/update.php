@@ -21,15 +21,16 @@
 
 // loads HTTP data in correct order
 $account = InputData::read('account');
-$row = new OTS_Account( (int) InputData::read('id') );
+$row = POT::getInstance()->createObject('Account');
+$row->load( InputData::read('id') );
 
-$row['email'] = $account['email'];
-$row['premdays'] = $account['premdays'];
+$row->setEMail($account['email']);
+$row->setPACCDays($account['premdays']);
 
 // checks if new password is set
 if( trim($account['password']) )
 {
-    $row['password'] = $config['system.use_md5'] ? md5($account['password']) : $account['password'];
+    $row->setPassword($config['system.use_md5'] ? md5($account['password']) : $account['password']);
 }
 
 $row->save();

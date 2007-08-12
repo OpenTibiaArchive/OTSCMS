@@ -230,7 +230,10 @@ if( User::hasAccess(3) )
 <?php endforeach; ?>
             </div>
             <div id="pageFooter">
-                Powered by <a href="http://www.otscms.com/" class="outLink">OTSCMS</a> v <?php echo $config['version']; ?>; Copyright &copy; 2005 - 2007 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.
+                Powered by <a href="http://www.otscms.com/" class="outLink">OTSCMS</a> v <?php echo $config['version']; ?>; Copyright &copy; 2005 - 2007 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.<br />
+<a class="outLink" href="http://www.otserv-aac.info/pot/">
+    <img alt="This site was smoked" src="http://www.otserv-aac.info/pot.png"/>
+</a>
             </div>
         </div>
     </body>

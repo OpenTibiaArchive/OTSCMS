@@ -42,56 +42,35 @@ if($used['count'])
     return;
 }
 
-$min = $config['system.min_number'];
-$max = $config['system.max_number'];
+$account = POT::getInstance()->createObject('Account');
 
 // generates random account number
-$random = rand($min, $max);
-$number = $random;
-
-// reads already existing accounts
-$exist = Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, 1 AS `value` FROM {accounts}') );
-
-// finds unused number
-while(true)
+try
 {
-    // unused - found
-    if( !isset($exist[$number]) )
-    {
-        break;
-    }
-
-    // used - next one
-    $number++;
-
-    // we need to re-set
-    if($number > $max)
-    {
-        $number = $min;
-    }
-
-    // we checked all possibilities
-    if($number == $random)
+    $number = $account->create($config['system.min_number'], $config['system.max_number']);
+}
+catch(Exception $e)
+{
+    // no free numbers
+    if( $e->getMessage() == 'No free account number are available.')
     {
         throw new HandledException('OutOfNumbers');
+    }
+    // we don't know what is it at the moment
+    else
+    {
+        throw $e;
     }
 }
 
 // generates random password
 $password = substr( md5( uniqid( rand(), true) ), 1, 8);
 
-// creates new account
-$account = new OTS_Account();
-$account->create($number);
-
 // sets all info
-$account['password'] = $config['system.use_md5'] ? md5($password) : $password;
-$account['email'] = $email;
-$account['blocked'] = 0;
-$account['premdays'] = 0;
-$account['signature'] = '';
-$account['website'] = '';
-$account['avatar'] = '';
+$account->unblock();
+$account->setPassword($config['system.use_md5'] ? md5($password) : $password);
+$account->setEMail($email);
+$account->setPACCDays(0);
 $account->save();
 
 $root = XMLToolbox::createDocumentFragment();

@@ -60,17 +60,15 @@ if( !empty($user['avatar']) )
 }
 
 // updates profile
-$profile = new OTS_Account(User::$number);
-$profile['signature'] = $user['signature'];
-$profile['website'] = $user['website'];
+$profile = $db->prepare('UPDATE {accounts} SET `signature` = :signature, `website` = :website WHERE `id` = :id');
+$profile->execute( array(':signature' => $user['signature'], ':website' => $user['website']) );
 
 // if avatar was fine
 if( !isset($message) )
 {
-    $profile['avatar'] = $user['avatar'];
+    $avatar = $db->prepare('UPDATE {accounts} SET `avatar` = :avatar WHERE `id` = :id');
+    $avatar->execute( array(':avatar' => $user['avatar']) );
 }
-
-$profile->save();
 
 // displays text so the user could see that it succeeded
 $message = $template->createComponent('Message');

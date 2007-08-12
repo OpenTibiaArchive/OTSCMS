@@ -32,10 +32,11 @@ if( !preg_match('/^[a-z ]+$/i', $name) )
 if( isset($name) )
 {
     // gets character informations from database
-    $character = new OTS_Player($name);
+    $character = POT::getInstance()->createObject('Player');
+    $character->find($name);
 
     // checks if player exists
-    if(!$character['id'])
+    if( !$character->isLoaded() )
     {
         $message = $template->createComponent('Message');
         $message['message'] = $language['Modules.Character.NoCharacterText'];
@@ -51,11 +52,11 @@ if( isset($name) )
     $table = $template->createComponent('TableData');
     $table['caption'] = $language['Modules.Character.CharacterData'];
 
-    $data = array($language['Modules.Character.Name'] => $character['name'], $language['Modules.Character.Gender'] => $language['main.gender' . $character['sex'] ], $language['Modules.Character.Vocation'] => $language['main.vocation' . $character['vocation'] ], $language['Modules.Character.Experience'] => $character['experience'], $language['Modules.Character.Level'] => $character['level'], $language['Modules.Character.MagicLevel'] => $character['maglevel'],
-    $language['Modules.Character.City'] => $spawns[ $character['town_id'] ]);
+    $data = array($language['Modules.Character.Name'] => $character->getName(), $language['Modules.Character.Gender'] => $language['main.gender' . $character->getSex() ], $language['Modules.Character.Vocation'] => $language['main.vocation' . $character->getVocation() ], $language['Modules.Character.Experience'] => $character->getExperience(), $language['Modules.Character.Level'] => $character->getLevel(), $language['Modules.Character.MagicLevel'] => $character->getMagLevel(),
+    $language['Modules.Character.City'] => $spawns[ $character->getTownId() ]);
 
     // house
-    $house = $db->query('SELECT `id` FROM {houses} WHERE `owner` = ' . $character['id'])->fetch();
+    $house = $db->query('SELECT `id` FROM {houses} WHERE `owner` = ' . $character->getId() )->fetch();
 
     if( !empty($house) )
     {
@@ -74,13 +75,14 @@ if( isset($name) )
     }
 
     // reads guild information if there is any
-    if($character['rank_id'])
+    $rank = $character->getRankId();
+    if($rank)
     {
         // for guilds link
         $root = XMLToolbox::createDocumentFragment();
         $a = XMLToolbox::createElement('a');
 
-        $guild = $db->query('SELECT {guilds}.`id` AS `id`, {guilds}.`name` AS `name`, {guild_ranks}.`name` AS `rank` FROM {guilds}, {guild_ranks} WHERE {guilds}.`id` = {guild_ranks}.`guild_id` AND {guild_ranks}.`id` = ' . $character['rank_id'])->fetch();
+        $guild = $db->query('SELECT {guilds}.`id` AS `id`, {guilds}.`name` AS `name`, {guild_ranks}.`name` AS `rank` FROM {guilds}, {guild_ranks} WHERE {guilds}.`id` = {guild_ranks}.`guild_id` AND {guild_ranks}.`id` = ' . $rank)->fetch();
 
         $a->setAttribute('href', '/guilds/' . $guild['id']);
         $a->addContent($guild['name']);
@@ -91,10 +93,11 @@ if( isset($name) )
     }
 
     // last login time
-    $data[ $language['Modules.Character.LastLogin'] ] = date($config['site.date_format'], $character['lastlogin']);
+    $data[ $language['Modules.Character.LastLogin'] ] = date($config['site.date_format'], $character->getLastLogin() );
 
     // forum profile part
-    $profile = new OTS_Account($character['account_id']);
+    $account = $character->getAccount();
+    $profile = $db->query('SELECT `signature`, `avatar`, `website` FROM {accounts} WHERE `id` = ' . $account->getId() )->fetch();
 
     // parses BB code and then loads it into XML tree
     if( !empty($profile['signature']) )
@@ -121,19 +124,28 @@ if( isset($name) )
     }
 
     // character comment
-    if($character['comment'])
+    $comment = $db->query('SELECT `comment` FROM {players} WHERE `id` = ' . $character->getId() )->fetch();
+    if( !empty($comment['comment']) )
     {
-        $data[ $language['Modules.Character.Comment'] ] = $character['comment'];
+        $data[ $language['Modules.Character.Comment'] ] = $comment['comment'];
     }
 
     $table['data'] = $data;
 
     // PM link
     $link = $template->createComponent('Links');
-    $link['links'] = array( array('link' => '/characters/' . urlencode($character['name']) . '/message', 'label' => $language['Modules.Account.PMSubmit']) );
+    $link['links'] = array( array('link' => '/characters/' . urlencode( $character->getName() ) . '/message', 'label' => $language['Modules.Account.PMSubmit']) );
 
     // other characters list
-    $others = Toolbox::dumpRecords( $db->query('SELECT `name` AS `key`, `name` AS `value` FROM {players} WHERE `account_id` = ' . $character['account_id'] . ' AND `id` != ' . $character['id']) );
+    $others = array();
+    foreach( $account->getPlayers() as $other)
+    {
+        // checks if it's not current player
+        if( $character->getId() != $other->getId() )
+        {
+            $others[ $other->getName() ] = $other->getName();
+        }
+    }
 
     if( !empty($others) )
     {

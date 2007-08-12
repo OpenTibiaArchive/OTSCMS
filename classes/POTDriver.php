@@ -19,30 +19,24 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// loads player info
-$player = POT::getInstance()->createObject('Player');
-$player->load( InputData::read('id') );
-$rank = new OTS_GuildRank( $player->getRankId() );
+/*
+    POT classes loading.
+*/
 
-// if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($rank['guild_id'], User::$number) < 2)
+class POTDriver implements AutoloadDriver
 {
-    throw new NoAccessException();
+    // checks if given class is a component
+    public function match($class)
+    {
+        $config = OTSCMS::getResource('Config');
+        return (bool) ( preg_match('/^I?OTS_/', $class) && file_exists($config['directories.classes'] . 'POT/' . $class . '.php') );
+    }
+
+    // returns component file path
+    public function __get($class)
+    {
+        return 'POT/' . $class;
+    }
 }
-
-// checks user rank if he is not a leader
-if($rank['level'] == 3)
-{
-    throw new NoAccessException();
-}
-
-// kick user out
-$player->setRankId(0);
-$player->setGuildNick('');
-$player->save();
-
-// moves to guild page
-InputData::write('id', $rank['guild_id']);
-OTSCMS::call('Guilds', 'display');
 
 ?>

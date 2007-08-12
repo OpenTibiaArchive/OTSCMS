@@ -20,28 +20,26 @@
 */
 
 // gets number from URL or form
-$account = new OTS_Account( (int) InputData::read('id') );
+$account = POT::getInstance()->createObject('Account');
+$account->load( InputData::read('id') );
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Account&command=update&id=' . $account['id'];
+$form['action'] = '/admin/module=Account&command=update&id=' . $account->getId();
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
 // form fields
-$form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Account.AccountNumber'], $account['id']);
-$form->addField('account[email]', ComponentAdminForm::FieldText, $language['Modules.Account.EMail'], $account['email']);
-$form->addField('account[password]', ComponentAdminForm::FieldText, $language['Modules.Account.Password'], $config['system.use_md5'] ? '' : $account['password']);
-$form->addField('account[premdays]', ComponentAdminForm::FieldText, $language['Modules.Account.Premium'], $account['premdays']);
-
-// for AJAX compatibility - in future
-$form['data'] = $account;
+$form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Account.AccountNumber'], $account->getId() );
+$form->addField('account[email]', ComponentAdminForm::FieldText, $language['Modules.Account.EMail'], $account->getEMail() );
+$form->addField('account[password]', ComponentAdminForm::FieldText, $language['Modules.Account.Password'], $config['system.use_md5'] ? '' : $account->getPassword() );
+$form->addField('account[premdays]', ComponentAdminForm::FieldText, $language['Modules.Account.Premium'], $account->getPACCDats() );
 
 $characters = array();
 
 // reads account's characters
-foreach( $db->query('SELECT {players}.`name` AS `name`, {groups}.`name` AS `group` FROM {players}, {groups} WHERE {players}.`group_id` = {groups}.`id` AND {players}.`account_id` = ' . $account['id']) as $character)
+foreach( $account->getPlayers() as $character)
 {
-    $characters[] = $character['name'] . ' (' . $character['group'] . ')';
+    $characters[] = $character->getName() . ' (' . $character->getGroup()->getName() . ')';
 }
 
 $list = $template->createComponent('ItemsList');

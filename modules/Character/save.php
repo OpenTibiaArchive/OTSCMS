@@ -22,10 +22,11 @@
 // loads data in correct order
 $character = InputData::read('character');
 
-$row = new OTS_Player( (int) InputData::read('id') );
+$row = POT::getInstance()->createObject('Player');
+$row->load( InputData::read('id') );
 
-// checks if the character that user wants to edit is his/het
-if($row['account_id'] != User::$number)
+// checks if the character that user wants to edit is his/her
+if( !$row->isLoaded() || $row->getAccount()->getId() != User::$number)
 {
     throw new HandledException('NotOwner');
 }

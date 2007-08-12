@@ -20,7 +20,8 @@
 */
 
 $id = (int) InputData::read('id');
-$player = new OTS_Player( (string) InputData::read('character') );
+$player = POT::getInstance()->createObject('Player');
+$player->find( InputData::read('character') );
 
 // if not a gamemaster checks if user is a leader
 if( !User::hasAccess(3) && Toolbox::guildAccess($id, User::$number) < 2)
@@ -28,11 +29,15 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($id, User::$number) < 2)
     throw new NoAccessException();
 }
 
-// saves new invitation
-$invite = new CMS_Invite();
-$invite['name'] = $player['id'];
-$invite['content'] = $id;
-$invite->save();
+// check if player exists
+if( $player->isLoaded() )
+{
+    // saves new invitation
+    $invite = new CMS_Invite();
+    $invite['name'] = $player->getId();
+    $invite['content'] = $id;
+    $invite->save();
+}
 
 // moves to guilds list
 OTSCMS::call('Guilds', 'display');

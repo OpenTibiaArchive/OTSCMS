@@ -19,6 +19,8 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+$ots = POT::getInstance();
+
 // checks characters limit
 $count = $db->query('SELECT COUNT(`id`) AS `count` FROM {players} WHERE `account_id` = ' . User::$number)->fetch();
 if($count['count'] >= $config['system.account_limit'])
@@ -70,33 +72,30 @@ if($count['count'])
     throw new HandledException('NameUsed');
 }
 
+$account = $ots->createObject('Account');
+$account->load(User::$number);
+$group = $ots->createObject('Group');
+$group->load($system['default_group']);
+
 // composes new player record
-$player = new OTS_Player();
-$player['name'] = $character['name'];
-$player['account_id'] = User::$number;
-$player['group_id'] = $system['default_group'];
-$player['sex'] = $character['sex'];
-$player['vocation'] = $character['vocation'];
-$player['comment'] = '';
-$player['posx'] = 0;
-$player['posy'] = 0;
-$player['posz'] = 0;
-$player['lastlogin'] = 0;
-$player['lastip'] = 0;
-$player['save'] = 1;
-$player['conditions'] = 0;
-$player['redskulltime'] = 0;
-$player['redskull'] = 0;
-$player['guildnick'] = '';
-$player['rank_id'] = 0;
-$player['lookaddons'] = 0;
-$player['town_id'] = $system['rook']['enabled'] ? $system['rook']['id'] : $character['town'];
+$player = $ots->createObject('Player');
+$player->setName($character['name']);
+$player->setAccount($account);
+$player->setGroup($group);
+$player->setSex($character['sex']);
+$player->setVocation($character['vocation']);
+$player->setConditions(0);
+$player->setRankId(0);
+$player->setLookAddons(0);
+$player->setTownId($system['rook']['enabled'] ? $system['rook']['id'] : $character['town']);
 
 // prepared query for reading profile
 $read = $db->prepare('SELECT `id`, `name`, `skill0`, `skill1`, `skill2`, `skill3`, `skill4`, `skill5`, `skill6`, `health`, `healthmax`, `direction`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `cap`, `food`, `loss_experience`, `loss_mana`, `loss_skills` FROM [profiles] WHERE `name` = :name');
 
 // reads deafult character profile
 $profile = new CMS_Profile('*.*');
+$sex = $player->getSex();
+$vocation = $player->getVocation();
 
 // reads default equipment
 $list = array();
@@ -109,7 +108,7 @@ if( is_array($profile) )
 }
 
 // reads profile for gender
-$gender = new CMS_Profile($player['sex'] . '.*');
+$gender = new CMS_Profile($sex . '.*');
 
 // overwrites default profile settings
 if( is_array($gender) )
@@ -139,7 +138,7 @@ if($gender['id'])
 }
 
 // reads profile for vocation
-$profession = new CMS_Profile('*.' . $player['vocation']);
+$profession = new CMS_Profile('*.' . $vocation);
 
 // overwrites profile settings
 if( is_array($profession) )
@@ -169,7 +168,7 @@ if($profession['id'])
 }
 
 // reads detailed profile
-$detail = new CMS_Profile($player['sex'] . '.' . $player['vocation']);
+$detail = new CMS_Profile($sex . '.' . $vocation);
 
 // creates final profile
 if( is_array($detail) )
@@ -215,30 +214,30 @@ foreach($profile as $key => $value)
 }
 
 // continues player data inserting from profile
-$player['experience'] = $profile['experience'];
-$player['level'] = $level;
-$player['maglevel'] = $profile['maglevel'];
-$player['health'] = $profile['health'];
-$player['healthmax'] = $profile['healthmax'];
-$player['mana'] = $profile['mana'];
-$player['manamax'] = $profile['manamax'];
-$player['manaspent'] = $profile['manaspent'];
-$player['soul'] = $profile['soul'];
-$player['direction'] = $profile['direction'];
-$player['lookbody'] = $profile['lookbody'];
-$player['lookfeet'] = $profile['lookfeet'];
-$player['lookhead'] = $profile['lookhead'];
-$player['looklegs'] = $profile['looklegs'];
-$player['looktype'] = $profile['looktype'];
-$player['cap'] = $profile['cap'];
-$player['loss_experience'] = $profile['loss_experience'];
-$player['loss_mana'] = $profile['loss_mana'];
-$player['loss_skills'] = $profile['loss_skills'];
+$player->setExperience($profile['experience']);
+$player->setLevel($level);
+$player->setMagLevel($profile['maglevel']);
+$player->setHealth($profile['health']);
+$player->setHealthMax($profile['healthmax']);
+$player->setMana($profile['mana']);
+$player->setManaMax($profile['manamax']);
+$player->setManaSpent($profile['manaspent']);
+$player->setSoul($profile['soul']);
+$player->setDirection($profile['direction']);
+$player->setLookBody($profile['lookbody']);
+$player->setLookFeet($profile['lookfeet']);
+$player->setLookHead($profile['lookhead']);
+$player->setLookLegs($profile['looklegs']);
+$player->setLookType($profile['looktype']);
+$player->setCap($profile['cap']);
+$player->setLossExperience($profile['loss_experience']);
+$player->setLossMana($profile['loss_mana']);
+$player->setLossSkills($profile['loss_skills']);
 
 // saves record
 $player->save();
 
-$skill = $db->prepare('UPDATE {player_skills} SET `value` = :value WHERE `player_id` = ' . $player['id'] . ' AND `skillid` = :skillid');
+$skill = $db->prepare('UPDATE {player_skills} SET `value` = :value WHERE `player_id` = ' . $player->getId() . ' AND `skillid` = :skillid');
 
 // skill vlaues
 $skill->execute( array(':value' => (int) $profile['skill0'], ':skillid' => 0) );
@@ -283,7 +282,7 @@ foreach($list as $container)
 ksort($items);
 ksort($depots);
 
-$insert = $db->prepare('INSERT INTO {player_items} (`player_id`, `sid`, `pid`, `itemtype`, `count`) VALUES (' . $player['id'] . ', :sid, :pid, :itemtype, :count)');
+$insert = $db->prepare('INSERT INTO {player_items} (`player_id`, `sid`, `pid`, `itemtype`, `count`) VALUES (' . $player->getId() . ', :sid, :pid, :itemtype, :count)');
 $pids = array(0 => 1, 1 => 2, 2 => 3, 3 => 4, 4 => 5, 5 => 6, 6 => 7, 7 => 8, 8 => 9, 9 => 10);
 $sid = 10;
 
@@ -294,7 +293,7 @@ foreach($items as $item)
     $pids[ $item['id'] ] = $sid;
 }
 
-$insert = $db->prepare('INSERT INTO {player_depotitems} (`player_id`, `depotid`, `sid`, `pid`, `itemtype`, `count`) VALUES (' . $player['id'] . ', :depotid, :sid, :pid, :itemtype, :count)');
+$insert = $db->prepare('INSERT INTO {player_depotitems} (`player_id`, `depotid`, `sid`, `pid`, `itemtype`, `count`) VALUES (' . $player->getId() . ', :depotid, :sid, :pid, :itemtype, :count)');
 $pids = array();
 $sid = 201 + $system['depots']['count'];
 

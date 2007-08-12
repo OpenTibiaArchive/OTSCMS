@@ -34,8 +34,9 @@ if(($config['system.md5'] ? md5($oldpassword) : $oldpassword) != Session::read('
 $newpassword = $config['system.md5'] ? md5($newpassword) : $newpassword;
 
 // updates password
-$account = new OTS_Account(User::$number);
-$account['password'] = $newpassword;
+$account = POT::getInstance()->createObject('Account');
+$account->load(User::$number);
+$account->setPassword($newpassword);
 $account->save();
 
 // and session so the user doesn't have to relog

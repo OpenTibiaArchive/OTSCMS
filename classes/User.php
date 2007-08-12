@@ -33,29 +33,30 @@ class User
     protected static $access = -1;
 
     // logs user in
-    public static function login($account, $password)
+    public static function login($number, $password)
     {
         // reading account information from SQL
-        $account = new OTS_Account($account);
+        $account = POT::getInstance()->createObject('Account');
+        $account->load($number);
 
         // checks password
-        if($password != $account['password'])
+        if( !$account->isLoaded() || $password != $account->getPassword() )
         {
             throw new HandledException('WrongPassword');
         }
 
         // checks if account is active
-        if($account['blocked'])
+        if( $account->isBlocked() )
         {
             throw new HandledException('AccountBlocked');
         }
 
         // reads highest access level
-        $maxAccess = OTSCMS::getResource('DB')->query('SELECT MAX({groups}.`access`) AS `access` FROM {players}, {groups} WHERE {players}.`account_id` = ' . (int) $account['id'] . ' AND {players}.`group_id` = {groups}.`id`')->fetch();
+        $maxAccess = OTSCMS::getResource('DB')->query('SELECT MAX({groups}.`access`) AS `access` FROM {players}, {groups} WHERE {players}.`account_id` = ' . $account->getId() . ' AND {players}.`group_id` = {groups}.`id`')->fetch();
 
         // sets user information
         self::$logged = true;
-        self::$number = $account['id'];
+        self::$number = $account->getId();
         self::$access = $maxAccess['access'];
 
         // default 0 access for logged player without characters

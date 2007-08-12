@@ -20,19 +20,22 @@
 */
 
 // loads data in correct order
-$character = new OTS_Player( (int) InputData::read('id') );
+$character = POT::getInstance()->createObject('Player');
+$character->load( InputData::read('id') );
 
-// checks if the character that user wants to edit is his/het
-if($character['account_id'] != User::$number)
+// checks if the character that user wants to edit is his/her
+if( !$character->isLoaded() || $character->getAccount()->getId() != User::$number)
 {
     throw new HandledException('NotOwner');
 }
 
+$comment = $db->query('SELECT `comment` FROM {players} WHERE `id` = ' . $character->getId() );
+
 // comment edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/characters/' . $character['id'] . '/save';
+$form['action'] = '/characters/' . $character->getId() . '/save';
 $form['submit'] = $language['Modules.Character.ChangeSubmit'];
-$form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Character.Name'], $character['name']);
-$form->addField('character[comment]', ComponentAdminForm::FieldArea, $language['Modules.Character.Comment'], $character['comment']);
+$form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Character.Name'], $character->getName() );
+$form->addField('character[comment]', ComponentAdminForm::FieldArea, $language['Modules.Character.Comment'], $comment['comment']);
 
 ?>

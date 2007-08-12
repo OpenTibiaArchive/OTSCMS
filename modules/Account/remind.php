@@ -20,12 +20,13 @@
 */
 
 // loads HTTP data in correct order
-$account = new OTS_Account( (int) InputData::read('number') );
+$account = POT::getInstance()->createObject('Account');
+$account->load( InputData::read('number') );
 
 $message = $template->createComponent('Message');
 
 // checks if this e-mail was used for given account
-if($account['email'] != trim( InputData::read('email') ) )
+if( $account->getEMail() != trim( InputData::read('email') ) )
 {
     $message['message'] = $language['Modules.Account.RemindMail_MissMatch'];
 }
@@ -35,12 +36,12 @@ else
     if($config['system.use_md5'])
     {
         $password = substr( md5( uniqid( rand(), true) ), 1, 8);
-        $account['password'] = md5($password);
+        $account->setPassword( md5($password) );
         $account->save();
     }
     else
     {
-        $password = $account['password'];
+        $password = $account->getPassword();
     }
 
     // sends password
@@ -48,7 +49,7 @@ else
     {
         try
         {
-            Mail::send($account['email'], $language['Modules.Account.RemindMail_Title'], $language['Modules.Account.SignupMail_Content'] . ': '.$password);
+            Mail::send( $account->getEMail(), $language['Modules.Account.RemindMail_Title'], $language['Modules.Account.SignupMail_Content'] . ': '.$password);
             $message['place'] = $language['Modules.Account.SignupMail_Sent'];
         }
         // if failed then tell user about it

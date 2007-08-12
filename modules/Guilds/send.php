@@ -20,17 +20,18 @@
 */
 
 // loads character id
-$player = new OTS_Player( (int) InputData::read('character') );
+$player = POT::getInstance()->createObject('Player');
+$player->load( InputData::read('character') );
 
 // checks if it's current user's character
-if($player['account_id'] != User::$number)
+if( !$player->isLoaded() || $player->getAccount()->getId() != User::$number)
 {
     throw new HandledException('NotOwner');
 }
 
 // saves request
 $request = new CMS_Request();
-$request['name'] = $player['id'];
+$request['name'] = $player->getId();
 $request['content'] = (int) InputData::read('id');
 $request->save();
 

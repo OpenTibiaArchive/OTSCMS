@@ -19,14 +19,18 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+$ots = POT::getInstance();
+
 $pm = InputData::read('bb');
 
 // loads characters
-$from = new OTS_Player($pm['from']);
-$to = new OTS_Player($pm['to']);
+$from = $ots->createObject('Player');
+$from->find($pm['from']);
+$to = $ots->createObject('Player');
+$to->find($pm['to']);
 
 // couldn't find character(s), or message addressed to author-self
-if(!($from['account_id'] && $to['account_id']) || $from['account_id'] == $to['account_id'])
+if(!( $from->isLoaded() && $to->isLoaded() ) || $from->getAccount()->getId() == $to->getAccount()->getId() )
 {
     $message = $template->createComponent('PM');
     $message['message'] = $language['Modules.PM.Error'];
@@ -34,7 +38,7 @@ if(!($from['account_id'] && $to['account_id']) || $from['account_id'] == $to['ac
 }
 
 // author doesn't belong to user
-if($from['account_id'] != User::$number)
+if( $from->getAccount()->getId() != User::$number)
 {
     throw new NoAccessException();
 }

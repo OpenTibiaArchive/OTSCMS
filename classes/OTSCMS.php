@@ -40,6 +40,10 @@ class OTSCMS
 
         // sets database driver
         self::setDriver('SQL', $config['db.type']);
+
+        // POT inclusion
+        self::setDriver('POT', 'POT/OTS');
+        self::addAutoloadDriver( new POTDriver() );
     }
 
     // handles critical exceptions
@@ -167,6 +171,13 @@ class OTSCMS
 
         // database connection
         $db = $config['db'];
+
+        // POT initialization
+        $driver = array('MySQL' => POT::DB_MYSQL, 'SQLite', POT::DB_SQLITE);
+        $db['driver'] = $driver[ $db['type'] ];
+        $db['prefix'] = $db['ots_prefix'];
+        POT::getInstance()->connect(null, $db);
+
         $db = new SQL($db['host'], $db['user'], $db['password'], $db['database'], $db['cms_prefix'], $db['ots_prefix']);
         self::setResource('DB', $db);
 

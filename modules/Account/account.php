@@ -32,12 +32,13 @@ $template->addJavaScript('character');
 $template->addJavaScript('user');
 
 // reads account information
-$account = new OTS_Account(User::$number);
+$account = POT::getInstance()->createObject('Account');
+$account->load(User::$number);
 
 // account metainfo table
 $data = $template->createComponent('TableData');
 $data['caption'] = $language['Modules.Account.AccountData'];
-$data['data'] = array($language['Modules.Account.AccountNumber'] => $account['id'], $language['Modules.Account.Premium'] => $account['premdays']);
+$data['data'] = array($language['Modules.Account.AccountNumber'] => $account->getId(), $language['Modules.Account.Premium'] => $account->getPACCDays() );
 
 // password change form
 $form = $template->createComponent('AdminForm');
@@ -55,10 +56,12 @@ $profile['action'] = '/account/save';
 $profile['submit'] = $language['main.admin.UpdateSubmit'];
 $profile['id'] = 'userForm';
 
+$fields = $db->query('SELECT `signature`, `avatar`, `website` FROM {accounts} WHERE `id` = ' . $account->getId() )->fetch();
+
 // form fields
-$profile->addField('user[signature]', ComponentAdminForm::FieldArea, $language['Modules.Account.Signature'], $account['signature']);
-$profile->addField('user[avatar]', ComponentAdminForm::FieldText, $language['Modules.Account.Avatar'], $account['avatar']);
-$profile->addField('user[website]', ComponentAdminForm::FieldText, $language['Modules.Account.Website'], $account['website']);
+$profile->addField('user[signature]', ComponentAdminForm::FieldArea, $language['Modules.Account.Signature'], $fields['signature']);
+$profile->addField('user[avatar]', ComponentAdminForm::FieldText, $language['Modules.Account.Avatar'], $fields['avatar']);
+$profile->addField('user[website]', ComponentAdminForm::FieldText, $language['Modules.Account.Website'], $fields['website']);
 
 // account characters
 $list = $template->createComponent('TableList');
@@ -69,7 +72,7 @@ $list->idPrefix = 'characterID_';
 
 $characters = array();
 
-foreach( $db->query('SELECT `id`, `name` FROM {players} WHERE `account_id` = ' . $account['id']) as $character)
+foreach( $db->query('SELECT `id`, `name` FROM {players} WHERE `account_id` = ' . $account->getId() ) as $character)
 {
     // actions links
     $root = XMLToolbox::createDocumentFragment();

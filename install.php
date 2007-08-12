@@ -377,13 +377,9 @@ Mainly great thans to <b>Foziw</b> for the domain, <b>Invincible AznX</b> for ho
 
         $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTSCMS\', \'http://www.otscms.com/\')');
         $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTFans\', \'http://www.otfans.net/\')');
-        $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'ToDlaCiebie.net\', \'http://www.wrzasq.com/\')');
         $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTServ AAC\', \'http://www.otserv-aac.info/\')');
         $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'Open Tibia Server List\', \'http://www.otservlist.org/\')');
         $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTServ News\', \'http://www.otservnews.org/\')');
-        $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'Tibia Fans\', \'http://www.tibiafans.com/\')');
-        $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'Invincible Hosting\', \'http://www.invinciblehosting.com/\')');
-        $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'Save OTServ\', \'http://www.wrzasq.com/otserv/\')');
 
         $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Access.*\', 3)');
         $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.*\', 3)');

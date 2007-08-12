@@ -19,23 +19,28 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+$ots = POT::getInstance();
+
 // loads data from form
+$id = InputData::read('id');
 $player = InputData::read('player');
-$row = new OTS_Player( (int) InputData::read('id') );
+$row = $ots->createObject('Player');
+$row->load($id);
 
 // checks if the names are different
 // if not then we dont need to change anything
-if($player['name'] != $row['name'])
+if($player['name'] != $row->getName() )
 {
     // checks if the name isn't already used
-    $select = $db->prepare('SELECT COUNT(`id`) AS `count` FROM {players} WHERE `name` = :name');
-    $select->execute( array(':name' => $player['name']) );
-    $select = $select->fetch();
+    $row->find($player['name']);
 
-    if($select['count'])
+    if( $row->isLoaded() )
     {
         throw new HandledException('NameUsed');
     }
+
+    // re-loads current player
+    $row->load($id);
 }
 
 // finds experience level based on points
@@ -45,15 +50,22 @@ while(50 / 3 * pow($level + 1, 3) - 100 * pow($level + 1, 2) + (850 / 3) * ($lev
     $level++;
 }
 
+$account = $ots->createObject('Account');
+$account->load($player['account_id']);
+$group = $ots->createObject('Group');
+$group->load($player['group_id']);
+
 // updates character informations
-$row['name'] = $player['name'];
-$row['account_id'] = $player['account_id'];
-$row['group_id'] = $player['group_id'];
-$row['experience'] = $player['level'];
-$row['level'] = $player['level'];
-$row['maglevel'] = $player['maglevel'];
-$row['comment'] = $player['comment'];
+$row->setName($player['name']);
+$row->setAccount($account);
+$row->setGroup($group);
+$row->setExperience($player['experience']);
+$row->setLevel($player['level']);
+$row->setMagLevel($player['maglevel']);
 $row->save();
+
+$update = $db->prepare('UPDATE {players} SET `comment` = :comment WHERE `id` = :id');
+$update->execute( array(':comment' => $player['comment'], ':id' => $row->getId() ) );
 
 // there is nothing to display
 // redirects internaly to management page

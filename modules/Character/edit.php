@@ -20,22 +20,22 @@
 */
 
 // loads player fro edition
-$player = new OTS_Player( (int) InputData::read('id') );
+$player = POT::getInstance()->createObject('Player');
+$player->load( InputData::read('id') );
+
+$comment = $db->query('SELECT `comment` FROM {players} WHERE `id` = ' . $player->getId() );
 
 // creates edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Character&command=update&id=' . $player['id'];
+$form['action'] = '/admin/module=Character&command=update&id=' . $player->getId();
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
 // edition fields
-$form->addField('player[name]', ComponentAdminForm::FieldText, $language['Modules.Character.Name'], $player['name']);
-$form->addField('player[account_id]', ComponentAdminForm::FieldSelect, $language['Modules.Account.AccountNumber'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `id` AS `value` FROM {accounts}') ), 'selected' => $player['account_id']) );
-$form->addField('player[group_id]', ComponentAdminForm::FieldSelect, $language['Modules.Character.Group'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM {groups}') ), 'selected' => $player['group_id']) );
-$form->addField('player[experience]', ComponentAdminForm::FieldText, $language['Modules.Character.Experience'], $player['experience']);
-$form->addField('player[maglevel]', ComponentAdminForm::FieldText, $language['Modules.Character.MagicLevel'], $player['maglevel']);
-$form->addField('player[comment]', ComponentAdminForm::FieldArea, $language['Modules.Character.Comment'], $player['comment']);
-
-// for AJAX compatibility - in future
-$form['data'] = $player;
+$form->addField('player[name]', ComponentAdminForm::FieldText, $language['Modules.Character.Name'], $player->getName() );
+$form->addField('player[account_id]', ComponentAdminForm::FieldSelect, $language['Modules.Account.AccountNumber'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `id` AS `value` FROM {accounts}') ), 'selected' => $player->getAccount()->getId() ) );
+$form->addField('player[group_id]', ComponentAdminForm::FieldSelect, $language['Modules.Character.Group'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM {groups}') ), 'selected' => $player->getGroup()->getId() ) );
+$form->addField('player[experience]', ComponentAdminForm::FieldText, $language['Modules.Character.Experience'], $player->getExperience() );
+$form->addField('player[maglevel]', ComponentAdminForm::FieldText, $language['Modules.Character.MagicLevel'], $player->getMagLevel() );
+$form->addField('player[comment]', ComponentAdminForm::FieldArea, $language['Modules.Character.Comment'], $comment['comment']);
 
 ?>

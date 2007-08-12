@@ -21,8 +21,9 @@
 
 // pre-loads HTTP data
 $member = InputData::read('member');
-$player = new OTS_Player( (int) InputData::read('id') );
-$rank = new OTS_GuildRank($player['rank_id']);
+$player = POT::getInstance()->createObject('Player');
+$player->load( InputData::read('id') );
+$rank = new OTS_GuildRank( $player->getRankId() );
 $new = new OTS_GuildRank($member['rank_id']);
 
 // check if ranks are from same guild
@@ -40,8 +41,8 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($rank['guild_id'], User::$number
 }
 
 // updates member
-$player['rank_id'] = $member['rank_id'];
-$player['guildnick'] = $member['guildnick'];
+$player->setRankId($member['rank_id']);
+$player->setGuildNick($member['guildnick']);
 $player->save();
 
 // moves to guilds list

@@ -24,9 +24,10 @@
 $post = InputData::read('bb');
 
 // checks if the posted character belongs to user's account
-$author = new OTS_Player($post['from']);
+$author = POT::getInstance()->createObject('Player');
+$author->find($post['from']);
 
-if($author['account_id'] != User::$number)
+if( !$author->isLoaded() || $author->getAccount()->getId() != User::$number)
 {
     throw new HandledException('NotOwner');
 }
@@ -64,7 +65,7 @@ $insert['upperid'] = $post['upperid'];
 $insert['closed'] = 0;
 $insert['pinned'] = 0;
 $insert['content'] = $post['content'];
-$insert['poster'] = $author['id'];
+$insert['poster'] = $author->getId();
 $insert['date_time'] = time();
 
 // checks if there are any instructions from administrator to do with this topics

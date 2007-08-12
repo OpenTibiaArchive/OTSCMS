@@ -34,10 +34,11 @@ if($count['count'] > 0)
 }
 
 // loads creator data
-$player = new OTS_Player($guild['ownerid']);
+$player = POT::getInstance()->createObject('Player');
+$player->load($guild['ownerid']);
 
 // checks if user has controll over given character
-if($player['account_id'] != User::$number)
+if( !$player->isLoaded() || $player->getAccount()->getId() != User::$number)
 {
     throw new HandledException('NotOwner');
 }
@@ -45,7 +46,7 @@ if($player['account_id'] != User::$number)
 // creates guild
 $row = new OTS_Guild();
 $row['name'] = htmlspecialchars($guild['name']);
-$row['ownerid'] = $player['id'];
+$row['ownerid'] = $player->getId();
 $row['creationdata'] = time();
 $row->save();
 
@@ -53,7 +54,7 @@ $row->save();
 $rank = $db->query('SELECT `id` FROM {guild_ranks} WHERE `guild_id` = ' . $row['id'] . ' AND `name` = \'Leader\'')->fetch();
 
 // updates leader rank info
-$player['rank_id'] = $rank['id'];
+$player->getRankId() = $rank['id'];
 $player->save();
 
 // moves to just-created guild page

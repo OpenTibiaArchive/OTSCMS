@@ -20,18 +20,19 @@
 */
 
 // loads member
-$character = new OTS_Player( (int) InputData::read('id') );
+$character = POT::getInstance()->createObject('Player');
+$character->load( InputData::read('id') );
 
 // checks if member belongs to current account
-if($character['account_id'] != User::$number)
+if( !$character->isLoaded() || $character->getAccount()->getId() != User::$number)
 {
     throw new HandledException('NotOwner');
 }
 
-$guild = $db->query('SELECT {guilds}.`id` AS `id`, {guilds}.`ownerid` AS `ownerid` FROM {guilds}, {guild_ranks} WHERE {guilds}.`id` = {guild_ranks}.`guild_id` AND {guild_ranks}.`id` = ' . $character['rank_id'])->fetch();
+$guild = $db->query('SELECT {guilds}.`id` AS `id`, {guilds}.`ownerid` AS `ownerid` FROM {guilds}, {guild_ranks} WHERE {guilds}.`id` = {guild_ranks}.`guild_id` AND {guild_ranks}.`id` = ' . $character->getRankId() )->fetch();
 
 // checks if member is a leader
-if($guild['ownerid'] == $character['id'])
+if($guild['ownerid'] == $character->getId() )
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Guilds.CantLeave'];
@@ -39,8 +40,8 @@ if($guild['ownerid'] == $character['id'])
 }
 
 // clears membership data
-$character['guildnick'] = '';
-$character['rank_id'] = 0;
+$character->setGuildNick('');
+$character->setRankId(0);
 $character->save();
 
 // moves to guild page

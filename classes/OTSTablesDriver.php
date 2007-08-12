@@ -28,7 +28,8 @@ class OTSTablesDriver implements AutoloadDriver
     // checks if given class is a component
     public function match($class)
     {
-        return (bool) preg_match('/^OTS_/', $class);
+        $config = OTSCMS::getResource('Config');
+        return (bool) ( preg_match('/^OTS_/', $class) && !file_exists($config['directories.classes'] . 'POT/' . $class . '.php') );
     }
 
     // returns component file path

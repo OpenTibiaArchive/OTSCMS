@@ -20,8 +20,9 @@
 */
 
 // loads account
-$account = new OTS_Account( (int) InputData::read('id') );
-$account['blocked'] = 0;
+$account = POT::getInstance()->createObject('Account');
+$account->load( InputData::read('id') );
+$account->block();
 $account->save();
 
 OTSCMS::call('Account', 'manage');
