@@ -173,7 +173,7 @@ class OTSCMS
         $db = $config['db'];
 
         // POT initialization
-        $driver = array('MySQL' => POT::DB_MYSQL, 'SQLite', POT::DB_SQLITE);
+        $driver = array('MySQL' => POT::DB_MYSQL, 'SQLite' => POT::DB_SQLITE);
         $db['driver'] = $driver[ $db['type'] ];
         $db['prefix'] = $db['ots_prefix'];
         POT::getInstance()->connect(null, $db);

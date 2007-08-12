@@ -309,6 +309,7 @@ Mainly great thans to <b>Foziw</b> for the domain, <b>Invincible AznX</b> for ho
 <li><b>LooSik</b> - Helps with design.</li>
 <li><b>Katten</b> - Code for XML output formating.</li>
 <li><b>Ada GT</b> - For help in hard moment by reminding rule "if you don\'t understant, then fuck it" :P.</li>
+<li><b>Joddo</b> - Help, POT bugfix.</li>
 <li><b>Reks</b> - Beta tester.</li>
 <li><b>Winghawk</b> - Beta tester.</li>
 <li><b>Slash X</b> - Beta tester.</li>
