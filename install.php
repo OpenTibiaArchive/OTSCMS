@@ -188,12 +188,9 @@ header(\'Location: ../\');
     // install scheme
     $install = file_get_contents('Install/' . $db['type'] . '.sql');
 
-    // adds OTSCMS classes directory to includes direcotry
-    set_include_path( get_include_path() . PATH_SEPARATOR . $config['directories']['classes']);
-
     // loads database handler file
     $config['db'] = $db;
-    require_once('OTSCMS.php');
+    require_once($config['directories']['classes'] . 'OTSCMS.php');
     $sql = new SQL($db['host'], $db['user'], $db['password'], $db['database'], $db['cms_prefix'], $db['ots_prefix']);
 
     // current query
@@ -247,40 +244,10 @@ header(\'Location: ../\');
 
         $sql->beginTransaction();
 
-        $query = $sql->prepare('INSERT INTO [settings] (`name`, `content`) VALUES (:name, :content)');
+        // home website
+        $query = $sql->prepare('INSERT INTO [sites] (`name`, `content`, `is_home`) VALUES (:name, :content, 1)');
 
-        $query->execute( array(':name' => 'version', ':content' => '3.1.0') );
-        $query->execute( array(':name' => 'directories.languages', ':content' => $config['directories']['languages']) );
-        $query->execute( array(':name' => 'directories.modules', ':content' => $config['directories']['modules']) );
-        $query->execute( array(':name' => 'directories.skins', ':content' => $config['directories']['skins']) );
-        $query->execute( array(':name' => 'directories.images', ':content' => $config['directories']['images']) );
-
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'directories.data\', \'/path/to/your/otserv/data/\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'cookies.prefix\', \'otscms_\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'cookies.path\', \'/\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'cookies.domain\', \'.example.com\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'cookies.expire\', \'2592000\')');
-
-        $query->execute( array(':name' => 'system.md5', ':content' => (int) $_POST['uses_md5']) );
-
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.use_mail\', \'0\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.nick_length\', \'3\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.default_group\', \'1\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.min_number\', \'0\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.max_number\', \'999999\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.account_limit\', \'5\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.map\', \'map.otbm\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.rook.enabled\', \'0\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.rook.id\', \'0\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.depots.count\', \'2\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.depots.item\', \'2590\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.depots.chest\', \'2594\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'statistics.page\', \'30\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'site.language\', \'english\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'site.skin\', \'Default\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'site.title\', \'Powered by OTSCMS 3 - http://www.otscms.com/\')');
-
-        $query->execute( array(':name' => 'site.home', ':content' => '<p class="justified">
+        $query->execute( array(':name' => 'OTSCMS credits', ':content' => '<p class="justified">
 Describe of your site can goes here. You can edit this text in administration panel.
 </p>
 
@@ -302,7 +269,7 @@ Mainly great thans to <b>Foziw</b> for the domain, <b>Invincible AznX</b> for ho
 
 <ul>
 <li><b>Foziw</b> - Project supporter, beta tester, bug finder.</li>
-<li><b>Invincible Aznx</b> - Hosting (<a href="http://www.invinciblehost.com/">http://www.invinciblehost.com/</a>).</li>
+<li><b>Invincible Aznx</b> - Hosting (<a href="http://www.invinciblehost.com/" class="outLink">http://www.invinciblehost.com/</a>).</li>
 <li><b>Brave</b> - Helps with "<i>Players Online</i>" script.</li>
 <li><b>Chester</b> - Website design.</li>
 <li><b>Yorick</b> - Advertising, forum.</li>
@@ -319,6 +286,7 @@ Mainly great thans to <b>Foziw</b> for the domain, <b>Invincible AznX</b> for ho
 <li><b>Mistik</b> - Beta tester.</li>
 <li><b>Morpheus</b> - Beta tester.</li>
 <li><b>Critias</b> - Beta tester.</li>
+<li><b>FCKEditor</b> - WYSIWYG controll (<a href="http://www.fckeditor.net/" class="outLink">FCK Editor</a>).</li>
 </ul>
 
 <h3>OTSCMS version 2 developement</h3>
@@ -343,11 +311,11 @@ Mainly great thans to <b>Foziw</b> for the domain, <b>Invincible AznX</b> for ho
 <li><b>Escman</b> - Portuguese translation fixes.</li>
 <li><b>Anarkus Furi</b> - Some portuguese translation fixes.</li>
 <li><b>Mroczny_Mis</b> - Technical consultation.</li>
-<li><b>FF Wrapzone</b> - "<i>Default</i>" skin (downloaded from <a href="http://www.freelayouts.com/">http://www.freelayouts.com/</a>).</li>
+<li><b>FF Wrapzone</b> - "<i>Default</i>" skin (downloaded from <a href="http://www.freelayouts.com/" class="outLink">http://www.freelayouts.com/</a>).</li>
 <li><b>Bryan007</b> - Remote OTSCMS tester.</li>
 <li><b>Jason</b> - <i>GenX</i> theme.</li>
 <li><b>Mick</b> - Helps with MySQL driver for OTServ database, translation fixes.</li>
-<li><b>Adki</b> - Designer, port of <a href="http://webmark.shost.pl/">WebMark</a> <i>Multi CSS</i> skin.</li>
+<li><b>Adki</b> - Designer, port of <a href="http://webmark.shost.pl/" class="outLink">WebMark</a> <i>Multi CSS</i> skin.</li>
 <li><b>Katten</b> - Some bugfixes.</li>
 <li><b>Anjek</b> - Portuguese (Brazil) translation.</li>
 </ul>
@@ -362,19 +330,48 @@ Mainly great thans to <b>Foziw</b> for the domain, <b>Invincible AznX</b> for ho
 <li><b>Rozek</b> - technical consultation.</li>
 </ul>') );
 
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'site.date_format\', \'j F Y G:i\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'site.news_limit\', \'5\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'gallery.mini_x\', \'100\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'gallery.mini_y\', \'100\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'forum.limit\', \'20\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'forum.avatar.max_x\', \'80\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'forum.avatar.max_y\', \'80\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'mail.from\', \'you@example.com\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'mail.smtp.host\', \'localhost\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'mail.smtp.port\', \'25\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'mail.smtp.use_auth\', \'0\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'mail.smtp.user\', \'\')');
-        $sql->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'mail.smtp.password\', \'\')');
+        $query = $sql->prepare('INSERT INTO [settings] (`name`, `content`) VALUES (:name, :content)');
+
+        $query->execute( array(':name' => 'version', ':content' => '3.1.0') );
+        $query->execute( array(':name' => 'directories.languages', ':content' => $config['directories']['languages']) );
+        $query->execute( array(':name' => 'directories.modules', ':content' => $config['directories']['modules']) );
+        $query->execute( array(':name' => 'directories.skins', ':content' => $config['directories']['skins']) );
+        $query->execute( array(':name' => 'directories.images', ':content' => $config['directories']['images']) );
+        $query->execute( array(':name' => 'directories.data', ':content' => '/path/to/your/otserv/data/') );
+        $query->execute( array(':name' => 'cookies.prefix', ':content' => 'otscms_') );
+        $query->execute( array(':name' => 'cookies.path', ':content' => '/') );
+        $query->execute( array(':name' => 'cookies.domain', ':content' => '.example.com') );
+        $query->execute( array(':name' => 'cookies.expire', ':content' => 2592000) );
+        $query->execute( array(':name' => 'system.md5', ':content' => (int) $_POST['uses_md5']) );
+        $query->execute( array(':name' => 'system.use_mail', ':content' => 0) );
+        $query->execute( array(':name' => 'system.nick_length', ':content' => 3) );
+        $query->execute( array(':name' => 'system.default_group', ':content' => 1) );
+        $query->execute( array(':name' => 'system.min_number', ':content' => 0) );
+        $query->execute( array(':name' => 'system.max_number', ':content' => 999999) );
+        $query->execute( array(':name' => 'system.account_limit', ':content' => 5) );
+        $query->execute( array(':name' => 'system.map', ':content' => 'map.otbm') );
+        $query->execute( array(':name' => 'system.rook.enabled', ':content' => 0) );
+        $query->execute( array(':name' => 'system.rook.id', ':content' => 0) );
+        $query->execute( array(':name' => 'system.depots.count', ':content' => 2) );
+        $query->execute( array(':name' => 'system.depots.item', ':content' => 2590) );
+        $query->execute( array(':name' => 'system.depots.chest', ':content' => 2594) );
+        $query->execute( array(':name' => 'statistics.page', ':content' => 30) );
+        $query->execute( array(':name' => 'site.language', ':content' => 'english') );
+        $query->execute( array(':name' => 'site.skin', ':content' => 'Default') );
+        $query->execute( array(':name' => 'site.title', ':content' => 'Powered by OTSCMS 3 - http://www.otscms.com/') );
+        $query->execute( array(':name' => 'site.date_format', ':content' => 'j F Y G:i') );
+        $query->execute( array(':name' => 'site.news_limit', ':content' => 5) );
+        $query->execute( array(':name' => 'gallery.mini_x', ':content' => 100) );
+        $query->execute( array(':name' => 'gallery.mini_y', ':content' => 100) );
+        $query->execute( array(':name' => 'forum.limit', ':content' => 20) );
+        $query->execute( array(':name' => 'forum.avatar.max_x', ':content' => 80) );
+        $query->execute( array(':name' => 'forum.avatar.max_y', ':content' => 80) );
+        $query->execute( array(':name' => 'mail.from', ':content' => 'you@example.com') );
+        $query->execute( array(':name' => 'mail.smtp.host', ':content' => 'localhost') );
+        $query->execute( array(':name' => 'mail.smtp.port', ':content' => 25) );
+        $query->execute( array(':name' => 'mail.smtp.use_auth', ':content' => 0) );
+        $query->execute( array(':name' => 'mail.smtp.user', ':content' => '') );
+        $query->execute( array(':name' => 'mail.smtp.password', ':content' => '') );
 
         $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTSCMS\', \'http://www.otscms.com/\')');
         $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTFans\', \'http://www.otfans.net/\')');
@@ -434,6 +431,9 @@ Mainly great thans to <b>Foziw</b> for the domain, <b>Invincible AznX</b> for ho
         $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Post.*\', 3)');
         $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Post.new\', 0)');
         $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Post.view\', -1)');
+        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Sites.*\', 3)');
+        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Sites.display\', -1)');
+        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Sites.list\', -1)');
 
         $sql->exec('INSERT INTO [download] (`name`, `content`, `binary`, `file`) VALUES (\'OTSCMS Lite\', \'Latest <span style="font-weight: bold;">OTSCMS Lite</span>.<br />
 <br />
@@ -487,6 +487,8 @@ Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, 
         $query->execute( array(':name' => '^guild/create$', ':content' => 'module=Guilds&command=create', ':order' => 20) );
         $query->execute( array(':name' => '^guilds/?$', ':content' => 'module=Guilds&command=list', ':order' => 50) );
         $query->execute( array(':name' => '^guilds/([0-9]+)$', ':content' => 'module=Guilds&command=display&id=$1', ':order' => 30) );
+        $query->execute( array(':name' => '^guides/?$', ':content' => 'module=Sites&command=list', ':order' => 50) );
+        $query->execute( array(':name' => '^guides/([0-9]+)$', ':content' => 'module=Sites&command=display&id=$1', ':order' => 40) );
         $query->execute( array(':name' => '^forum/?$', ':content' => 'module=Forum&command=board&id=0', ':order' => 50) );
         $query->execute( array(':name' => '^forum/([0-9]+)$', ':content' => 'module=Forum&command=board&id=$1', ':order' => 40) );
         $query->execute( array(':name' => '^forum/([0-9]+)/page([0-9]+)$', ':content' => 'module=Forum&command=board&id=$1&page=$2', ':order' => 30) );

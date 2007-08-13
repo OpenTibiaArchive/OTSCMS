@@ -83,7 +83,6 @@ $form->addField('', ComponentAdminForm::FieldSeparator, $language['Modules.Setti
 $form->addField('settings[site.language]', ComponentAdminForm::FieldSelect, $language['Modules.Settings.SettingSiteLanguage'], array('options' => array_combine($template['languages'], $template['languages']), 'selected' => $part['language']) );
 $form->addField('settings[site.skin]', ComponentAdminForm::FieldSelect, $language['Modules.Settings.SettingSiteSkin'], array('options' => array_combine($template['skins'], $template['skins']), 'selected' => $part['skin']) );
 $form->addField('settings[site.title]', ComponentAdminForm::FieldText, $language['Modules.Settings.SettingSiteTitle'], $part['title']);
-$form->addField('settings[site.home]', ComponentAdminForm::FieldArea, $language['Modules.Settings.SettingSiteHome'], $part['home']);$form->addField('settings[site.date_format]', ComponentAdminForm::FieldText, $language['Modules.Settings.SettingSiteDateFormat'], $part['date_format']);
 $form->addField('settings[site.news_limit]', ComponentAdminForm::FieldText, $language['Modules.Settings.SettingSiteNewsLimit'], $part['news_limit']);
 
 // gallery settings

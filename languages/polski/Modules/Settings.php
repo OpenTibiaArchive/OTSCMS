@@ -52,7 +52,6 @@ return array(
     'SettingSiteLanguage' => 'Domyślny język strony',
     'SettingSiteSkin' => 'Domyślna skórka',
     'SettingSiteTitle' => 'Tytuł strony',
-    'SettingSiteHome' => 'Strona domowa',
     'SettingSiteDateFormat' => 'Format dla dat (zobacz podręcznik PHP dla funkcji date(), aby zobaczyć możliwe parametry)',
     'SettingSiteNewsLimit' => 'Newsów na stronę',
     'SettingPartGallery' => 'Ustawienia galerii',

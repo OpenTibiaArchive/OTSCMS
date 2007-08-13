@@ -88,6 +88,7 @@ return array(
         ),
 
         'Library' => array(
+            'Guides' => 'Poradniki',
             'Monsters' => 'Monsters',
             'Spells' => 'Czary',
         ),

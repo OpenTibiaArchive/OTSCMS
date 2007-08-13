@@ -77,6 +77,7 @@ Language[14] = "<?php echo $language['Modules.Account.PleaseEMail']; ?>";
             <div><a href="/message/new"><?php echo $language['main.menu.PM.New']; ?></a></div>
         </div>
         <div id="menu_Library" class="module_menu">
+            <div><a href="/guides"><?php echo $language['main.menu.Library.Guides']; ?></a></div>
             <div><a href="/monsters"><?php echo $language['main.menu.Library.Monsters']; ?></a></div>
             <div><a href="/spells"><?php echo $language['main.menu.Library.Spells']; ?></a></div>
         </div>

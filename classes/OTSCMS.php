@@ -32,9 +32,6 @@ class OTSCMS
         $config = new DataContainer($config);
         self::setResource('Config', $config);
 
-        // adds OTSCMS classes directory to includes direcotry
-        set_include_path( get_include_path() . PATH_SEPARATOR . $config['directories.classes']);
-
         // sets default critical exteptions handler
         set_exception_handler( array('OTSCMS', 'exceptionHandler') );
 
@@ -116,7 +113,7 @@ class OTSCMS
         }
 
         // loads class driver
-        include($file);
+        include($config['directories.classes'] . $file);
     }
 
     // calls single module

@@ -214,6 +214,15 @@ CREATE TABLE [requests] (
     FOREIGN KEY (`content`) REFERENCES {guilds} (`id`) ON DELETE CASCADE
 );
 
+DROP TABLE [sites];
+
+CREATE TABLE [sites] (
+    `id` INTEGER PRIMARY KEY,
+    `name` VARCHAR(255),
+    `content` TEXT,
+    `is_home` INT DEFAULT 0
+);
+
 DROP VIEW [posts_with_authors];
 
 CREATE VIEW [posts_with_authors]

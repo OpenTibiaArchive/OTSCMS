@@ -20,7 +20,10 @@
 */
 
 // simple home page content
+$site = new CMS_Site();
+$site->loadHome();
+
 $file = $template->createComponent('RAW');
-$file['content'] = $config['site.home'];
+$file['content'] = $site['content'];
 
 ?>

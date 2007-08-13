@@ -11,7 +11,7 @@ CREATE TABLE [settings] (
     `name` VARCHAR(255),
     `content` TEXT,
     UNIQUE KEY (`name`)
-);
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [online];
 
@@ -23,7 +23,7 @@ CREATE TABLE [online] (
     `maximum` INT DEFAULT 0,
     PRIMARY KEY (`id`),
     UNIQUE KEY (`content`, `port`)
-);
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [links];
 
@@ -32,7 +32,7 @@ CREATE TABLE [links] (
     `name` VARCHAR(255),
     `content` VARCHAR(255),
     PRIMARY KEY (`id`)
-);
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [access];
 
@@ -42,7 +42,7 @@ CREATE TABLE [access] (
     `content` INTEGER,
     PRIMARY KEY (`id`),
     UNIQUE (`name`)
-);
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [pms];
 
@@ -52,12 +52,12 @@ CREATE TABLE [pms] (
     `content` TEXT,
     `from` INT NOT NULL,
     `to` INT NOT NULL,
-    `read` INT DEFAULT 0,
+    `read` BOOLEAN DEFAULT FALSE,
     `date_time` INT UNSIGNED,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`from`) REFERENCES {players} (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`to`) REFERENCES {players} (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB;
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [logs];
 
@@ -67,7 +67,7 @@ CREATE TABLE [logs] (
     `content` INT UNSIGNED,
     `date_time` INT UNSIGNED,
     PRIMARY KEY (`id`)
-);
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [download];
 
@@ -146,7 +146,7 @@ CREATE TABLE [posts] (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`poster`) REFERENCES {players} (`id`),
     KEY (`upperid`)
-);
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [profiles];
 
@@ -180,7 +180,7 @@ CREATE TABLE [profiles] (
     `loss_mana` INT,
     `loss_skills` INT,
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [containers];
 
@@ -193,7 +193,7 @@ CREATE TABLE [containers] (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`profile`) REFERENCES [profiles] (`id`) ON DELETE CASCADE,
     KEY (`slot`)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [news];
 
@@ -203,7 +203,7 @@ CREATE TABLE [news] (
     `content` TEXT,
     `date_time` INT,
     PRIMARY KEY (`id`)
-);
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [urls];
 
@@ -211,7 +211,7 @@ CREATE TABLE [urls] (
     `name` VARCHAR(255),
     `content` VARCHAR(255),
     `order` INT
-) ENGINE = InnoDB;
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [invites];
 
@@ -222,7 +222,7 @@ CREATE TABLE [invites] (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`name`) REFERENCES {players} (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`content`) REFERENCES {guilds} (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB;
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP TABLE IF EXISTS [requests];
 
@@ -233,7 +233,17 @@ CREATE TABLE [requests] (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`name`) REFERENCES {players} (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`content`) REFERENCES {guilds} (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB;
+) ENGINE = InnoDB CHARSET = utf8;
+
+DROP TABLE IF EXISTS [sites];
+
+CREATE TABLE [sites] (
+    `id` SERIAL,
+    `name` VARCHAR(255),
+    `content` LONGTEXT,
+    `is_home` BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB CHARSET = utf8;
 
 DROP VIEW IF EXISTS [posts_with_authors];
 

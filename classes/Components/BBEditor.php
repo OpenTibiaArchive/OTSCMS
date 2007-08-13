@@ -217,7 +217,7 @@ class ComponentBBEditor extends TemplateComponent
         // separator - for further use
         $separator = XMLToolbox::createElement('td');
         $img = XMLToolbox::createElement('img');
-        $img->setAttribute('src', $this['baseHref'] . 'bb/separator.gif');
+        $img->setAttribute('src', $this->this['baseHref'] . 'bb/separator.gif');
         $img->setAttribute('alt', '');
         $img->setAttribute('class', 'bbseparator');
         $separator->addContent($img);
@@ -237,7 +237,7 @@ class ComponentBBEditor extends TemplateComponent
             $img = XMLToolbox::createElement('img');
             $img->setAttribute('onclick', $code . ';');
             $img->setAttribute('class', 'bbbutton');
-            $img->setAttribute('src', $this['baseHref'] . 'bb/' . $label . '.gif');
+            $img->setAttribute('src', $this->this['baseHref'] . 'bb/' . $label . '.gif');
             $img->setAttribute('alt', $language['Components.BBEditor.' . $label]);
             $button->addContent($img);
             $buttons->addContent($button);

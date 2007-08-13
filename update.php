@@ -154,6 +154,31 @@ switch($config['version'])
         // updates system version
         $db->exec('UPDATE [settings] SET `content` = \'3.1.0\' WHERE `name` = \'version\'');
 
+        // guides table
+        switch( $db->getAttribute(PDO::ATTR_DRIVER_NAME) )
+        {
+            case 'mysql':
+                $db->query('CREATE TABLE [sites] (`id` INT NOT NULL AUTO_INCREMENT, `name` VARCHAR(255), `content` LONGTEXT, `is_home` BOOLEAN DEFAULT FALSE, PRIMARY KEY (`id`) )');
+                break;
+
+            case 'sqlite':
+                $db->query('CREATE TABLE [sites] (`id` INTEGER PRIMARY KEY, `name` VARCHAR(255), `content` TEXT, `is_home` INT DEFAULT 0)');
+                break;
+        }
+
+        // moves home website into guides
+        $content = $db->query('SELECT `content` FROM [settings] WHERE `name` = \'site.home\'')->fetch();
+        $query = $db->prepare('INSERT INTO [sites] (`name`, `content`, `is_home`) VALUES (\'Main\', :content, 1)');
+        $query->execute( array(':content' => $content['content']) );
+        $db->exec('DELETE FROM [settings] WHERE `name` = \'site.home\'');
+
+        // access rights for Sites modules
+        $query = $db->prepare('INSERT INTO [access] (`name`, `content`) VALUES (:name, :content)');
+
+        $query->execute( array(':name' => 'Sites.*', ':content' => 3) );
+        $query->execute( array(':name' => 'Sites.display', ':content' => -1) );
+        $query->execute( array(':name' => 'Sites.list', ':content' => -1) );
+
         // URLs table
         $db->exec('CREATE TABLE [urls] (`name` VARCHAR(255), `content` VARCHAR(255), `order` INT) ENGINE = InnoDB');
 
@@ -198,6 +223,8 @@ switch($config['version'])
         $query->execute( array(':name' => '^guild/create$', ':content' => 'module=Guilds&command=create', ':order' => 20) );
         $query->execute( array(':name' => '^guilds/?$', ':content' => 'module=Guilds&command=list', ':order' => 50) );
         $query->execute( array(':name' => '^guilds/([0-9]+)$', ':content' => 'module=Guilds&command=display&id=$1', ':order' => 30) );
+        $query->execute( array(':name' => '^guides/?$', ':content' => 'module=Sites&command=list', ':order' => 50) );
+        $query->execute( array(':name' => '^guides/([0-9]+)$', ':content' => 'module=Sites&command=display&id=$1', ':order' => 40) );
         $query->execute( array(':name' => '^forum/?$', ':content' => 'module=Forum&command=board&id=0', ':order' => 50) );
         $query->execute( array(':name' => '^forum/([0-9]+)$', ':content' => 'module=Forum&command=board&id=$1', ':order' => 40) );
         $query->execute( array(':name' => '^forum/([0-9]+)/page([0-9]+)$', ':content' => 'module=Forum&command=board&id=$1&page=$2', ':order' => 30) );

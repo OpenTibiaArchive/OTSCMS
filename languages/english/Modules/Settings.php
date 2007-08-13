@@ -52,7 +52,6 @@ return array(
     'SettingSiteLanguage' => 'Default website language',
     'SettingSiteSkin' => 'Default skin',
     'SettingSiteTitle' => 'Website title',
-    'SettingSiteHome' => 'Home content',
     'SettingSiteDateFormat' => 'Format for dates (see PHP manual page for date() function to see possible parameters)',
     'SettingSiteNewsLimit' => 'News per page',
     'SettingPartGallery' => 'Gallery setting',

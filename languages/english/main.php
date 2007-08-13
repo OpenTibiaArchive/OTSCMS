@@ -90,6 +90,7 @@ return array(
         ),
 
         'Library' => array(
+            'Guides' => 'Guides',
             'Monsters' => 'Monsters',
             'Spells' => 'Spells',
         ),

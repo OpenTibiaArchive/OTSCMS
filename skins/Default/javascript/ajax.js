@@ -64,7 +64,7 @@ XMLHttpRequest.prototype.request = function(requestMethod, requestModule, reques
                     return true;
                 }
 
-                alert( message[0].getAttribute("value") );
+                alert( message[0].getAttribute("value") + "\n\n" + this.root.getTagValue("debug") );
                 return false;
             }
 
