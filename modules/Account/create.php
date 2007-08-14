@@ -30,19 +30,17 @@ if( !preg_match('/^[a-z][\w\.+-]*[a-z0-9]@[a-z0-9][\w\.+-]*\.[a-z][a-z\.]*[a-z]$
     return;
 }
 
+$account = POT::getInstance()->createObject('Account');
+
 // checks if this e-mail was already used
-$used = $db->prepare('SELECT COUNT(`id`) AS `count` FROM {accounts} WHERE `email` = :email');
-$used->execute( array(':email' => $email) );
-$used = $used->fetch();
-if($used['count'])
+$account->find($email);
+if( $account->isLoaded() )
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Account.AlreadyUsed'];
     OTSCMS::call('Account', 'signup');
     return;
 }
-
-$account = POT::getInstance()->createObject('Account');
 
 // generates random account number
 try

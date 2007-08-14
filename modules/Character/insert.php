@@ -63,11 +63,10 @@ if( !preg_match('/^[A-Z][A-Za-z ]{' . ($system['nick_length'] - 1) . ',}$/', $ch
 }
 
 // checks if character exists
-$count = $db->prepare('SELECT COUNT(`id`) AS `count` FROM {players} WHERE `name` = :name');
-$count->execute( array(':name' => $character['name']) );
-$count = $count->fetch();
+$player = $ots->createObject('Player');
+$player->find($character['name']);
 
-if($count['count'])
+if( $player->isLoaded() )
 {
     throw new HandledException('NameUsed');
 }
@@ -234,19 +233,17 @@ $player->setLossExperience($profile['loss_experience']);
 $player->setLossMana($profile['loss_mana']);
 $player->setLossSkills($profile['loss_skills']);
 
+// skill vlaues
+$player->setSkill(POT::SKILL_FIST, $profile['skill0']);
+$player->setSkill(POT::SKILL_CLUB, $profile['skill1']);
+$player->setSkill(POT::SKILL_SWORD, $profile['skill2']);
+$player->setSkill(POT::SKILL_AXE, $profile['skill3']);
+$player->setSkill(POT::SKILL_DISTANCE, $profile['skill4']);
+$player->setSkill(POT::SKILL_SHIELDING, $profile['skill5']);
+$player->setSkill(POT::SKILL_FISHING, $profile['skill6']);
+
 // saves record
 $player->save();
-
-$skill = $db->prepare('UPDATE {player_skills} SET `value` = :value WHERE `player_id` = ' . $player->getId() . ' AND `skillid` = :skillid');
-
-// skill vlaues
-$skill->execute( array(':value' => (int) $profile['skill0'], ':skillid' => 0) );
-$skill->execute( array(':value' => (int) $profile['skill1'], ':skillid' => 1) );
-$skill->execute( array(':value' => (int) $profile['skill2'], ':skillid' => 2) );
-$skill->execute( array(':value' => (int) $profile['skill3'], ':skillid' => 3) );
-$skill->execute( array(':value' => (int) $profile['skill4'], ':skillid' => 4) );
-$skill->execute( array(':value' => (int) $profile['skill5'], ':skillid' => 5) );
-$skill->execute( array(':value' => (int) $profile['skill6'], ':skillid' => 6) );
 
 // sorts list of items
 $items = array();
