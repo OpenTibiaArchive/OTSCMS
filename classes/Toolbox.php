@@ -99,58 +99,32 @@ class Toolbox
     // returns server status
     public static function getPlayersCount(CMS_Online $server)
     {
-        // connects to server
-        // gives maximum 5 seconds to connect
-        $socket = @fsockopen($server['content'], $server['port'], $errorCode, $errorString, 5);
+        // reads server status
+        $status = POT::getInstance()->serverStatus($server['content'], $server['port']);
 
-        // if connected then checking statistics
-        if($socket)
+        // offline message
+        if(!$status)
         {
-            // sets 5 second timeout for reading and writing
-            stream_set_timeout($socket, 5);
-
-            // sends packet with request
-            // 06 - length of packet, 255, 255 is the comamnd identifier, 'info' is a request
-            fwrite($socket, chr(6).chr(0).chr(255).chr(255).'info');
-
-            // reads respond
-            // donno why, but while( !foef($socket) ) doesnt work here
-            // 2048 bytes should be ok, but you can change it if it's not enought
-            $data = fread($socket, 2048);
-
-            // closing connection to current server
-            fclose($socket);
-
-            // sometimes server returns empty info
-            if( empty($data) )
-            {
-                // returns offline text
-                $language = OTSCMS::getResource('Language');
-                return $language['Modules.Online.offline'];
-            }
-
-            // finding online statistics in respond (respond is in XML format)
-            $xml = DOMDocument::loadXML($data);
-            $data = $xml->getElementsByTagName('players')->item(0);
-            $data = array( $data->getAttribute('online'), $data->getAttribute('max') );
+            $language = OTSCMS::getResource('Language');
+            return $language['Modules.Online.offline'];
+        }
+        // online status processing
+        else
+        {
+            // finding online statistics in respond
+            $online = $status->getOnlinePlayers();
+            $max = $status->getMaxPlayers();
 
             // checks if current online players are higher number then previous
-            if($data[0] > $server['maximum'])
+            if($online > $server['maximum'])
             {
                 // saves new count
-                $server['maximum'] = $data[0];
+                $server['maximum'] = $online;
                 $server->save();
             }
 
             // formating results
-            return $data[0]. (($server['maximum'] != $data[0] && $server['maximum'] != $data[1]) ? ' ('.$server['maximum'].')' : '') .'/'.$data[1];
-        }
-        // returns null when server is offline
-        else
-        {
-            // returns offline text
-            $language = OTSCMS::getResource('Language');
-            return $language['Modules.Online.offline'];
+            return $online. (($server['maximum'] != $online && $server['maximum'] != $max) ? ' (' . $server['maximum'] . ')' : '') . '/' . $max;
         }
     }
 
