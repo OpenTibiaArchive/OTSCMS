@@ -25,30 +25,17 @@
 
 class InputData
 {
-    // URL data
-    private static $data = array();
-
-    // initiates URL data
-    public static function init()
-    {
-        // saves current variables
-        self::$data = $_REQUEST;
-    }
-
     // returns HTTP data variable
     public static function read($name)
     {
-        return self::$data[$name];
+        return $_REQUEST[$name];
     }
 
     // sets new value for given input variable
     public static function write($name, $value)
     {
-        self::$data[$name] = $value;
+        $_REQUEST[$name] = $value;
     }
 }
-
-// startup initialization
-InputData::init();
 
 ?>

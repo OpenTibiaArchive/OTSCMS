@@ -44,11 +44,6 @@ class XMLToolbox
         return self::$xml->createElement($name);
     }
 
-    public static function createTextNode($content)
-    {
-        return self::$xml->createTextNode($content);
-    }
-
     public static function createDocumentFragment()
     {
         return self::$xml->createDocumentFragment();
@@ -120,7 +115,7 @@ class XMLToolbox
         $tree = self::createDocumentFragment();
 
         // loads tree into current container
-        foreach( $xml->childNodes->item(0)->childNodes as $child)
+        foreach( $xml->documentElement->childNodes as $child)
         {
             $tree->addContent($child);
         }

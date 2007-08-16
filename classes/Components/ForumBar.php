@@ -39,7 +39,7 @@ class ComponentForumBar extends TemplateComponent
         $a = XMLToolbox::createElement('a');
         $img = XMLToolbox::createElement('img');
         $img->setAttribute('alt', $language['Components.ForumBar.newThread']);
-        $img->setAttribute('src', $this->this['baseHref'] . $config['site.language'] . '/forum_newThread.png');
+        $img->setAttribute('src', $this->owner['baseHref'] . $config['site.language'] . '/forum_newThread.png');
         $a->setAttribute('href', '/forum/' . $this['boardid'] . '/reply');
         $a->addContent($img);
         $root->addContent($a);
@@ -50,7 +50,7 @@ class ComponentForumBar extends TemplateComponent
             $a = XMLToolbox::createElement('a');
             $img = XMLToolbox::createElement('img');
             $img->setAttribute('alt', $language['Components.ForumBar.newPost']);
-            $img->setAttribute('src', $this->this['baseHref'] . $config['site.language'] . '/forum_newPost.png');
+            $img->setAttribute('src', $this->owner['baseHref'] . $config['site.language'] . '/forum_newPost.png');
             $a->setAttribute('href', '/posts/' . $this['topicid'] . '/reply');
             $a->addContent($img);
             $root->addContent($a);

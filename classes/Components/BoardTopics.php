@@ -126,7 +126,7 @@ class ComponentBoardTopics extends TemplateComponent
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
                 $a->setAttribute('href', '/posts/' . $topic['id']);
-                $img->setAttribute('src', $this->this['baseHref'] . 'images/arrow.png');
+                $img->setAttribute('src', $this->owner['baseHref'] . 'images/arrow.png');
                 $img->setAttribute('alt', $language['Modules.Forum.LastPost']);
                 $a->addContent($img);
                 $td->addContents($a, date( $config['site.date_format'], $lastPost['date_time']), XMLToolbox::createElement('br'), $language['Modules.Forum.by'] . ' ');

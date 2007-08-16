@@ -23,7 +23,7 @@
     Generic class for handling SQL records in object-oriented way.
 */
 
-abstract class ActiveRecord implements ArrayAccess, Iterator
+abstract class ActiveRecord extends DataContainer implements Iterator
 {
     // record fields
     protected $data = array();
@@ -54,39 +54,6 @@ abstract class ActiveRecord implements ArrayAccess, Iterator
 
     // saves current record
     abstract public function save();
-
-    // covers record data
-    public function __get($key)
-    {
-        return $this->data[$key];
-    }
-
-    public function __set($key, $value)
-    {
-        $this->data[$key] = $value;
-    }
-
-    // ArrayAccess interface
-
-    public function offsetExists($name)
-    {
-        return isset($this->data[$name]);
-    }
-
-    public function offsetGet($name)
-    {
-        return $this->__get($name);
-    }
-
-    public function offsetSet($name, $value)
-    {
-        $this->__set($name, $value);
-    }
-
-    public function offsetUnset($name)
-    {
-        unset($this->data[$name]);
-    }
 
     // Iterator interface
 

@@ -85,7 +85,7 @@ class ComponentItemsList extends TemplateComponent
                 $a->setAttribute('href', '/admin/module=' . $this->module . '&command=edit&id=' . $key);
                 $a->setAttribute('onclick', 'return page' . $this->module . '.edit(' . $key . ');');
                 $img->setAttribute('alt', $language['main.admin.EditSubmit']);
-                $img->setAttribute('src', $this->this['baseHref'] . 'images/edit.gif');
+                $img->setAttribute('src', $this->owner['baseHref'] . 'images/edit.gif');
                 $a->addContent($img);
                 $li->addContents($a, ' ');
 
@@ -94,7 +94,7 @@ class ComponentItemsList extends TemplateComponent
                 $a->setAttribute('href', '/admin/module=' . $this->module . '&command=remove&id=' . $key);
                 $a->setAttribute('onclick', 'if( confirm(Language[0]) ) { return page' . $this['module'] . '.remove(' . $key . '); } else { return false; }');
                 $img->setAttribute('alt', $language['main.admin.DeleteSubmit']);
-                $img->setAttribute('src', $this->this['baseHref'] . 'images/delete.gif');
+                $img->setAttribute('src', $this->owner['baseHref'] . 'images/delete.gif');
                 $a->addContent($img);
                 $li->addContent($a);
             }

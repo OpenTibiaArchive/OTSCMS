@@ -44,7 +44,7 @@ class SQL extends SQL_Base
     }
 
     // REGEXP operator for SQLite
-    private function regexp($name, $content)
+    public function regexp($name, $content)
     {
         return (bool) preg_match('#' . $name . '#', $content);
     }
