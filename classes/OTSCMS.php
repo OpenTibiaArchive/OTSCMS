@@ -109,13 +109,11 @@ class OTSCMS
         $file .= '.php';
 
         // to prevent from ugly error messages from PHP
-        if( !file_exists($config['directories.classes'] . $file) )
+        if( file_exists($config['directories.classes'] . $file) )
         {
-            throw new Exception('Could not load ' . $class . ' class.');
+            // loads class driver
+            include($config['directories.classes'] . $file);
         }
-
-        // loads class driver
-        include($config['directories.classes'] . $file);
     }
 
     // calls single module
