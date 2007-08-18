@@ -28,6 +28,9 @@ class OTSCMS
     // initializes system with given configuration table
     public static function init($config)
     {
+        // registers __autoload() handler
+        spl_autoload_register( array('OTSCMS', '__autoload') );
+
         // creates configuration resource
         $config = new DataContainer($config);
         self::setResource('Config', $config);
@@ -40,7 +43,6 @@ class OTSCMS
 
         // POT inclusion
         self::setDriver('POT', 'POT/OTS');
-        self::addAutoloadDriver( new POTDriver() );
     }
 
     // handles critical exceptions
@@ -411,12 +413,6 @@ class OTSCMS
 
         ob_end_flush();
     }
-}
-
-// automaticly loads classes - calls system method
-function __autoload($class)
-{
-    OTSCMS::__autoload($class);
 }
 
 /*
