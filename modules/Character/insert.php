@@ -290,23 +290,23 @@ foreach($items as $item)
     $pids[ $item['id'] ] = $sid;
 }
 
-$insert = $db->prepare('INSERT INTO {player_depotitems} (`player_id`, `depotid`, `sid`, `pid`, `itemtype`, `count`) VALUES (' . $player->getId() . ', :depotid, :sid, :pid, :itemtype, :count)');
+$insert = $db->prepare('INSERT INTO {player_depotitems} (`depotid`, `sid`, `pid`, `itemtype`, `count`) VALUES (' . $player->getId() . ', :sid, :pid, :itemtype, :count)');
 $pids = array();
 $sid = 201 + $system['depots']['count'];
 
 // depot lockers and chests
 for($i = 1; $i <= $system['depots']['count']; $i++)
 {
-    $insert->execute( array(':depotid' => $i, ':sid' => 100 + $i, ':pid' => 0, ':itemtype' => $system['depots']['item'], ':count' => 0) );
-    $insert->execute( array(':depotid' => $i, ':sid' => 200 + $i, ':pid' => 100 + $i, ':itemtype' => $system['depots']['chest'], ':count' => 0) );
-    $pids[100 + $i] = array('pid' => 200 + $i, 'depot' => $i);
+    $insert->execute( array(':sid' => 100 + $i, ':pid' => $i, ':itemtype' => $system['depots']['item'], ':count' => 0) );
+    $insert->execute( array(':sid' => 200 + $i, ':pid' => 100 + $i, ':itemtype' => $system['depots']['chest'], ':count' => 0) );
+    $pids[100 + $i] = 200 + $i;
 }
 
 // depots contents
 foreach($depots as $item)
 {
-    $insert->execute( array(':depotid' => $pids[ $item['slot'] ]['depot'], ':sid' => ++$sid, ':pid' => $pids[ $item['slot'] ]['pid'], ':itemtype' => $item['content'], ':count' => $item['count']) );
-    $pids[ $item['id'] ] = array('pid' => $sid, 'depot' => $pids[ $item['slot'] ]['depot']);
+    $insert->execute( array(':sid' => ++$sid, ':pid' => $pids[ $item['slot'] ], ':itemtype' => $item['content'], ':count' => $item['count']) );
+    $pids[ $item['id'] ] = $sid;
 }
 
 // there is nothing to display
