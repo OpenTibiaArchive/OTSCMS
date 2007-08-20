@@ -290,7 +290,7 @@ foreach($items as $item)
     $pids[ $item['id'] ] = $sid;
 }
 
-$insert = $db->prepare('INSERT INTO {player_depotitems} (`depotid`, `sid`, `pid`, `itemtype`, `count`) VALUES (' . $player->getId() . ', :sid, :pid, :itemtype, :count)');
+$insert = $db->prepare('INSERT INTO {player_depotitems} (`player_id`, `sid`, `pid`, `itemtype`, `count`) VALUES (' . $player->getId() . ', :sid, :pid, :itemtype, :count)');
 $pids = array();
 $sid = 201 + $system['depots']['count'];
 
