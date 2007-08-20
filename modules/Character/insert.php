@@ -298,8 +298,8 @@ $sid = 201 + $system['depots']['count'];
 for($i = 1; $i <= $system['depots']['count']; $i++)
 {
     $insert->execute( array(':sid' => 100 + $i, ':pid' => $i, ':itemtype' => $system['depots']['item'], ':count' => 0) );
-    $insert->execute( array(':sid' => 200 + $i, ':pid' => 100 + $i, ':itemtype' => $system['depots']['chest'], ':count' => 0) );
-    $pids[100 + $i] = 200 + $i;
+    $insert->execute( array(':sid' => ++$sid, ':pid' => 100 + $i, ':itemtype' => $system['depots']['chest'], ':count' => 0) );
+    $pids[100 + $i] = $sid;
 }
 
 // depots contents
