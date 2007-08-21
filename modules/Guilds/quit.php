@@ -20,7 +20,7 @@
 */
 
 // loads member
-$character = POT::getInstance()->createObject('Player');
+$character = $ots->createObject('Player');
 $character->load( InputData::read('id') );
 
 // checks if member belongs to current account

@@ -19,8 +19,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// loads account
-$db->exec('DELETE FROM {accounts} WHERE `id` = ' . (int) InputData::read('id') );
+// deletes account
+$account = $ots->createObject('Account');
+$account->load( InputData::read('id') );
+$ots->createObject('Accounts_List')->deleteAccount($account);
 OTSCMS::call('Account', 'manage');
 
 ?>

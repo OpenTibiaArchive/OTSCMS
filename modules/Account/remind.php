@@ -20,7 +20,7 @@
 */
 
 // loads HTTP data in correct order
-$account = POT::getInstance()->createObject('Account');
+$account = $ots->createObject('Account');
 $account->load( InputData::read('number') );
 
 $message = $template->createComponent('Message');

@@ -20,7 +20,7 @@
 */
 
 // loads player info
-$player = POT::getInstance()->createObject('Player');
+$player = $ots->createObject('Player');
 $player->load( InputData::read('id') );
 $rank = new OTS_GuildRank( $player->getRankId() );
 

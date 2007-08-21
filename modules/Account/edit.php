@@ -20,7 +20,7 @@
 */
 
 // gets number from URL or form
-$account = POT::getInstance()->createObject('Account');
+$account = $ots->createObject('Account');
 $account->load( InputData::read('id') );
 
 // edition form

@@ -124,6 +124,7 @@ class OTSCMS
         $config = self::getResource('Config');
         $template = self::getResource('Template');
         $language = self::getResource('Language');
+        $ots = POT::getInstance();
 
         // sets displaying configuration
         $config['display'] = array('module' => $module, 'command' => $command);

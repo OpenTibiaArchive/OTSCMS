@@ -21,7 +21,7 @@
 
 // pre-loads HTTP data
 $member = InputData::read('member');
-$player = POT::getInstance()->createObject('Player');
+$player = $ots->createObject('Player');
 $player->load( InputData::read('id') );
 $rank = new OTS_GuildRank( $player->getRankId() );
 $new = new OTS_GuildRank($member['rank_id']);

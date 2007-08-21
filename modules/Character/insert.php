@@ -19,35 +19,14 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$ots = POT::getInstance();
-
 // checks characters limit
-$count = $db->query('SELECT COUNT(`id`) AS `count` FROM {players} WHERE `account_id` = ' . User::$number)->fetch();
-if($count['count'] >= $config['system.account_limit'])
+$account = $ots->createObject('Account');
+$account->load(User::$number);
+if( count( $account->getPlayers() ) >= $config['system.account_limit'])
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Character.Limit'];
     return;
-}
-
-// deletes item recursively
-function dropItem(&$array, $slot)
-{
-    // simply recursive iteration
-    foreach($array as $key => $items)
-    {
-        // found
-        if($key == $slot)
-        {
-            unset($array[$key]);
-
-            // also removes it recursively
-            foreach($items as $item)
-            {
-                dropItem($array, $item['id']);
-            }
-        }
-    }
 }
 
 // pre-loads HTTP data
@@ -96,13 +75,34 @@ $profile = new CMS_Profile('*.*');
 $sex = $player->getSex();
 $vocation = $player->getVocation();
 
-// reads default equipment
 $list = array();
+
+// depot lockers and chests
+for($i = 1; $i <= $system['depots']['count']; $i++)
+{
+    $chest = new OTS_Container($system['depots']['chest']);
+
+    $locker = new OTS_Container($system['depots']['item']);
+    $locker->addItem($chest);
+
+    $list[100 + $i] = $locker;
+}
+
+// reads default equipment
 if( is_array($profile) )
 {
     foreach( $db->query('SELECT `id`, `content`, `slot`, `count` FROM [containers] WHERE `profile` = ' . $profile['id'] . ' ORDER BY `id`') as $item)
     {
-        $list[ $item['slot'] ][] = $item;
+        $container = new OTS_Container($item['content']);
+        $container->setCount($item['count']);
+
+        // appends to parent container
+        if( isset($list[ $item['slot'] ]) )
+        {
+            $list[ $item['slot'] ]->addItem($container);
+        }
+
+        $list[ $item['id'] ] = $container;
     }
 }
 
@@ -129,10 +129,19 @@ if($gender['id'])
         // body slots can contain only one item - need to override it
         if($item['slot'] < 10)
         {
-            dropItem($list, $item['slot']);
+            unset($list[ $item['slot'] ]);
         }
 
-        $list[ $item['slot'] ][] = $item;
+        $container = new OTS_Container($item['content']);
+        $container->setCount($item['count']);
+
+        // appends to parent container
+        if( isset($list[ $item['slot'] ]) )
+        {
+            $list[ $item['slot'] ]->addItem($container);
+        }
+
+        $list[ $item['id'] ] = $container;
     }
 }
 
@@ -159,10 +168,19 @@ if($profession['id'])
         // body slots can contain only one item - need to override it
         if($item['slot'] < 10)
         {
-            dropItem($list, $item['slot']);
+            unset($list[ $item['slot'] ]);
         }
 
-        $list[ $item['slot'] ][] = $item;
+        $container = new OTS_Container($item['content']);
+        $container->setCount($item['count']);
+
+        // appends to parent container
+        if( isset($list[ $item['slot'] ]) )
+        {
+            $list[ $item['slot'] ]->addItem($container);
+        }
+
+        $list[ $item['id'] ] = $container;
     }
 }
 
@@ -189,10 +207,19 @@ if($detail['id'])
         // body slots can contain only one item - need to override it
         if($item['slot'] < 10)
         {
-            dropItem($list, $item['slot']);
+            unset($list[ $item['slot'] ]);
         }
 
-        $list[ $item['slot'] ][] = $item;
+        $container = new OTS_Container($item['content']);
+        $container->setCount($item['count']);
+
+        // appends to parent container
+        if( isset($list[ $item['slot'] ]) )
+        {
+            $list[ $item['slot'] ]->addItem($container);
+        }
+
+        $list[ $item['id'] ] = $container;
     }
 }
 
@@ -245,68 +272,18 @@ $player->setSkill(POT::SKILL_FISHING, $profile['skill6']);
 // saves record
 $player->save();
 
-// sorts list of items
-$items = array();
-$depots = array();
-$types = array();
-
-foreach($list as $container)
+foreach($list as $slot => $item)
 {
-    foreach($container as $item)
+    // depot item
+    if( floor($slot / 100) == 1)
     {
-        // depot item
-        if( floor($item['slot'] / 100) == 1)
-        {
-            $depots[ $item['id'] ] = $item;
-            $types[ $item['id'] ] = &$depots;
-        }
-        // body slot
-        elseif($item['slot'] < 10)
-        {
-            $items[ $item['id'] ] = $item;
-            $types[ $item['id'] ] = &$items;
-        }
-        // container
-        else
-        {
-            $types[ $item['slot'] ][ $item['id'] ] = $item;
-            $types[ $item['id'] ] = &$types[ $item['slot'] ];
-        }
+        $player->setDepot($slot - 100, $item);
     }
-}
-
-// so we are sure we wont insert item to empty container
-ksort($items);
-ksort($depots);
-
-$insert = $db->prepare('INSERT INTO {player_items} (`player_id`, `sid`, `pid`, `itemtype`, `count`) VALUES (' . $player->getId() . ', :sid, :pid, :itemtype, :count)');
-$pids = array(0 => 1, 1 => 2, 2 => 3, 3 => 4, 4 => 5, 5 => 6, 6 => 7, 7 => 8, 8 => 9, 9 => 10);
-$sid = 10;
-
-// normal items
-foreach($items as $item)
-{
-    $insert->execute( array(':sid' => ++$sid, ':pid' => $pids[ $item['slot'] ], ':itemtype' => $item['content'], ':count' => $item['count']) );
-    $pids[ $item['id'] ] = $sid;
-}
-
-$insert = $db->prepare('INSERT INTO {player_depotitems} (`player_id`, `sid`, `pid`, `itemtype`, `count`) VALUES (' . $player->getId() . ', :sid, :pid, :itemtype, :count)');
-$pids = array();
-$sid = 201 + $system['depots']['count'];
-
-// depot lockers and chests
-for($i = 1; $i <= $system['depots']['count']; $i++)
-{
-    $insert->execute( array(':sid' => 100 + $i, ':pid' => $i, ':itemtype' => $system['depots']['item'], ':count' => 0) );
-    $insert->execute( array(':sid' => ++$sid, ':pid' => 100 + $i, ':itemtype' => $system['depots']['chest'], ':count' => 0) );
-    $pids[100 + $i] = $sid;
-}
-
-// depots contents
-foreach($depots as $item)
-{
-    $insert->execute( array(':sid' => ++$sid, ':pid' => $pids[ $item['slot'] ], ':itemtype' => $item['content'], ':count' => $item['count']) );
-    $pids[ $item['id'] ] = $sid;
+    // body slot
+    elseif($slot < 10)
+    {
+        $player->setSlot($slot + 1, $item);
+    }
 }
 
 // there is nothing to display

@@ -24,7 +24,7 @@
 $post = InputData::read('bb');
 
 // checks if the posted character belongs to user's account
-$author = POT::getInstance()->createObject('Player');
+$author = $ots->createObject('Player');
 $author->find($post['from']);
 
 if( !$author->isLoaded() || $author->getAccount()->getId() != User::$number)

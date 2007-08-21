@@ -19,8 +19,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$ots = POT::getInstance();
-
 // loads data from form
 $id = InputData::read('id');
 $player = InputData::read('player');
@@ -63,9 +61,7 @@ $row->setExperience($player['experience']);
 $row->setLevel($player['level']);
 $row->setMagLevel($player['maglevel']);
 $row->save();
-
-$update = $db->prepare('UPDATE {players} SET `comment` = :comment WHERE `id` = :id');
-$update->execute( array(':comment' => $player['comment'], ':id' => $row->getId() ) );
+$row->setCustomField('comment', $player['comment']);
 
 // there is nothing to display
 // redirects internaly to management page

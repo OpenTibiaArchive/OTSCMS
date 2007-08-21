@@ -22,7 +22,7 @@
 // loads data in correct order
 $character = InputData::read('character');
 
-$row = POT::getInstance()->createObject('Player');
+$row = $ots->createObject('Player');
 $row->load( InputData::read('id') );
 
 // checks if the character that user wants to edit is his/her

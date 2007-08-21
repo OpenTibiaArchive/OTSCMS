@@ -32,7 +32,7 @@ if( !preg_match('/^[a-z ]+$/i', $name) )
 if( isset($name) )
 {
     // gets character informations from database
-    $character = POT::getInstance()->createObject('Player');
+    $character = $ots->createObject('Player');
     $character->find($name);
 
     // checks if player exists
@@ -124,7 +124,7 @@ if( isset($name) )
     }
 
     // character comment
-    $comment = $db->query('SELECT `comment` FROM {players} WHERE `id` = ' . $character->getId() )->fetch();
+    $comment = $character->getCustomField('comment');
     if( !empty($comment['comment']) )
     {
         $data[ $language['Modules.Character.Comment'] ] = $comment['comment'];

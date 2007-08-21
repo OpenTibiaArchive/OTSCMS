@@ -20,7 +20,7 @@
 */
 
 $id = (int) InputData::read('id');
-$player = POT::getInstance()->createObject('Player');
+$player = $ots->createObject('Player');
 $player->find( InputData::read('character') );
 
 // if not a gamemaster checks if user is a leader

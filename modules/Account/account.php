@@ -32,7 +32,7 @@ $template->addJavaScript('character');
 $template->addJavaScript('user');
 
 // reads account information
-$account = POT::getInstance()->createObject('Account');
+$account = $ots->createObject('Account');
 $account->load(User::$number);
 
 // account metainfo table
@@ -72,25 +72,25 @@ $list->idPrefix = 'characterID_';
 
 $characters = array();
 
-foreach( $db->query('SELECT `id`, `name` FROM {players} WHERE `account_id` = ' . $account->getId() ) as $character)
+foreach( $account->getPlayers() as $player)
 {
     // actions links
     $root = XMLToolbox::createDocumentFragment();
 
     // delete link
     $delete = XMLToolbox::createElement('a');
-    $delete->setAttribute('href', '/characters/' . $character['id'] . '/delete');
-    $delete->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Account.DeleteConfirm'] . '\') ) { return pageCharacter.Delete(' . $character['id'] . '); } else { return false; }');
+    $delete->setAttribute('href', '/characters/' . $player->getId() . '/delete');
+    $delete->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Account.DeleteConfirm'] . '\') ) { return pageCharacter.Delete(' . $player->getId() . '); } else { return false; }');
     $delete->addContent($language['main.admin.DeleteSubmit']);
 
     // edit link
     $edit = XMLToolbox::createElement('a');
-    $edit->setAttribute('href', '/characters/' . $character['id'] . '/change');
+    $edit->setAttribute('href', '/characters/' . $player->getId() . '/change');
     $edit->addContent($language['main.admin.EditSubmit']);
 
     $root->addContents($delete, ' | ', $edit);
 
-    $characters[] = array('id' => $character['id'], 'name' => $character['name'], 'actions' => $root);
+    $characters[] = array('id' => $player->getId(), 'name' => $player->getName(), 'actions' => $root);
 }
 
 // reads account's characters

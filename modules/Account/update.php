@@ -21,7 +21,7 @@
 
 // loads HTTP data in correct order
 $account = InputData::read('account');
-$row = POT::getInstance()->createObject('Account');
+$row = $ots->createObject('Account');
 $row->load( InputData::read('id') );
 
 $row->setEMail($account['email']);

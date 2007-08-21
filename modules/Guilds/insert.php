@@ -34,7 +34,7 @@ if($count['count'] > 0)
 }
 
 // loads creator data
-$player = POT::getInstance()->createObject('Player');
+$player = $ots->createObject('Player');
 $player->load($guild['ownerid']);
 
 // checks if user has controll over given character

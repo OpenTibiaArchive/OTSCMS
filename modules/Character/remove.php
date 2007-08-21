@@ -20,7 +20,9 @@
 */
 
 // deletes character and redirects to management page
-$db->exec('DELETE FROM {players} WHERE `id` = ' . (int) InputData::read('id') );
+$player = $ots->createObject('Player');
+$player->load( InputData::read('id') );
+$ots->createObject('Players_List')->deletePlayer($player);
 OTSCMS::call('Character', 'manage');
 
 ?>

@@ -34,7 +34,10 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($request['content'], User::$numb
 $db->query('DELETE FROM [requests] WHERE `id` = ' . $id);
 
 // adds player to guild with default rank
-$db->exec('UPDATE {players} SET `rank_id` = ' . $request['rank'] . ' WHERE `id` = ' . $request['name']);
+$player = $ots->createObject('Player');
+$player->load($request['name']);
+$player->setRankId($request['rank']);
+$player->save();
 
 // moves to guild page
 InputData::write('id', $request['content']);

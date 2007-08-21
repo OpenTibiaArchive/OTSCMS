@@ -20,8 +20,9 @@
 */
 
 // checks characters limit
-$count = $db->query('SELECT COUNT(`id`) AS `count` FROM {players} WHERE `account_id` = ' . User::$number)->fetch();
-if($count['count'] >= $config['system.account_limit'])
+$account = $ots->createObject('Account');
+$account->load(User::$number);
+if( count( $account->getPlayers() ) >= $config['system.account_limit'])
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Character.Limit'];

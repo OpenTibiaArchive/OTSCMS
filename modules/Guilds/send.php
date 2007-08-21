@@ -20,7 +20,7 @@
 */
 
 // loads character id
-$player = POT::getInstance()->createObject('Player');
+$player = $ots->createObject('Player');
 $player->load( InputData::read('character') );
 
 // checks if it's current user's character

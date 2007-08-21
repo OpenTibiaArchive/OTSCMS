@@ -60,14 +60,15 @@ if( !empty($user['avatar']) )
 }
 
 // updates profile
-$profile = $db->prepare('UPDATE {accounts} SET `signature` = :signature, `website` = :website WHERE `id` = :id');
-$profile->execute( array(':signature' => $user['signature'], ':website' => $user['website']) );
+$account = $ots->createObject('Account');
+$account->load(User::$number);
+$account->setCustomField('signature', $user['signature']);
+$account->setCustomField('website', $user['website']);
 
 // if avatar was fine
 if( !isset($message) )
 {
-    $avatar = $db->prepare('UPDATE {accounts} SET `avatar` = :avatar WHERE `id` = :id');
-    $avatar->execute( array(':avatar' => $user['avatar']) );
+    $account->setCustomField('avatar', $user['avatar']);
 }
 
 // displays text so the user could see that it succeeded

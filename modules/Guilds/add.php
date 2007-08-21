@@ -34,7 +34,14 @@ if($invite['account_id'] != User::$number)
 $db->query('DELETE FROM [invites] WHERE `id` = ' . $id);
 
 // adds player to guild with default rank
-$db->exec('UPDATE {players} SET `rank_id` = ' . $invite['rank'] . ' WHERE `id` = ' . $invite['name']);
+$player = $ots->createObject('Player');
+$player->load($invite['name']);
+
+if( $player->isLoaded() )
+{
+    $player->setRankId($invite['rank']);
+    $player->save();
+}
 
 // moves to guild page
 InputData::write('id', $invite['content']);

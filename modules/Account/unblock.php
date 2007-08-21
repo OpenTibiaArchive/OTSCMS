@@ -20,7 +20,7 @@
 */
 
 // loads account
-$account = POT::getInstance()->createObject('Account');
+$account = $ots->createObject('Account');
 $account->load( InputData::read('id') );
 $account->block();
 $account->save();

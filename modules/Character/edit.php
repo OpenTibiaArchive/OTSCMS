@@ -20,10 +20,8 @@
 */
 
 // loads player fro edition
-$player = POT::getInstance()->createObject('Player');
+$player = $ots->createObject('Player');
 $player->load( InputData::read('id') );
-
-$comment = $db->query('SELECT `comment` FROM {players} WHERE `id` = ' . $player->getId() );
 
 // creates edition form
 $form = $template->createComponent('AdminForm');
@@ -36,6 +34,6 @@ $form->addField('player[account_id]', ComponentAdminForm::FieldSelect, $language
 $form->addField('player[group_id]', ComponentAdminForm::FieldSelect, $language['Modules.Character.Group'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM {groups}') ), 'selected' => $player->getGroup()->getId() ) );
 $form->addField('player[experience]', ComponentAdminForm::FieldText, $language['Modules.Character.Experience'], $player->getExperience() );
 $form->addField('player[maglevel]', ComponentAdminForm::FieldText, $language['Modules.Character.MagicLevel'], $player->getMagLevel() );
-$form->addField('player[comment]', ComponentAdminForm::FieldArea, $language['Modules.Character.Comment'], $comment['comment']);
+$form->addField('player[comment]', ComponentAdminForm::FieldArea, $language['Modules.Character.Comment'], $player->getCustomField('comment') );
 
 ?>

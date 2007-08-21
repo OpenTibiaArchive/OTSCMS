@@ -25,14 +25,14 @@ $accounts = array();
 $md5 = $config['system.use_md5'];
 
 // reads accounts
-foreach( $db->query('SELECT `id`, `email`, `blocked`, `premdays`, `password` FROM {accounts} ORDER BY `id`') as $account)
+foreach( $ots->createObject('Accounts_List') as $account)
 {
-    $row = array('id' => $account['id'], 'email' => $account['email'], 'blocked' => $account['blocked'] ? $language['Modules.Account.Blocked'] : $language['Modules.Account.Unblocked'], 'premdays' => $account['premdays']);
+    $row = array('id' => $account->getId(), 'email' => $account->getEMail(), 'blocked' => $account->isBlocked() ? $language['Modules.Account.Blocked'] : $language['Modules.Account.Unblocked'], 'premdays' => $account->getPACCDays() );
 
     // if MD5 is disabled we can display passwords
     if(!$md5)
     {
-        $row['password'] = $account['password'];
+        $row['password'] = $account->getPassword();
     }
 
     $accounts[] = $row;

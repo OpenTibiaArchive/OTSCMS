@@ -30,7 +30,7 @@ if( !preg_match('/^[a-z][\w\.+-]*[a-z0-9]@[a-z0-9][\w\.+-]*\.[a-z][a-z\.]*[a-z]$
     return;
 }
 
-$account = POT::getInstance()->createObject('Account');
+$account = $ots->createObject('Account');
 
 // checks if this e-mail was already used
 $account->find($email);

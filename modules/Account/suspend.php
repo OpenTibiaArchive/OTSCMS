@@ -19,8 +19,10 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// deletes account - database triggers will handle account and characters stuff removing
-$db->exec('DELETE FROM {accounts} WHERE `id` = ' . User::$number);
+// deletes account
+$account = $ots->createObject('Account');
+$account->load(User::$number);
+$ots->createObject('Accounts_List')->deleteAccount($account);
 
 // redirects to logout page
 Toolbox::redirect('/logout');
