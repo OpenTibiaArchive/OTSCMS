@@ -24,7 +24,6 @@ return array(
     'CharactersData' => 'Postacie na koncie',
     'AccountNumber' => 'Numer konta',
     'Password' => 'Hasło do konta',
-    'Premium' => 'Pozostałe dni premi',
     'DeleteConfirm' => 'Czy jesteś pewien, że chcesz usunąć tą postać TRWALE? Będzie to NATYCHMIASTOWE i NIEMOŻLIWYM będzie odzyskanie jej!',
     'PleaseEMail' => 'Proszę wpisać poprawny adres email.',
     'SignupText' => 'Proszę podać adres e-mail. <span style="color: #FF0000;">Musi być poprawny, zostanie na niego przesłane hasło</span>.',

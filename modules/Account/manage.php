@@ -27,7 +27,7 @@ $md5 = $config['system.use_md5'];
 // reads accounts
 foreach( $ots->createObject('Accounts_List') as $account)
 {
-    $row = array('id' => $account->getId(), 'email' => $account->getEMail(), 'blocked' => $account->isBlocked() ? $language['Modules.Account.Blocked'] : $language['Modules.Account.Unblocked'], 'premdays' => $account->getPACCDays() );
+    $row = array('id' => $account->getId(), 'email' => $account->getEMail(), 'blocked' => $account->isBlocked() ? $language['Modules.Account.Blocked'] : $language['Modules.Account.Unblocked'] );
 
     // if MD5 is disabled we can display passwords
     if(!$md5)
@@ -49,7 +49,6 @@ if(!$md5)
 
 $list->addField('email', $language['Modules.Account.EMail']);
 $list->addField('blocked', $language['Modules.Account.Status']);
-$list->addField('premdays', $language['Modules.Account.Premium']);
 $list->addAction('remove', $language['main.admin.DeleteSubmit']);
 $list->addAction('edit', $language['main.admin.EditSubmit']);
 $list->addAction('block', $language['Modules.Account.BlockSubmit']);

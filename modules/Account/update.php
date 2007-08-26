@@ -25,7 +25,6 @@ $row = $ots->createObject('Account');
 $row->load( InputData::read('id') );
 
 $row->setEMail($account['email']);
-$row->setPACCDays($account['premdays']);
 
 // checks if new password is set
 if( trim($account['password']) )

@@ -32,7 +32,6 @@ $form['submit'] = $language['main.admin.UpdateSubmit'];
 $form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Account.AccountNumber'], $account->getId() );
 $form->addField('account[email]', ComponentAdminForm::FieldText, $language['Modules.Account.EMail'], $account->getEMail() );
 $form->addField('account[password]', ComponentAdminForm::FieldText, $language['Modules.Account.Password'], $config['system.use_md5'] ? '' : $account->getPassword() );
-$form->addField('account[premdays]', ComponentAdminForm::FieldText, $language['Modules.Account.Premium'], $account->getPACCDats() );
 
 $characters = array();
 

@@ -24,7 +24,6 @@ return array(
     'CharactersData' => 'Account characters',
     'AccountNumber' => 'Account number',
     'Password' => 'Account password',
-    'Premium' => 'Premium days',
     'DeleteConfirm' => 'Are you sure to delete this character PERMANENTLY? It will become IMMEDIATELY and it will be IMPOSSIBLE to recovery it!',
     'PleaseEMail' => 'Please enter a valid email address.',
     'SignupText' => 'Please insert your e-mail address. Must be valid, because you will receive your password there.',
