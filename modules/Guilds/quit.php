@@ -29,10 +29,10 @@ if( !$character->isLoaded() || $character->getAccount()->getId() != User::$numbe
     throw new HandledException('NotOwner');
 }
 
-$guild = $db->query('SELECT {guilds}.`id` AS `id`, {guilds}.`ownerid` AS `ownerid` FROM {guilds}, {guild_ranks} WHERE {guilds}.`id` = {guild_ranks}.`guild_id` AND {guild_ranks}.`id` = ' . $character->getRankId() )->fetch();
+$guild = $character->getRank()->getGuild();
 
 // checks if member is a leader
-if($guild['ownerid'] == $character->getId() )
+if( $guild->getOwner()->getId() == $character->getId() )
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Guilds.CantLeave'];
@@ -41,11 +41,11 @@ if($guild['ownerid'] == $character->getId() )
 
 // clears membership data
 $character->setGuildNick('');
-$character->setRankId(0);
+$character->setRank();
 $character->save();
 
 // moves to guild page
-InputData::write('id', $guild['id']);
+InputData::write('id', $guild->getId() );
 OTSCMS::call('Guilds', 'display');
 
 ?>

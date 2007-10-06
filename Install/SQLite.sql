@@ -96,7 +96,7 @@ CREATE TABLE [options] (
     `id` INTEGER PRIMARY KEY,
     `name` VARCHAR(255),
     `poll` INT NOT NULL,
-    FOREIGN KEY (`poll`) REFERENCES [polls] (`id`)
+    FOREIGN KEY (`poll`) REFERENCES [polls] (`id`) ON DELETE CASCADE
 );
 
 DROP TABLE [votes];
@@ -104,8 +104,8 @@ DROP TABLE [votes];
 CREATE TABLE [votes] (
     `name` INT NOT NULL,
     `content` INT NOT NULL,
-    FOREIGN KEY (`name`) REFERENCES [options] (`id`),
-    FOREIGN KEY (`content`) REFERENCES {accounts} (`id`),
+    FOREIGN KEY (`name`) REFERENCES [options] (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`content`) REFERENCES {accounts} (`id`) ON DELETE CASCADE,
     UNIQUE (`name`, `content`)
 );
 
@@ -174,7 +174,7 @@ CREATE TABLE [containers] (
     `slot` INT KEY,
     `count` INT,
     `profile` INT NOT NULL,
-    FOREIGN KEY (`profile`) REFERENCES [profiles] (`id`)
+    FOREIGN KEY (`profile`) REFERENCES [profiles] (`id`) ON DELETE CASCADE
 );
 
 DROP TABLE [news];
@@ -200,8 +200,8 @@ CREATE TABLE [invites] (
     `id` INTEGER PRIMARY KEY,
     `name` INT NOT NULL,
     `content` INT NOT NULL,
-    FOREIGN KEY (`name`) REFERENCES {players} (`id`),
-    FOREIGN KEY (`content`) REFERENCES {guilds} (`id`)
+    FOREIGN KEY (`name`) REFERENCES {players} (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`content`) REFERENCES {guilds} (`id`) ON DELETE CASCADE
 );
 
 DROP TABLE [requests];
@@ -264,24 +264,6 @@ FROM
     {players} AS `tos`
 WHERE
     [pms].`to` = `tos`.`id` AND [pms].`from` = `froms`.`id` AND {accounts}.`id` = `froms`.`account_id`;
-
-DROP VIEW [guild_members];
-
-CREATE VIEW [guild_members]
-AS SELECT
-    {players}.`id` AS `id`,
-    {players}.`name` AS `name`,
-    {players}.`account_id` AS `account`,
-    {players}.`guildnick` AS `guildnick`,
-    {guild_ranks}.`id` AS `rank_id`,
-    {guild_ranks}.`name` AS `rank`,
-    {guild_ranks}.`level` AS `level`,
-    {guilds}.`id` AS `guild_id`,
-    {guilds}.`name` AS `guild`
-FROM
-    {guilds}, {guild_ranks}, {players}
-WHERE
-    {players}.`rank_id` = {guild_ranks}.`id` AND {guild_ranks}.`guild_id` = {guilds}.`id`;
 
 DROP VIEW [player_skills];
 

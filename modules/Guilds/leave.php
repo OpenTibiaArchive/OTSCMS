@@ -24,7 +24,25 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = '/guild/quit';
 $form['submit'] = $language['Modules.Guilds.LeaveSubmit'];
 
+$guild = $ots->createObject('Guild');
+$guild->load( InputData::read('id') );
+
+$account = $ots->createObject('Account');
+$account->load(User::$number);
+
+$players = array();
+
 // loads all non-leader members of this guild that belongs to currently logged account
-$form->addField('id', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.LeaveCharacter'], array('options' => Toolbox::dumpRecords( $db->query('SELECT {players}.`id` AS `key`, {players}.`name` AS `value` FROM {players}, {guilds}, {guild_ranks} WHERE {players}.`rank_id` AND {guild_ranks}.`id` AND {guild_ranks}.`guild_id` = {guilds}.`id` AND {players}.`id` != {guilds}.`ownerid` AND {guild_ranks}.`level` < 3 AND {guilds}.`id` = ' . (int) InputData::read('id') . ' AND {players}.`account_id` = ' . User::$number) ) ) );
+foreach( $account->getPlayers() as $player)
+{
+    $rank = $player->getRank();
+
+    if( isset($rank) && $rank->getLevel() < 3)
+    {
+        $players[ $player->getId() ] = $player->getName();
+    }
+}
+
+$form->addField('id', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.LeaveCharacter'], array('options' => $players) );
 
 ?>

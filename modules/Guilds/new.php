@@ -20,19 +20,25 @@
 */
 
 // creates new rank
-$rank = new OTS_GuildRank( InputData::read('rank') );
+$rank = $ots->createObject('GuildRank');
+$guild = $ots->createObject('Guild');
+$guild->load($input['guild_id');
+
 
 // checks if user is able to create this rank
-if( !User::hasAccess(3) && Toolbox::guildAccess($rank['guild_id'], User::$number) < $rank['level'])
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $input['level'])
 {
     throw new NoAccessException();
 }
 
 // saves new rank
+$rank->setGuild($guild);
+$renk->setName($input['name']);
+$rank->setLevel($input['level']);
 $rank->save();
 
 // displays creation form
-InputData::write('id', $rank['guild_id']);
+InputData::write('id', $guild->getId() );
 OTSCMS::call('Guilds', 'manage');
 
 ?>

@@ -19,11 +19,14 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+$account = $ots->createObject('Account');
+$account->load(User::$number);
+
 // bb message editor
 $form = $template->createComponent('BBEditor');
 $form['action'] = '/send';
 $form['fields'] = array('name' => InputData::read('name'), 'content' => InputData::read('content'), 'to' => InputData::read('to') );
-$form['characters'] = $db->query('SELECT `name` FROM {players} WHERE `account_id` = ' . User::$number);
+$form['characters'] = $account->getPlayers();
 $form->module = 'PM';
 $form->toField = true;
 

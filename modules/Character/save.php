@@ -31,7 +31,7 @@ if( !$row->isLoaded() || $row->getAccount()->getId() != User::$number)
     throw new HandledException('NotOwner');
 }
 
-$row['comment'] = $character['comment'];
+$row->setCustomField('comment', $character['comment']);
 $row->save();
 
 // there is nothing to display

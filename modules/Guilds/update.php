@@ -23,11 +23,13 @@
 $member = InputData::read('member');
 $player = $ots->createObject('Player');
 $player->load( InputData::read('id') );
-$rank = new OTS_GuildRank( $player->getRankId() );
-$new = new OTS_GuildRank($member['rank_id']);
+$rank = $player->getRank();
+$new = $ots->createObject('GuildRank');
+$new->load($member['rank_id']);
+$guild = $rank->getGuild();
 
 // check if ranks are from same guild
-if($new['guild_id'] != $rank['guild_id'])
+if( $new->getGuild()->getId() != $guild->getId() )
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Guilds.DifferentGuild'];
@@ -35,18 +37,18 @@ if($new['guild_id'] != $rank['guild_id'])
 }
 
 // if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($rank['guild_id'], User::$number) < $rank['level'])
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->getLevel() )
 {
     throw new NoAccessException();
 }
 
 // updates member
-$player->setRankId($member['rank_id']);
+$player->setRank($new);
 $player->setGuildNick($member['guildnick']);
 $player->save();
 
 // moves to guilds list
-InputData::write('id', $rank['guild_id']);
+InputData::write('id', $guild->getId() );
 OTSCMS::call('Guilds', 'display');
 
 ?>

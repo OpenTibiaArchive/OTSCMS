@@ -87,8 +87,8 @@ class ComponentBBEditor extends TemplateComponent
         foreach($this['characters'] as $character)
         {
             $option = XMLToolbox::createElement('option');
-            $option->setAttribute('value', $character['name']);
-            $option->addContent($character['name']);
+            $option->setAttribute('value', $character->getName() );
+            $option->addContent( $character->getName() );
             $element->addContent($option);
         }
 

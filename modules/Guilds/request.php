@@ -24,6 +24,16 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = '/admin.php?modeule=Guilds&command=send&id=' . InputData::read('id');
 $form['submit'] = $language['Modules.Guilds.RequestSubmit'];
 
-$form->addField('character', ComponentAdminForm::FieldSelect, $language['Modules.Topic.From'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM {players} WHERE `account_id` = ' . User::$number) ) ) );
+$players = array();
+
+$account = $ots->createObject('Account');
+$account->load(User::$number);
+
+foreach( $account->getPlayers() as $player)
+{
+    $players[ $player->getId() ] = $player->getName();
+}
+
+$form->addField('character', ComponentAdminForm::FieldSelect, $language['Modules.Topic.From'], array('options' => $players) );
 
 ?>

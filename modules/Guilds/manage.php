@@ -21,10 +21,12 @@
 
 $template->addJavaScript('guilds');
 
-$id = (int) InputData::read('id');
+$guild = $ots->createObject('Guild');
+$guild->load( InputData::read('id') );
+$access = Toolbox::guildAccess($guild);
 
 // if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($id, User::$number) < 2)
+if( !User::hasAccess(3) && $access < 2)
 {
     throw new NoAccessException();
 }
@@ -33,13 +35,13 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($id, User::$number) < 2)
 $js = $template->createComponent('RAW');
 $js['content'] = '<script type="text/javascript">
 
-GuildID = ' . $id . ';
+GuildID = ' . $guild->getId() . ';
 
 </script>';
 
 // new rank form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Guilds&command=new&rank[guild_id]=' . $id;
+$form['action'] = '/admin/module=Guilds&command=new&rank[guild_id]=' . $guild->getId();
 $form['submit'] = $language['Modules.Guilds.NewSubmit'];
 $form['id'] = 'ranksForm';
 
@@ -56,15 +58,21 @@ $table->idPrefix = 'rankID_';
 $ranks = array();
 
 // reads current guild ranks
-foreach( $db->query('SELECT `id`, `name`, `level` FROM {guild_ranks} WHERE `guild_id` = ' . $id . ( Toolbox::guildAccess($id, User::$number) == 2 ? ' AND `level` != 3' : '') ) as $rank)
+foreach( $guild->getGuildRanks() as $rank)
 {
+    // skips leader rank if it's not leader on current account
+    if($access == 2 && $rank->getLevel() == 3)
+    {
+        continue;
+    }
+
     // deletion link
     $link = XMLToolbox::createElement('a');
-    $link->setAttribute('href', '/admin/module=Guilds&command=delete&id=' . $rank['id']);
-    $link->setAttribute('onclick', 'if( confirm(\'' . $language['main.admin.ConfirmDelete'] . '\') ) { return pageGuilds.Delete(' . $rank['id'] . '); } else { return false; }');
+    $link->setAttribute('href', '/admin/module=Guilds&command=delete&id=' . $rank->getId() );
+    $link->setAttribute('onclick', 'if( confirm(\'' . $language['main.admin.ConfirmDelete'] . '\') ) { return pageGuilds.Delete(' . $rank->getId() . '); } else { return false; }');
     $link->addContent($language['main.admin.DeleteSubmit']);
 
-    $ranks[] = array('id' => $rank['id'], 'name' => $rank['name'] . ' (' . $language['Modules.Guilds.Level_' . $rank['level'] ] . ')', 'actions' => $link);
+    $ranks[] = array('id' => $rank->getId(), 'name' => $rank->getName() . ' (' . $language['Modules.Guilds.Level_' . $rank->getLevel() ] . ')', 'actions' => $link);
 }
 
 $table['list'] = $ranks;
@@ -79,6 +87,16 @@ $list->addAction('reject', $language['Modules.Guilds.RejectSubmit']);
 $list->idPrefix = 'requestID_';
 $list->module = 'Guilds';
 
-$list['list'] = $db->query('SELECT [requests].`id` AS `id`, {players}.`name` AS `name` FROM [requests], {players} WHERE [requests].`name` = {players}.`id` AND [requests].`content` = ' . $id);
+$requests = array();
+$driver = new RequestsDriver($guild);
+
+// reads membership requests
+foreach( $guild->listRequests() as $player)
+{
+    $requests[ $player->getId() ] = $player->getName();
+}
+
+$list['list'] = $requests;
+Session::write('guild', $guild->getId() );
 
 ?>

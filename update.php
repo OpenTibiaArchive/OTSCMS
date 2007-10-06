@@ -154,6 +154,9 @@ switch($config['version'])
         // updates system version
         $db->exec('UPDATE [settings] SET `content` = \'3.1.0\' WHERE `name` = \'version\'');
 
+        // not used anymore
+        $db->exec('DROP VIEW [guild_members]');
+
         // guides table
         switch( $db->getAttribute(PDO::ATTR_DRIVER_NAME) )
         {

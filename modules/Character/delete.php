@@ -20,10 +20,15 @@
 */
 
 // gets account of the character
-if( !$db->exec('DELETE FROM {players} WHERE `id` = ' . (int) InputData::read('id') . ' AND `account_id` = ' . User::$number) )
+$player = $ots->createObject('Player');
+$player->load( InputData::read('id') );
+
+if( $player->getAccount()->getId() != User::$number)
 {
     throw new NoAccessException();
 }
+
+$ots->createObject('Players_List')->deletePlayer($player);
 
 // redirectd to account management
 OTSCMS::call('Account', 'account');

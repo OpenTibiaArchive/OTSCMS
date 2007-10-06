@@ -75,19 +75,19 @@ if( isset($name) )
     }
 
     // reads guild information if there is any
-    $rank = $character->getRankId();
-    if($rank)
+    $rank = $character->getRank();
+    if( isset($rank) )
     {
         // for guilds link
         $root = XMLToolbox::createDocumentFragment();
         $a = XMLToolbox::createElement('a');
 
-        $guild = $db->query('SELECT {guilds}.`id` AS `id`, {guilds}.`name` AS `name`, {guild_ranks}.`name` AS `rank` FROM {guilds}, {guild_ranks} WHERE {guilds}.`id` = {guild_ranks}.`guild_id` AND {guild_ranks}.`id` = ' . $rank)->fetch();
+        $guild = $rank->getGuild();
 
-        $a->setAttribute('href', '/guilds/' . $guild['id']);
-        $a->addContent($guild['name']);
+        $a->setAttribute('href', '/guilds/' . $guild->getId() );
+        $a->addContent( $guild->getName() );
 
-        $root->addContents($guild['rank'] . ' ' . $language['Modules.Character.InGuild'] . ' ', $a);
+        $root->addContents( $rank->getName() . ' ' . $language['Modules.Character.InGuild'] . ' ', $a);
 
         $data[ $language['Modules.Character.Guild'] ] = $root;
     }
@@ -97,29 +97,31 @@ if( isset($name) )
 
     // forum profile part
     $account = $character->getAccount();
-    $profile = $db->query('SELECT `signature`, `avatar`, `website` FROM {accounts} WHERE `id` = ' . $account->getId() )->fetch();
+    $signature = $account->getCustomField('signature');
+    $avatar = $account->getCustomField('avatar');
+    $website = $account->getCustomField('website');
 
     // parses BB code and then loads it into XML tree
-    if( !empty($profile['signature']) )
+    if( !empty($signature) )
     {
-        $data[ $language['Modules.Account.Signature'] ] = XMLToolbox::inparse( BBParser::parse($profile['signature']) );
+        $data[ $language['Modules.Account.Signature'] ] = XMLToolbox::inparse( BBParser::parse($signature) );
     }
 
-    if( !empty($profile['avatar']) )
+    if( !empty($avatar) )
     {
         // avatar image
         $img = XMLToolbox::createElement('img');
-        $img->setAttribute('alt', $profile['avatar']);
-        $img->setAttribute('src', $profile['avatar']);
+        $img->setAttribute('alt', $avatar);
+        $img->setAttribute('src', $avatar);
         $data[ $language['Modules.Account.Avatar'] ] = $img;
     }
 
-    if( !empty($profile['website']) )
+    if( !empty($website) )
     {
         // website link
         $a = XMLToolbox::createElement('a');
-        $a->setAttribute('href', $profile['website']);
-        $a->addContent($profile['website']);
+        $a->setAttribute('href', $website);
+        $a->addContent($website);
         $data[ $language['Modules.Account.Website'] ] = $a;
     }
 

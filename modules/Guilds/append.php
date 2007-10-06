@@ -19,12 +19,13 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$id = (int) InputData::read('id');
+$guild = $ots->createObject('Guild');
+$guild->load( InputData::read('id') );
 $player = $ots->createObject('Player');
 $player->find( InputData::read('character') );
 
 // if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($id, User::$number) < 2)
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
 {
     throw new NoAccessException();
 }
@@ -32,11 +33,9 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($id, User::$number) < 2)
 // check if player exists
 if( $player->isLoaded() )
 {
-    // saves new invitation
-    $invite = new CMS_Invite();
-    $invite['name'] = $player->getId();
-    $invite['content'] = $id;
-    $invite->save();
+    // saves invitation
+    $invites = new InvitesDriver($guild);
+    $guild->invite($player);
 }
 
 // moves to guilds list

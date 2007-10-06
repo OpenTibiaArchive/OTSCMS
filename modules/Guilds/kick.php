@@ -22,27 +22,28 @@
 // loads player info
 $player = $ots->createObject('Player');
 $player->load( InputData::read('id') );
-$rank = new OTS_GuildRank( $player->getRankId() );
+$rank = $player->getRank();
+$guild = $rank->getGuild();
 
 // if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($rank['guild_id'], User::$number) < 2)
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
 {
     throw new NoAccessException();
 }
 
 // checks user rank if he is not a leader
-if($rank['level'] == 3)
+if( $rank->getLevel() == 3)
 {
     throw new NoAccessException();
 }
 
 // kick user out
-$player->setRankId(0);
+$player->setRank();
 $player->setGuildNick('');
 $player->save();
 
 // moves to guild page
-InputData::write('id', $rank['guild_id']);
+InputData::write('id', $guild->getId() );
 OTSCMS::call('Guilds', 'display');
 
 ?>

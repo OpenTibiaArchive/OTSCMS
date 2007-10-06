@@ -63,7 +63,7 @@ $player->setGroup($group);
 $player->setSex($character['sex']);
 $player->setVocation($character['vocation']);
 $player->setConditions(0);
-$player->setRankId(0);
+$player->setRank();
 $player->setLookAddons(0);
 $player->setTownId($system['rook']['enabled'] ? $system['rook']['id'] : $character['town']);
 

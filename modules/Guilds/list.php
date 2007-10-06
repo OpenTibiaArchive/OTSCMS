@@ -19,11 +19,19 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+// guilds list
+$guilds = array();
+
+foreach( $ots->createObject('Guilds_List') as $guild)
+{
+    $guilds[ $guild->getId() ] = $guild->getName();
+}
+
 // news display component
 $list = $template->createComponent('ItemsList');
 $list['header'] = $language['Modules.Guilds.GuildsList'];
 $list['link'] = '/guilds/';
-$list['list'] = Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM {guilds} ORDER BY `name`') );
+$list['list'] = $guilds;
 
 // archive link
 $link = $template->createComponent('Links');

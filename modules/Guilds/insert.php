@@ -22,11 +22,10 @@
 $guild = InputData::read('guild');
 
 // checks if guild with such name exists
-$count = $db->prepare('SELECT COUNT(`id`) AS `count` FROM {guilds} WHERE `name` = :name');
-$count->execute( array(':name' => $guild['name']) );
-$count = $count->fetch();
+$row = $ots->createObject('Guild');
+$row->find($guild['name']);
 
-if($count['count'] > 0)
+if( $row->isLoaded() )
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Guilds.NameUsed'];
@@ -44,21 +43,29 @@ if( !$player->isLoaded() || $player->getAccount()->getId() != User::$number)
 }
 
 // creates guild
-$row = new OTS_Guild();
-$row['name'] = htmlspecialchars($guild['name']);
-$row['ownerid'] = $player->getId();
-$row['creationdata'] = time();
+$row->setName( htmlspecialchars($guild['name']) );
+$row->setOwner($player);
+$row->setCreationData( time() );
 $row->save();
 
-// reads guild leader rank created by database handler
-$rank = $db->query('SELECT `id` FROM {guild_ranks} WHERE `guild_id` = ' . $row['id'] . ' AND `name` = \'Leader\'')->fetch();
+$leader = null;
+
+// reads guild leader rank created by database trigger
+foreach( $row->getGuildRanks() as $rank)
+{
+    if( $rank->getLevel() == 3)
+    {
+        $leader = $rank;
+        break;
+    }
+}
 
 // updates leader rank info
-$player->getRankId() = $rank['id'];
+$player->getRank($leader);
 $player->save();
 
 // moves to just-created guild page
-InputData::write('id', $row['id']);
+InputData::write('id', $row->getId() );
 OTSCMS::call('Guilds', 'display');
 
 ?>

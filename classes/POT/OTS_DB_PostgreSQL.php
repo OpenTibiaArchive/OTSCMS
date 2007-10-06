@@ -1,24 +1,23 @@
 <?php
 
 /**#@+
- * @version 0.0.1
+ * @version 0.0.3+SVN
+ * @since 0.0.3+SVN
  */
 
 /**
  * @package POT
- * @version 0.0.3+SVN
  * @author Wrzasq <wrzasq@gmail.com>
  * @copyright 2007 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
  */
 
 /**
- * SQLite connection interface.
+ * PostgreSQL connection interface.
  * 
  * @package POT
- * @version 0.0.3+SVN
  */
-class OTS_DB_SQLite extends PDO implements IOTS_DB
+class OTS_DB_PostgreSQL extends PDO implements IOTS_DB
 {
 /**
  * Tables prefix.
@@ -30,29 +29,68 @@ class OTS_DB_SQLite extends PDO implements IOTS_DB
 /**
  * Creates database connection.
  * 
- * Connects to SQLite database on given arguments.
+ * Connects to PgSQL database on given arguments.
  * 
  * <p>
  * List of parameters for this drivers:
  * </p>
  * 
+ * - <var>host</var> - database server.
+ * - <var>port</var> - port (optional, also it is possible to use host:port in <var>host</var> parameter).
  * - <var>database</var> - database name.
+ * - <var>user</var> - user login.
+ * - <var>password</var> - user password.
  * 
  * @param array $params Connection parameters.
  * @see POT::connect()
  */
     public function __construct(array $params)
     {
+        $user = null;
+        $password = null;
+        $dns = array();
+
+        // host:port support
+        if( strpos(':', $params['host']) !== false)
+        {
+            $host = explode(':', $params['host'], 2);
+
+            $params['host'] = $host[0];
+            $params['port'] = $host[1];
+        }
+
+        if( isset($params['host']) )
+        {
+            $dns[] = 'host=' . $params['host'];
+        }
+
+        if( isset($params['port']) )
+        {
+            $dns[] = 'port=' . $params['port'];
+        }
+
+        if( isset($params['database']) )
+        {
+            $dns[] = 'dbname=' . $params['database'];
+        }
+
+        if( isset($params['user']) )
+        {
+            $user = $params['user'];
+        }
+
+        if( isset($params['password']) )
+        {
+            $password = $params['password'];
+        }
+
         if( isset($params['prefix']) )
         {
             $this->prefix = $params['prefix'];
         }
 
         // PDO constructor
-        parent::__construct('sqlite:' . $params['database']);
-
-        // this class will drop quotes from field names
-        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('OTS_SQLite_Results') );
+        parent::__construct('pgsql:' . implode(' ', $dns), $user, $password);
     }
 
 /**

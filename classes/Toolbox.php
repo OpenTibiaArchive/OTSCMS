@@ -172,10 +172,10 @@ class Toolbox
     }
 
     // returns user's access level in given guild
-    public static function guildAccess($guild, $account)
+    public static function guildAccess(OTS_Guild $guild)
     {
         // fetches the highest user access level in given guild
-        $access = OTSCMS::getResource('DB')->query('SELECT MAX(`level`) AS `access` FROM [guild_members] WHERE `guild_id` = ' . $guild . ' AND `account` = ' . $account)->fetch();
+        $access = OTSCMS::getResource('DB')->query('SELECT MAX({guild_ranks}.`level`) AS `access` FROM {guild_ranks}, {players} WHERE {guild_ranks}.`guild_id` = ' . $guild->getId() . ' AND {guild_ranks}.`id` = {players}.`rank_id` AND {players}.`account_id` = ' . User::$number)->fetch();
         return $access['access'];
     }
 }

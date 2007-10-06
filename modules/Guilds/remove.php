@@ -20,16 +20,17 @@
 */
 
 // loads guild id
-$id = (int) InputData::read('id');
+$guild = $ots->createObject('Guild');
+$guild->load( InputData::read('id') );
 
 // if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($id, User::$number) < 3)
+if( !$guild->isLoaded() || ( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 3 ))
 {
     throw new NoAccessException();
 }
 
 // deletes guild - database triggers will handle connected data removal
-$db->query('DELETE FROM {guilds} WHERE `id` = ' . $id);
+$ots->createObject('Guilds_List')->deleteGuild($guild);
 
 // moves to guilds list
 OTSCMS::call('Guilds', 'list');

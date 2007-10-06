@@ -46,11 +46,14 @@ else
     $post = '';
 }
 
+$account = $ots->createObject('Account');
+$account->load(User::$number);
+
 // bb message editor
 $form = $template->createComponent('BBEditor');
 $form['action'] = '/admin/module=Topic&command=insert&bb[upperid]=' . $id . '&bb[istopic]=' . $newTopic;
 $form['fields'] = array('content' => $post);
-$form['characters'] = $db->query('SELECT `name` FROM {players} WHERE `account_id` = ' . User::$number);
+$form['characters'] = $account->getPlayers();
 $form->module = 'Topic';
 $form->adminActions = $newTopic && User::hasAccess(3);
 

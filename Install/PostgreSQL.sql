@@ -32,7 +32,7 @@ CREATE TABLE [settings] (
     `name` VARCHAR(255),
     `content` TEXT,
     UNIQUE KEY (`name`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [online] (
     `id` SERIAL,
@@ -42,14 +42,14 @@ CREATE TABLE [online] (
     `maximum` INT DEFAULT 0,
     PRIMARY KEY (`id`),
     UNIQUE KEY (`content`, `port`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [links] (
     `id` SERIAL,
     `name` VARCHAR(255),
     `content` VARCHAR(255),
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [access] (
     `id` SERIAL,
@@ -57,7 +57,7 @@ CREATE TABLE [access] (
     `content` INTEGER,
     PRIMARY KEY (`id`),
     UNIQUE (`name`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [pms] (
     `id` SERIAL,
@@ -70,7 +70,7 @@ CREATE TABLE [pms] (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`from`) REFERENCES {players} (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`to`) REFERENCES {players} (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [logs] (
     `id` SERIAL,
@@ -78,7 +78,7 @@ CREATE TABLE [logs] (
     `content` INT UNSIGNED,
     `date_time` INT UNSIGNED,
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [download] (
     `id` SERIAL,
@@ -87,7 +87,7 @@ CREATE TABLE [download] (
     `binary` BOOLEAN,
     `file` BLOB,
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [gallery] (
     `id` SERIAL,
@@ -96,14 +96,14 @@ CREATE TABLE [gallery] (
     `binary` BOOLEAN,
     `file` BLOB,
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [polls] (
     `id` SERIAL,
     `name` VARCHAR(255),
     `content` TEXT,
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE [options] (
     `id` SERIAL,
@@ -111,7 +111,7 @@ CREATE TABLE [options] (
     `poll` BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`poll`) REFERENCES [polls] (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE [votes] (
     `name` BIGINT UNSIGNED NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE [votes] (
     FOREIGN KEY (`name`) REFERENCES [options] (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`content`) REFERENCES {accounts} (`id`) ON DELETE CASCADE,
     UNIQUE KEY (`name`, `content`)
-) ENGINE = InnoDB;
+);
 
 CREATE TABLE [boards] (
     `id` SERIAL,
@@ -128,7 +128,7 @@ CREATE TABLE [boards] (
     `upperid` INT,
     PRIMARY KEY (`id`),
     KEY (`upperid`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [posts] (
     `id` SERIAL,
@@ -143,7 +143,7 @@ CREATE TABLE [posts] (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`poster`) REFERENCES {players} (`id`),
     KEY (`upperid`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [profiles] (
     `id` SERIAL,
@@ -175,7 +175,7 @@ CREATE TABLE [profiles] (
     `loss_mana` INT,
     `loss_skills` INT,
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [containers] (
     `id` SERIAL,
@@ -186,7 +186,7 @@ CREATE TABLE [containers] (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`profile`) REFERENCES [profiles] (`id`) ON DELETE CASCADE,
     KEY (`slot`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [news] (
     `id` SERIAL,
@@ -194,13 +194,13 @@ CREATE TABLE [news] (
     `content` TEXT,
     `date_time` INT,
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [urls] (
     `name` VARCHAR(255),
     `content` VARCHAR(255),
     `order` INT
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [invites] (
     `id` SERIAL,
@@ -209,7 +209,7 @@ CREATE TABLE [invites] (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`name`) REFERENCES {players} (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`content`) REFERENCES {guilds} (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [requests] (
     `id` SERIAL,
@@ -218,7 +218,7 @@ CREATE TABLE [requests] (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`name`) REFERENCES {players} (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`content`) REFERENCES {guilds} (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE TABLE [sites] (
     `id` SERIAL,
@@ -226,7 +226,7 @@ CREATE TABLE [sites] (
     `content` LONGTEXT,
     `is_home` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB CHARSET = utf8;
+);
 
 CREATE VIEW [posts_with_authors]
 AS SELECT

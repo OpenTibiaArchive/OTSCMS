@@ -55,13 +55,21 @@ foreach( array(60, 1800, 3600, 7200, 14400, 43200, 86400, 172800, 259200, 604800
 
 $form->addField('settings[cookies.expire]', ComponentAdminForm::FieldSelect, $language['Modules.Settings.SettingCookiesExpire'], array('options' => $time, 'selected' => $part['expire']) );
 
+$groups = array();
+
+// groups list
+foreach( $ots->createObject('Groups_List') as $group)
+{
+    $groups[ $group->getId() ] = $group->getName();
+}
+
 // otserv settings
 $part = $config['system'];
 $form->addField('', ComponentAdminForm::FieldSeparator, $language['Modules.Settings.PartSystem']);
 $form->addField('settings[system.md5]', ComponentAdminForm::FieldIsEnabled, $language['Modules.Settings.SettingSystemMD5'], $part['md5']);
 $form->addField('settings[system.use_mail]', ComponentAdminForm::FieldIsEnabled, $language['Modules.Settings.SettingSystemUseMail'], $part['use_mail']);
 $form->addField('settings[system.nick_length]', ComponentAdminForm::FieldText, $language['Modules.Settings.SettingSystemNickLength'], $part['nick_length']);
-$form->addField('settings[system.default_group]', ComponentAdminForm::FieldSelect, $language['Modules.Settings.SettingSystemDefaultGroup'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM {groups}') ), 'selected' => $part['default_group']) );
+$form->addField('settings[system.default_group]', ComponentAdminForm::FieldSelect, $language['Modules.Settings.SettingSystemDefaultGroup'], array('options' => $groups, 'selected' => $part['default_group']) );
 $form->addField('settings[system.min_number]', ComponentAdminForm::FieldText, $language['Modules.Settings.SettingSystemMinNumber'], $part['min_number']);
 $form->addField('settings[system.max_number]', ComponentAdminForm::FieldText, $language['Modules.Settings.SettingSystemMaxNumber'], $part['max_number']);
 $form->addField('settings[system.account_limit]', ComponentAdminForm::FieldText, $language['Modules.Settings.SettingSystemAccountLimit'], $part['account_limit']);

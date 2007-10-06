@@ -28,10 +28,26 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = '/admin/module=Character&command=update&id=' . $player->getId();
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
+$accounts = array();
+
+// accounts list
+foreach( $ots->createObject('Accounts_List') as $account)
+{
+    $accounts[ $account->getId() ] = $account->getId();
+}
+
+$groups = array();
+
+// groups list
+foreach( $ots->createObject('Groups_List') as $group)
+{
+    $groups[ $group->getId() ] = $group->getName();
+}
+
 // edition fields
 $form->addField('player[name]', ComponentAdminForm::FieldText, $language['Modules.Character.Name'], $player->getName() );
-$form->addField('player[account_id]', ComponentAdminForm::FieldSelect, $language['Modules.Account.AccountNumber'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `id` AS `value` FROM {accounts}') ), 'selected' => $player->getAccount()->getId() ) );
-$form->addField('player[group_id]', ComponentAdminForm::FieldSelect, $language['Modules.Character.Group'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM {groups}') ), 'selected' => $player->getGroup()->getId() ) );
+$form->addField('player[account_id]', ComponentAdminForm::FieldSelect, $language['Modules.Account.AccountNumber'], array('options' => $accounts, 'selected' => $player->getAccount()->getId() ) );
+$form->addField('player[group_id]', ComponentAdminForm::FieldSelect, $language['Modules.Character.Group'], array('options' => $groups, 'selected' => $player->getGroup()->getId() ) );
 $form->addField('player[experience]', ComponentAdminForm::FieldText, $language['Modules.Character.Experience'], $player->getExperience() );
 $form->addField('player[maglevel]', ComponentAdminForm::FieldText, $language['Modules.Character.MagicLevel'], $player->getMagLevel() );
 $form->addField('player[comment]', ComponentAdminForm::FieldArea, $language['Modules.Character.Comment'], $player->getCustomField('comment') );

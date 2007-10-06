@@ -20,21 +20,32 @@
 */
 
 // reads member
-$member = $db->query('SELECT `id`, `name`, `rank_id`, `guild_id`, `guildnick`, `level` FROM [guild_members] WHERE `id` = ' . (int) InputData::read('id') )->fetch();
+$member = $ots->createObject('Player');
+$member->load( InputData::read('id') );
+$rank = $member->getRank();
+$guild = $rank->getGuild();
 
 // if not a gamemaster checks if user can modify current member record
-if( !User::hasAccess(3) && Toolbox::guildAccess($member['guild_id'], User::$number) < $member['level'])
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->getLevel() )
 {
     throw new NoAccessException();
 }
 
+$ranks = array();
+
+// guild ranks list
+foreach( $guild->getGuildRanks() as $guildRank)
+{
+    $ranks[ $guildRank->getId() ] = $guildRank->getName();
+}
+
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Guilds&command=update&id=' . $member['id'];
+$form['action'] = '/admin/module=Guilds&command=update&id=' . $member->getId();
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
-$form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Guilds.EditCharacter'], $member['name']);
-$form->addField('member[rank_id]', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.EditRank'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM {guild_ranks} WHERE `guild_id` = ' . $member['guild_id']) ), 'selected' => $member['rank_id']) );
-$form->addField('member[guildnick]', ComponentAdminForm::FieldText, $language['Modules.Guilds.EditTitle'], $member['guildnick']);
+$form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Guilds.EditCharacter'], $member->getName() );
+$form->addField('member[rank_id]', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.EditRank'], array('options' => $ranks, 'selected' => $rank->getId() ) );
+$form->addField('member[guildnick]', ComponentAdminForm::FieldText, $language['Modules.Guilds.EditTitle'], $member->getGuildNick() );
 
 ?>

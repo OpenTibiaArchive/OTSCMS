@@ -19,32 +19,24 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$id = (int) InputData::read('id');
+$guild = $ots->createObject('Guild');
+$guild->load( Session::read('guild') );
 
-// loads invitation
-$invite = $db->query('SELECT [invites].`name` AS `name`, [invites].`content` AS `content`, {players}.`account_id` AS `account_id`, {guild_ranks}.`id` AS `rank` FROM {players}, [invites], {guild_ranks} WHERE {guild_ranks}.`guild_id` = [invites].`content` AND {guild_ranks}.`level` = 1 AND {players}.`id` = [invites].`name` AND [invites].`id` = ' . $id)->fetch();
+$player = $ots->createObject('Player');
+$player->load( InputData::read('id') );
 
 // checks if user is really owner of character
-if($invite['account_id'] != User::$number)
+if( $player->getAccount()->getId() != User::$number)
 {
     throw new HandledException('NotOwner');
 }
 
-// deletes invitation
-$db->query('DELETE FROM [invites] WHERE `id` = ' . $id);
+$invites = new InvitesDriver($guild);
 
-// adds player to guild with default rank
-$player = $ots->createObject('Player');
-$player->load($invite['name']);
-
-if( $player->isLoaded() )
-{
-    $player->setRankId($invite['rank']);
-    $player->save();
-}
+$guild->acceptInvite($player);
 
 // moves to guild page
-InputData::write('id', $invite['content']);
+InputData::write('id', $guild->getId() );
 OTSCMS::call('Guilds', 'display');
 
 ?>

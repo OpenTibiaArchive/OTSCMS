@@ -53,6 +53,11 @@ class OTS_Account implements IOTS_DAO
  * Remember! This method sets blocked flag to true after account creation!
  * </p>
  * 
+ * <p>
+ * IMPORTANT: Since 0.0.3+SVN there is group_id field which this method does not support. Account's group_id is set to first one found in database. You should use {@link OTS_Account::createEx() createEx()} method if you want to set group_id field during creation.
+ * </p>
+ * 
+ * @version 0.0.3+SVN
  * @param int $min Minimum number.
  * @param int $max Maximum number.
  * @return int Created account number.
@@ -60,6 +65,32 @@ class OTS_Account implements IOTS_DAO
  * @throws Exception When there are no free account numbers.
  */
     public function create($min = 1, $max = 9999999)
+    {
+        // loads default group
+        $groups = POT::getInstance()->createObject('Groups_List');
+        $groups->rewind();
+        return $this->createEx( $groups->current(), $min, $max);
+    }
+
+/**
+ * Creates new account.
+ * 
+ * Create new account in given range (1 - 9999999 by default) in given group.
+ * 
+ * <p>
+ * Remember! This method sets blocked flag to true after account creation!
+ * </p>
+ * 
+ * @version 0.0.3+SVN
+ * @since 0.0.3+SVN
+ * @param OTS_Group $group Group to be assigned to account.
+ * @param int $min Minimum number.
+ * @param int $max Maximum number.
+ * @return int Created account number.
+ * @example examples/create.php account.php
+ * @throws Exception When there are no free account numbers.
+ */
+    public function createEx(OTS_Group $group, $min = 1, $max = 9999999)
     {
         // generates random account number
         $random = rand($min, $max);
@@ -99,9 +130,10 @@ class OTS_Account implements IOTS_DAO
 
         // saves blank account info
         $this->data['id'] = $number;
+        $this->data['group_id'] = $group->getId();
         $this->data['blocked'] = true;
 
-        $this->db->SQLquery('INSERT INTO ' . $this->db->tableName('accounts') . ' (' . $this->db->fieldName('id') . ', ' . $this->db->fieldName('group_id') . ', ' . $this->db->fieldName('password') . ', ' . $this->db->fieldName('email') . ', ' . $this->db->fieldName('blocked') . ') VALUES (' . $number . ', \'\', \'\', 1)');
+        $this->db->SQLquery('INSERT INTO ' . $this->db->tableName('accounts') . ' (' . $this->db->fieldName('id') . ', ' . $this->db->fieldName('group_id') . ', ' . $this->db->fieldName('password') . ', ' . $this->db->fieldName('email') . ', ' . $this->db->fieldName('blocked') . ') VALUES (' . $number . ', ' . $this->data['group_id'] . ', \'\', \'\', 1)');
 
         return $number;
     }
@@ -109,12 +141,13 @@ class OTS_Account implements IOTS_DAO
 /**
  * Loads account with given number.
  * 
+ * @version 0.0.3+SVN
  * @param int $id Account number.
  */
     public function load($id)
     {
         // SELECT query on database
-        $this->data = $this->db->SQLquery('SELECT ' . $this->db->fieldName('id') . ', ' . $this->db->fieldName('password') . ', ' . $this->db->fieldName('email') . ', ' . $this->db->fieldName('blocked') . ' FROM ' . $this->db->tableName('accounts') . ' WHERE ' . $this->db->fieldName('id') . ' = ' . (int) $id)->fetch();
+        $this->data = $this->db->SQLquery('SELECT ' . $this->db->fieldName('id') . ', ' . $this->db->fieldName('group_id') . ', ' . $this->db->fieldName('password') . ', ' . $this->db->fieldName('email') . ', ' . $this->db->fieldName('blocked') . ' FROM ' . $this->db->tableName('accounts') . ' WHERE ' . $this->db->fieldName('id') . ' = ' . (int) $id)->fetch();
     }
 
 /**
@@ -268,7 +301,7 @@ class OTS_Account implements IOTS_DAO
  * Checks if account is blocked.
  * 
  * @version 0.0.3
- * @return bool PACC days.
+ * @return bool Blocked state.
  * @throws E_OTS_NotLoaded If account is not loaded.
  */
     public function isBlocked()
@@ -300,14 +333,14 @@ class OTS_Account implements IOTS_DAO
 /**
  * PACC days.
  * 
- * @version 0.0.3
+ * @version 0.0.3+SVN
  * @return int PACC days.
  * @throws E_OTS_NotLoaded If account is not loaded.
  * @deprecated 0.0.3 There is no more premdays field in accounts table.
  */
     public function getPACCDays()
     {
-        if( !isset($this->data['premdays']) )
+        if( !isset($this->data['id']) )
         {
             throw new E_OTS_NotLoaded();
         }
@@ -318,12 +351,12 @@ class OTS_Account implements IOTS_DAO
 /**
  * Sets PACC days count.
  * 
+ * @version 0.0.3+SVN
  * @param int $pacc PACC days.
  * @deprecated 0.0.3 There is no more premdays field in accounts table.
  */
     public function setPACCDays($premdays)
     {
-        return;
     }
 
 /**

@@ -19,7 +19,8 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$guild = new OTS_Guild( (int) InputData::read('id') );
+$guild = $ots->createObject('Guild');
+$guild->load( InputData::read('id') );
 
 $isLeader = false;
 $isVice = User::hasAccess(3);
@@ -29,22 +30,30 @@ $isInvited = false;
 // loads invited list
 if(User::$logged)
 {
-    $isInvited = $db->query('SELECT COUNT([invites].`id`) AS `count` FROM [invites], {players} WHERE [invites].`content` = ' . $guild['id'] . ' AND [invites].`name` = {players}.`id` AND {players}.`account_id` = ' . User::$number)->fetch();
-    $isInvited = $isInvited['count'] > 0;
+    $invites = new InvitesDriver($guild);
+
+    foreach( $guild->listInvites() as $player)
+    {
+        if( $player->getAccount()->getId() == User::$number)
+        {
+            $isInvited = true;
+            break;
+        }
+    }
 
     // checks if currently logged account is member of this guild
-    switch( Toolbox::guildAccess($guild['id'], User::$number) )
+    switch( Toolbox::guildAccess($guild) )
     {
-    // leader, vice and member
-    case 3:
-        $isLeader = true;
-    // vice and member
-    case 2:
-        $isVice = true;
-    // just a member
-    case 1:
-        $isMember = true;
-        break;
+        // leader, vice and member
+        case 3:
+            $isLeader = true;
+        // vice and member
+        case 2:
+            $isVice = true;
+        // just a member
+        case 1:
+            $isMember = true;
+            break;
     }
 }
 
@@ -56,60 +65,64 @@ if($isVice)
 
 // members list
 $table = $template->createComponent('TableList');
-$table['caption'] = $guild['name'] . $language['Modules.Guilds.DisplayHeader'];
+$table['caption'] = $guild->getName() . $language['Modules.Guilds.DisplayHeader'];
 $table['id'] = 'membersTable';
 $table->idPrefix = 'memberID_';
 
 $members = array();
-$done = array();
 
 // loads members
-foreach( $db->query('SELECT `id`, `name`, `guildnick`, `rank`, `rank_id`, `level` FROM [guild_members] WHERE `guild_id` = ' . $guild['id'] . ' ORDER BY `level` DESC') as $row)
+foreach( $guild->getGuildRanks() as $rank)
 {
-    // leader can't be kicked
-    if($isVice)
+    $first = true;
+
+    foreach( $rank->getPlayers() as $player)
     {
-        $actions = XMLToolbox::createDocumentFragment();
-
-        // edition link
-        $edit = XMLToolbox::createElement('a');
-        $edit->setAttribute('href', '/admin/module=Guilds&command=edit&id=' . $row['id']);
-        $edit->addContent($language['main.admin.EditSubmit']);
-        $actions->addContent($edit);
-
         // kick link
-        if($row['level'] < 3)
+        if($isVice)
         {
-            $kick = XMLToolbox::createElement('a');
-            $kick->setAttribute('href', '/admin/module=Guilds&command=kick&id=' . $row['id']);
-            $kick->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Guilds.ConfirmKick'] . '\') ) { return pageGuilds.kick(' . $row['id'] . '); } else { return false; }');
-            $kick->addContent($language['Modules.Guilds.KickSubmit']);
-            $actions->addContents(' | ', $kick);
+            $actions = XMLToolbox::createDocumentFragment();
+
+            // edition link
+            $edit = XMLToolbox::createElement('a');
+            $edit->setAttribute('href', '/admin/module=Guilds&command=edit&id=' . $player->getId() );
+            $edit->addContent($language['main.admin.EditSubmit']);
+            $actions->addContent($edit);
+
+            // leader can't be kicked
+            if( $rank->getLevel() < 3)
+            {
+                $kick = XMLToolbox::createElement('a');
+                $kick->setAttribute('href', '/admin/module=Guilds&command=kick&id=' . $player->getId() );
+                $kick->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Guilds.ConfirmKick'] . '\') ) { return pageGuilds.kick(' . $row['id'] . '); } else { return false; }');
+                $kick->addContent($language['Modules.Guilds.KickSubmit']);
+                $actions->addContents(' | ', $kick);
+            }
         }
+        else
+        {
+            $actions = '';
+        }
+
+        // character view link
+        $name = XMLToolbox::createDocumentFragment();
+        $link = XMLToolbox::createElement('a');
+        $link->setAttribute('href', '/characters/' . urlencode( $player->getName() ) );
+        $link->addContent( $player->getName() );
+        $name->addContent($link);
+
+        // guild nick
+        if( strlen( $player->getGuildNick() ) > 0)
+        {
+            $name->addContent(' (' . $player->getGuildNick() . ')');
+        }
+
+        // only first row of given rank will be labeled
+        $members[] = array('id' => $row['id'], 'rank' => $first ? $rank->getName() : '', 'name' => $name, 'actions' => $actions);
+
+        // marks current rank as done
+        $first = false;
     }
-    else
-    {
-        $actions = '';
-    }
-
-    // character view link
-    $name = XMLToolbox::createDocumentFragment();
-    $link = XMLToolbox::createElement('a');
-    $link->setAttribute('href', '/characters/' . urlencode($row['name']) );
-    $link->addContent($row['name']);
-    $name->addContent($link);
-
-    // guild nick
-    if( !empty($row['guildnick']) )
-    {
-        $name->addContent(' (' . $row['guildnick'] . ')');
-    }
-
-    // only first row of given rank will be labeled
-    $members[] = array('id' => $row['id'], 'rank' => $done[ $row['rank_id'] ] ? '' : $row['rank'], 'name' => $name, 'actions' => $actions);
-
-    // marks current rank as done
-    $done[ $row['rank_id'] ] = true;
 }
 
 $table->addField('rank', $language['Modules.Guilds.ListRank']);
@@ -129,28 +142,28 @@ $links = array();
 
 if($isLeader || User::hasAccess(3) )
 {
-    $links[] = array('link' => '/admin/module=Guilds&command=remove&id=' . $guild['id'], 'label' => $language['main.admin.DeleteSubmit'], 'confirm' => $language['main.admin.ConfirmDelete']);
+    $links[] = array('link' => '/admin/module=Guilds&command=remove&id=' . $guild->getId(), 'label' => $language['main.admin.DeleteSubmit'], 'confirm' => $language['main.admin.ConfirmDelete']);
 }
 
 if($isVice)
 {
-    $links[] = array('link' => '/admin/module=Guilds&command=invite&id=' . $guild['id'], 'label' => $language['Modules.Guilds.InviteSubmit']);
-    $links[] = array('link' => '/admin/module=Guilds&command=manage&id=' . $guild['id'], 'label' => $language['Modules.Guilds.ManageSubmit']);
+    $links[] = array('link' => '/admin/module=Guilds&command=invite&id=' . $guild->getId(), 'label' => $language['Modules.Guilds.InviteSubmit']);
+    $links[] = array('link' => '/admin/module=Guilds&command=manage&id=' . $guild->getId(), 'label' => $language['Modules.Guilds.ManageSubmit']);
 }
 
 if($isMember && !$isLeader)
 {
-    $links[] = array('link' => '/admin/module=Guilds&command=leave&id=' . $guild['id'], 'label' => $language['Modules.Guilds.LeaveSubmit']);
+    $links[] = array('link' => '/admin/module=Guilds&command=leave&id=' . $guild->getId(), 'label' => $language['Modules.Guilds.LeaveSubmit']);
 }
 
 if($isInvited)
 {
-    $links[] = array('link' => '/admin/module=Guilds&command=join&id=' . $guild['id'], 'label' => $language['Modules.Guilds.JoinSubmit']);
+    $links[] = array('link' => '/admin/module=Guilds&command=join&id=' . $guild->getId(), 'label' => $language['Modules.Guilds.JoinSubmit']);
 }
 
 if(!$isMember && User::$logged)
 {
-    $links[] = array('link' => '/admin/module=Guilds&command=request&id=' . $guild['id'], 'label' => $language['Modules.Guilds.RequestSubmit']);
+    $links[] = array('link' => '/admin/module=Guilds&command=request&id=' . $guild->getId(), 'label' => $language['Modules.Guilds.RequestSubmit']);
 }
 
 if( !empty($links) )

@@ -24,6 +24,23 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = '/guild/add';
 $form['submit'] = $language['Modules.Guilds.JoinSubmit'];
 
-$form->addField('id', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.JoinCharacter'], array('options' => Toolbox::dumpRecords( $db->query('SELECT [invites].`id` AS `key`, {players}.`name` AS `value` FROM [invites], {players} WHERE [invites].`name` = {players}.`id` AND [invites].`content` = ' . (int) InputData::read('id') ) ) ) );
+$guild = $ots->createObject('Guild');
+$guild->load( InputData::read('id') );
+
+$invites = new InvitesDriver($guild);
+
+$invited = array();
+
+foreach( $guild->listInvites() as $player)
+{
+    if( $player->getAccount()->getId() == User::$number)
+    {
+        $invited[ $player->getId() ] = $player->getName();
+    }
+}
+
+$form->addField('id', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.JoinCharacter'], array('options' => $invited) );
+
+Session::write('guild', $guild->getId() );
 
 ?>

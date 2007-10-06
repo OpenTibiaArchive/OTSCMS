@@ -42,10 +42,14 @@ if( $account->isLoaded() )
     return;
 }
 
+// default group
+$group = $ots->createObject('Group');
+$group->load($system['default_group']);
+
 // generates random account number
 try
 {
-    $number = $account->create($config['system.min_number'], $config['system.max_number']);
+    $number = $account->createEx($group, $config['system.min_number'], $config['system.max_number']);
 }
 catch(Exception $e)
 {
@@ -64,16 +68,10 @@ catch(Exception $e)
 // generates random password
 $password = substr( md5( uniqid( rand(), true) ), 1, 8);
 
-// default group
-$group = $ots->createObject('Group');
-$group->load($system['default_group']);
-$account->setGroup($group);
-
 // sets all info
 $account->unblock();
 $account->setPassword($config['system.use_md5'] ? md5($password) : $password);
 $account->setEMail($email);
-$account->setPACCDays(0);
 $account->save();
 
 $root = XMLToolbox::createDocumentFragment();

@@ -20,25 +20,40 @@
 */
 
 // reads rank info
-$rank = new OTS_GuildRank( (int) InputData::read('id') );
+$rank = $ots->createObject('GuildRank');
+$rank->load( InputData::read('id') );
+$guild = $rank->getGuild();
 
 // if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($rank['guild_id'], User::$number) < $rank['level'])
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->getLevel() )
 {
     throw new NoAccessException();
 }
 
 // gets any other rank from that guild with same access level
-$new = $db->query('SELECT `id` FROM {guild_ranks} WHERE `guild_id` = ' . $rank['guild_id'] . ' AND `level` = ' . $rank['level'])->fetch();
+$new = null;
+
+foreach( $guild->getGuildRanks() as $guildRank)
+{
+    if( $rank->getId() != $guildRank->getId() && $rank->getLevel() == $guildRank->getLevel() )
+    {
+        $new = $guildRank;
+        break;
+    }
+}
 
 // moves all members from old rank to new
-$db->exec('UPDATE {players} SET `rank_id` = ' . $new['id'] . ' WHERE `rank_id` = ' . $rank['id']);
+foreach( $new->getPlayers() as $player)
+{
+    $player->getRank($new);
+    $player->save();
+}
 
 // removes rank
-$db->query('DELETE FROM {guild_ranks} WHERE `id` = ' . $rank['id']);
+$ots->createObject('GuildRanks_List')->deleteGuildRank($rank);
 
 // displays creation form
-InputData::write('id', $rank['guild_id']);
+InputData::write('id', $guild->getId() );
 OTSCMS::call('Guilds', 'manage');
 
 ?>

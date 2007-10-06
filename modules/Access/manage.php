@@ -29,7 +29,12 @@ $form['submit'] = $language['main.admin.InsertSubmit'];
 $form['id'] = 'accessForm';
 
 // composes group labels
-$groups = Toolbox::dumpRecords( $db->query('SELECT `access` AS `key`, `name` AS `value` FROM {groups} ORDER BY `access`') ) + array(-1 => $language['Modules.Access.Level-1'], 0 => $language['Modules.Access.Level0'], 3 => $language['Modules.Access.Level3']);
+$groups = array(-1 => $language['Modules.Access.Level-1'], 0 => $language['Modules.Access.Level0'], 3 => $language['Modules.Access.Level3']);
+
+foreach( $ots->createObject('Groups_List') as $group)
+{
+    $groups[ $group->getAccess() ] = $group->getName();
+}
 
 // reads modules list
 $modules = Toolbox::subDirs($config['directories.modules'], true);

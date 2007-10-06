@@ -19,22 +19,22 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$id = (int) InputData::read('id');
-
-// loads request
-$request = new CMS_Request($id);
+$guild = $ots->createObject('Guild');
+$guild->load( Session::read('guild') );
 
 // if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($request['content'], User::$number) < 2)
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
 {
     throw new NoAccessException();
 }
 
-// deletes request
-$db->query('DELETE FROM [requests] WHERE `id` = ' . $request['id']);
+$requests = new RequestsDriver($guild);
+$player = $ots->createObject('Player');
+$player->load( InputData::read('id') );
+$guild->deleteRequest($player);
 
 // moves to guild page
-InputData::write('id', $request['content']);
+InputData::write('id', $guild->getId() );
 OTSCMS::call('Guilds', 'display');
 
 ?>

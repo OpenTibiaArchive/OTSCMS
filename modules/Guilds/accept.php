@@ -19,28 +19,23 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$id = (int) InputData::read('id');
-
-// loads request
-$request = $db->query('SELECT [requests].`name` AS `name`, [requests].`content` AS `content`, {guild_ranks}.`id` AS `rank` FROM [requests], {guild_ranks} WHERE {guild_ranks}.`guild_id` = [requests].`content` AND {guild_ranks}.`level` = 1 AND [requests].`id` = ' . $id)->fetch();
+$guild = $ots->createObject('Guild');
+$guild->load( Session::read('guild') );
 
 // if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($request['content'], User::$number) < 2)
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
 {
     throw new NoAccessException();
 }
 
-// deletes request
-$db->query('DELETE FROM [requests] WHERE `id` = ' . $id);
-
 // adds player to guild with default rank
+$requests = new RequestsDriver($guild);
 $player = $ots->createObject('Player');
-$player->load($request['name']);
-$player->setRankId($request['rank']);
-$player->save();
+$player->load( InputData::read('id') );
+$guild->acceptRequest($player);
 
 // moves to guild page
-InputData::write('id', $request['content']);
+InputData::write('id', $guild->getId() );
 OTSCMS::call('Guilds', 'display');
 
 ?>

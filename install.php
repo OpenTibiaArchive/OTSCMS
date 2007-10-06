@@ -591,6 +591,7 @@ else
             <td style="width: 50%; text-align: left;">
                 <label><input type="radio" name="db[type]" value="MySQL" selected="selected"/>MySQL</label><br/>
                 <label><input type="radio" name="db[type]" value="SQLite"/>SQLite</label><br/>
+                <label><input type="radio" name="db[type]" value="PostgreSQL"/>PostgreSQL</label><br/>
             </td>
         </tr>
         <tr>
@@ -603,13 +604,13 @@ else
         </tr>
         <tr>
             <td colspan="2" style="width: 100%; text-align: lustify;">
-                <span style="font-weight: bold;">MySQL</span>: MySQL server.<br/>
+                <span style="font-weight: bold;">MySQL, PostgreSQL</span>: database server.<br/>
                 <span style="font-weight: bold;">SQLite</span>: Path to database file.<br/>
             </td>
         </tr>
         <tr>
             <td style="width: 50%; text-align: right;">
-                Database user (<span style="font-weight: bold;">MySQL</span> only): 
+                Database user (not used by <span style="font-weight: bold;">SQLite</span>): 
             </td>
             <td style="width: 50%; text-align: left;">
                 <input type="text" name="db[user]"/>
@@ -617,7 +618,7 @@ else
         </tr>
         <tr>
             <td style="width: 50%; text-align: right;">
-                Database password (<span style="font-weight: bold;">MySQL</span> only): 
+                Database password (not used by <span style="font-weight: bold;">SQLite</span>): 
             </td>
             <td style="width: 50%; text-align: left;">
                 <input type="text" name="db[password]"/>
@@ -625,7 +626,7 @@ else
         </tr>
         <tr>
             <td style="width: 50%; text-align: right;">
-                Database name (<span style="font-weight: bold;">MySQL</span> only): 
+                Database name (not used by <span style="font-weight: bold;">SQLite</span>): 
             </td>
             <td style="width: 50%; text-align: left;">
                 <input type="text" name="db[database]" value="otserv"/>

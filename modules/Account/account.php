@@ -38,7 +38,7 @@ $account->load(User::$number);
 // account metainfo table
 $data = $template->createComponent('TableData');
 $data['caption'] = $language['Modules.Account.AccountData'];
-$data['data'] = array($language['Modules.Account.AccountNumber'] => $account->getId(), $language['Modules.Account.Premium'] => $account->getPACCDays() );
+$data['data'] = array($language['Modules.Account.AccountNumber'] => $account->getId() );
 
 // password change form
 $form = $template->createComponent('AdminForm');
@@ -59,9 +59,9 @@ $profile['id'] = 'userForm';
 $fields = $db->query('SELECT `signature`, `avatar`, `website` FROM {accounts} WHERE `id` = ' . $account->getId() )->fetch();
 
 // form fields
-$profile->addField('user[signature]', ComponentAdminForm::FieldArea, $language['Modules.Account.Signature'], $fields['signature']);
-$profile->addField('user[avatar]', ComponentAdminForm::FieldText, $language['Modules.Account.Avatar'], $fields['avatar']);
-$profile->addField('user[website]', ComponentAdminForm::FieldText, $language['Modules.Account.Website'], $fields['website']);
+$profile->addField('user[signature]', ComponentAdminForm::FieldArea, $language['Modules.Account.Signature'], $account->getCustomField('signature') );
+$profile->addField('user[avatar]', ComponentAdminForm::FieldText, $language['Modules.Account.Avatar'], $account->getCustomField('avatar') );
+$profile->addField('user[website]', ComponentAdminForm::FieldText, $language['Modules.Account.Website'], $account->getCustomField('website') );
 
 // account characters
 $list = $template->createComponent('TableList');

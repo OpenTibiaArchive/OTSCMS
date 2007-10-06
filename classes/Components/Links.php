@@ -50,9 +50,11 @@ class ComponentLinks extends TemplateComponent
         // single link
         else
         {
+            $p = XMLToolbox::createDocumentFragment();
+
             foreach($this['links'] as $link)
             {
-                $p = XMLToolbox::createElement('p');
+                $tag = XMLToolbox::createElement('p');
                 $a = XMLToolbox::createElement('a');
                 $a->setAttribute('href', $link['link']);
 
@@ -63,7 +65,8 @@ class ComponentLinks extends TemplateComponent
                 }
 
                 $a->addContent($link['label']);
-                $p->addContent($a);
+                $tag->addContent($a);
+                $p->addContent($tag);
             }
         }
 

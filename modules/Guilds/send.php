@@ -30,10 +30,11 @@ if( !$player->isLoaded() || $player->getAccount()->getId() != User::$number)
 }
 
 // saves request
-$request = new CMS_Request();
-$request['name'] = $player->getId();
-$request['content'] = (int) InputData::read('id');
-$request->save();
+$guild = $ots->createAccount('Guild');
+$guild->load( InputData::read('id') );
+
+$requests = new RequestsDriver($guild);
+$guild->request($player);
 
 // moves to guild page
 OTSCMS::call('Guilds', 'display');

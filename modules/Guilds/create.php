@@ -24,7 +24,17 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = '/guild/insert';
 $form['submit'] = $language['Modules.Guilds.CreateSubmit'];
 
+$players = array();
+
+$account = $ots->createObject('Account');
+$account->load(User::$number);
+
+foreach( $account->getPlayers() as $player)
+{
+    $players[ $player->getId() ] = $player->getName();
+}
+
 $form->addField('guild[name]', ComponentAdminForm::FieldText, $language['Modules.Guilds.Name']);
-$form->addField('guild[ownerid]', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.CreateCharacter'], array('options' => Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM {players} WHERE `account_id` = ' . User::$number) ) ) );
+$form->addField('guild[ownerid]', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.CreateCharacter'], array('options' => $players) );
 
 ?>

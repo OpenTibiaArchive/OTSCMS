@@ -1,24 +1,23 @@
 <?php
 
 /**#@+
- * @version 0.0.1
+ * @version 0.0.3+SVN
+ * @since 0.0.3+SVN
  */
 
 /**
  * @package POT
- * @version 0.0.3+SVN
  * @author Wrzasq <wrzasq@gmail.com>
  * @copyright 2007 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
  */
 
 /**
- * SQLite connection interface.
+ * ODBC connection interface.
  * 
  * @package POT
- * @version 0.0.3+SVN
  */
-class OTS_DB_SQLite extends PDO implements IOTS_DB
+class OTS_DB_ODBC extends PDO implements IOTS_DB
 {
 /**
  * Tables prefix.
@@ -30,29 +29,61 @@ class OTS_DB_SQLite extends PDO implements IOTS_DB
 /**
  * Creates database connection.
  * 
- * Connects to SQLite database on given arguments.
+ * Connects to ODBC data source on given arguments.
  * 
  * <p>
  * List of parameters for this drivers:
  * </p>
  * 
+ * - <var>host</var> - database host.
+ * - <var>port</var> - ODBC driver.
  * - <var>database</var> - database name.
+ * - <var>user</var> - user login.
+ * - <var>password</var> - user password.
  * 
  * @param array $params Connection parameters.
  * @see POT::connect()
  */
     public function __construct(array $params)
     {
+        $user = null;
+        $password = null;
+        $dns = array();
+
+        if( isset($params['host']) )
+        {
+            $dns[] = 'HOSTNAME={' . $params['host'] . '}';
+        }
+
+        if( isset($params['port']) )
+        {
+            $dns[] = 'DRIVER={' . $params['port'] . '}';
+        }
+
+        if( isset($params['database']) )
+        {
+            $dns[] = 'DATABASE={' . $params['database'] . '}';
+        }
+
+        if( isset($params['user']) )
+        {
+            $user = $params['user'];
+            $dns[] = 'UID={' . $user . '}';
+        }
+
+        if( isset($params['password']) )
+        {
+            $password = $params['password'];
+            $dns[] = 'PWD={' . $user . '}';
+        }
+
         if( isset($params['prefix']) )
         {
             $this->prefix = $params['prefix'];
         }
 
         // PDO constructor
-        parent::__construct('sqlite:' . $params['database']);
-
-        // this class will drop quotes from field names
-        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('OTS_SQLite_Results') );
+        parent::__construct('odbc:' . implode(';', $dns), $user, $password);
     }
 
 /**

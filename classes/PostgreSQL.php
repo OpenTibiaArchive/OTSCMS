@@ -19,20 +19,34 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$guild = $ots->createObject('Guild');
-$guild->load( InputData::read('id') );
+/*
+    SQL class for PostgreSQL.
+*/
 
-// if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
+class SQL extends SQL_Base
 {
-    throw new NoAccessException();
+    // standard SQL delimiters
+    protected $leftDelimiter = '"';
+    protected $rightDelimiter = '"';
+
+    public function __construct($host, $user, $password, $database, $cms_prefix, $ots_prefix)
+    {
+        parent::__construct($host, $user, $password, $database, $cms_prefix, $ots_prefix);
+    }
+
+    // PgSQL connection DNS
+    protected function DNS($host, $user, $password, $database)
+    {
+        // suport for connection on other port (host:port)
+        if( strpos(':', $host) !== false)
+        {
+            $params = explode(':', $host, 3);
+
+            $host = $params[0] . ' port=' . $params[1];
+        }
+
+        return 'pgsql:host=' . $host . ' dbname=' . $database;
+    }
 }
-
-// guild creation form
-$form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Guilds&command=append&id=' . $guild->getId();
-$form['submit'] = $language['Modules.Guilds.InviteSubmit'];
-
-$form->addField('character', ComponentAdminForm::FieldText, $language['Modules.Guilds.InviteCharacter']);
 
 ?>
