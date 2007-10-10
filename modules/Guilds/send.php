@@ -33,7 +33,7 @@ if( !$player->isLoaded() || $player->getAccount()->getId() != User::$number)
 $guild = $ots->createAccount('Guild');
 $guild->load( InputData::read('id') );
 
-$requests = new RequestsDriver($guild);
+new RequestsDriver($guild);
 $guild->request($player);
 
 // moves to guild page

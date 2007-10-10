@@ -57,6 +57,8 @@ class OTS_GuildRank implements IOTS_DAO
 /**
  * Loads rank by it's name.
  * 
+ * As there can be several ranks with same name in different guilds you can pass optional second parameter to specify in which guild script should look for rank.
+ * 
  * @param string $name Rank's name.
  * @param OTS_Guild $guild Guild in which rank should be found.
  */

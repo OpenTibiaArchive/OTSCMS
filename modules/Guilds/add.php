@@ -31,7 +31,7 @@ if( $player->getAccount()->getId() != User::$number)
     throw new HandledException('NotOwner');
 }
 
-$invites = new InvitesDriver($guild);
+new InvitesDriver($guild);
 
 $guild->acceptInvite($player);
 

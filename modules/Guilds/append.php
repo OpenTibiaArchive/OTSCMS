@@ -34,7 +34,7 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
 if( $player->isLoaded() )
 {
     // saves invitation
-    $invites = new InvitesDriver($guild);
+    new InvitesDriver($guild);
     $guild->invite($player);
 }
 

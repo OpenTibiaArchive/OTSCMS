@@ -27,7 +27,7 @@ $form['submit'] = $language['Modules.Guilds.JoinSubmit'];
 $guild = $ots->createObject('Guild');
 $guild->load( InputData::read('id') );
 
-$invites = new InvitesDriver($guild);
+new InvitesDriver($guild);
 
 $invited = array();
 

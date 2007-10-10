@@ -29,7 +29,7 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
 }
 
 // adds player to guild with default rank
-$requests = new RequestsDriver($guild);
+new RequestsDriver($guild);
 $player = $ots->createObject('Player');
 $player->load( InputData::read('id') );
 $guild->acceptRequest($player);

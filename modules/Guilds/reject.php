@@ -28,7 +28,7 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
     throw new NoAccessException();
 }
 
-$requests = new RequestsDriver($guild);
+new RequestsDriver($guild);
 $player = $ots->createObject('Player');
 $player->load( InputData::read('id') );
 $guild->deleteRequest($player);

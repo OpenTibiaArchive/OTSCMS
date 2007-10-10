@@ -88,7 +88,7 @@ $list->idPrefix = 'requestID_';
 $list->module = 'Guilds';
 
 $requests = array();
-$driver = new RequestsDriver($guild);
+new RequestsDriver($guild);
 
 // reads membership requests
 foreach( $guild->listRequests() as $player)

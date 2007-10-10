@@ -30,7 +30,7 @@ $isInvited = false;
 // loads invited list
 if(User::$logged)
 {
-    $invites = new InvitesDriver($guild);
+    new InvitesDriver($guild);
 
     foreach( $guild->listInvites() as $player)
     {
