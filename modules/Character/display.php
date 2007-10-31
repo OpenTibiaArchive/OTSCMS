@@ -140,7 +140,7 @@ if( isset($name) )
 
     // other characters list
     $others = array();
-    foreach( $account->getPlayers() as $other)
+    foreach( $account->getPlayersList() as $other)
     {
         // checks if it's not current player
         if( $character->getId() != $other->getId() )

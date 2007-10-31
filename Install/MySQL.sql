@@ -7,7 +7,7 @@ DROP VIEW IF EXISTS [player_skills];
 DROP VIEW IF EXISTS [private_messages];
 DROP VIEW IF EXISTS [posts_with_authors];
 
-DROP TABLE IF EXISTS [requests];
+DROP TABLE IF EXISTS [sites];
 DROP TABLE IF EXISTS [requests];
 DROP TABLE IF EXISTS [invites];
 DROP TABLE IF EXISTS [urls];

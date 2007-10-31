@@ -2,11 +2,12 @@
 
 /**#@+
  * @version 0.0.1
+ * @since 0.0.1
  */
 
 /**
  * @package POT
- * @version 0.0.3
+ * @version 0.0.4+SVN
  * @author Wrzasq <wrzasq@gmail.com>
  * @copyright 2007 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
@@ -16,80 +17,27 @@
  * OTServ user group abstraction.
  * 
  * @package POT
- * @version 0.0.3
+ * @version 0.0.4+SVN
  */
-class OTS_Group implements IOTS_DAO
+class OTS_Group extends OTS_Base_DAO implements IteratorAggregate, Countable
 {
 /**
- * Database connection.
- * 
- * @var IOTS_DB
- */
-    private $db;
-
-/**
- * Player data.
+ * Group data.
  * 
  * @var array
  */
     private $data = array('flags' => 0);
 
 /**
- * Sets database connection handler.
- * 
- * @param IOTS_DB $db Database connection object.
- */
-    public function __construct(IOTS_DB $db)
-    {
-        $this->db = $db;
-    }
-
-/**
- * Magic PHP5 method.
- * 
- * Allows object serialisation.
- * 
- * @return array List of properties that should be saved.
- * @internal Magic PHP5 method.
- */
-    public function __sleep()
-    {
-        return array('data');
-    }
-
-/**
- * Magic PHP5 method.
- * 
- * Allows object unserialisation.
- * 
- * @internal Magic PHP5 method.
- */
-    public function __wakeup()
-    {
-        $this->db = POT::getInstance()->getDBHandle();
-    }
-
-/**
- * Creates clone of object.
- * 
- * Copy of object needs to have different ID.
- * 
- * @internal magic PHP5 method.
- */
-    public function __clone()
-    {
-        unset($this->data['id']);
-    }
-
-/**
  * Loads group with given id.
  * 
+ * @version 0.0.4+SVN
  * @param int $id Group number.
  */
     public function load($id)
     {
         // SELECT query on database
-        $this->data = $this->db->SQLquery('SELECT ' . $this->db->fieldName('id') . ', ' . $this->db->fieldName('name') . ', ' . $this->db->fieldName('flags') . ', ' . $this->db->fieldName('access') . ', ' . $this->db->fieldName('maxdepotitems') . ', ' . $this->db->fieldName('maxviplist') . ' FROM ' . $this->db->tableName('groups') . ' WHERE ' . $this->db->fieldName('id') . ' = ' . (int) $id)->fetch();
+        $this->data = $this->db->query('SELECT ' . $this->db->fieldName('id') . ', ' . $this->db->fieldName('name') . ', ' . $this->db->fieldName('flags') . ', ' . $this->db->fieldName('access') . ', ' . $this->db->fieldName('maxdepotitems') . ', ' . $this->db->fieldName('maxviplist') . ' FROM ' . $this->db->tableName('groups') . ' WHERE ' . $this->db->fieldName('id') . ' = ' . (int) $id)->fetch();
     }
 
 /**
@@ -104,6 +52,8 @@ class OTS_Group implements IOTS_DAO
 
 /**
  * Saves account in database.
+ * 
+ * @version 0.0.4+SVN
  */
     public function save()
     {
@@ -111,13 +61,13 @@ class OTS_Group implements IOTS_DAO
         if( isset($this->data['id']) )
         {
             // UPDATE query on database
-            $this->db->SQLquery('UPDATE ' . $this->db->tableName('groups') . ' SET ' . $this->db->fieldName('name') . ' = ' . $this->db->SQLquote($this->data['name']) . ', ' . $this->db->fieldName('flags') . ' = ' . $this->data['flags'] . ', ' . $this->db->fieldName('access') . ' = ' . $this->data['access'] . ', ' . $this->db->fieldName('maxdepotitems') . ' = ' . $this->data['maxdepotitems'] . ', ' . $this->db->fieldName('maxviplist') . ' = ' . $this->data['maxviplist'] . ' WHERE ' . $this->db->fieldName('id') . ' = ' . $this->data['id']);
+            $this->db->query('UPDATE ' . $this->db->tableName('groups') . ' SET ' . $this->db->fieldName('name') . ' = ' . $this->db->quote($this->data['name']) . ', ' . $this->db->fieldName('flags') . ' = ' . $this->data['flags'] . ', ' . $this->db->fieldName('access') . ' = ' . $this->data['access'] . ', ' . $this->db->fieldName('maxdepotitems') . ' = ' . $this->data['maxdepotitems'] . ', ' . $this->db->fieldName('maxviplist') . ' = ' . $this->data['maxviplist'] . ' WHERE ' . $this->db->fieldName('id') . ' = ' . $this->data['id']);
         }
         // creates new group
         else
         {
             // INSERT query on database
-            $this->db->SQLquery('INSERT INTO ' . $this->db->tableName('groups') . ' (' . $this->db->fieldName('name') . ', ' . $this->db->fieldName('flags') . ', ' . $this->db->fieldName('access') . ', ' . $this->db->fieldName('maxdepotitems') . ', ' . $this->db->fieldName('maxviplist') . ') VALUES (' . $this->db->quote($this->data['name']) . ', ' . $this->data['flags'] . ', ' . $this->data['access'] . ', ' . $this->data['maxdepotitems'] . ', ' . $this->data['maxviplist'] . ')');
+            $this->db->query('INSERT INTO ' . $this->db->tableName('groups') . ' (' . $this->db->fieldName('name') . ', ' . $this->db->fieldName('flags') . ', ' . $this->db->fieldName('access') . ', ' . $this->db->fieldName('maxdepotitems') . ', ' . $this->db->fieldName('maxviplist') . ') VALUES (' . $this->db->quote($this->data['name']) . ', ' . $this->data['flags'] . ', ' . $this->data['access'] . ', ' . $this->data['maxdepotitems'] . ', ' . $this->data['maxviplist'] . ')');
             // ID of new group
             $this->data['id'] = $this->db->lastInsertId();
         }
@@ -282,7 +232,7 @@ class OTS_Group implements IOTS_DAO
  * 
  * Note: You should use this method only for fields that are not provided in standard setters/getters (SVN fields). This method runs SQL query each time you call it so it highly overloads used resources.
  * 
- * @version 0.0.3
+ * @version 0.0.4+SVN
  * @since 0.0.3
  * @param string $field Field name.
  * @return string Field value.
@@ -295,7 +245,7 @@ class OTS_Group implements IOTS_DAO
             throw new E_OTS_NotLoaded();
         }
 
-        $value = $this->db->SQLquery('SELECT ' . $this->db->fieldName($field) . ' FROM ' . $this->db->tableName('groups') . ' WHERE ' . $this->db->fieldName('id') . ' = ' . $this->data['id'])->fetch();
+        $value = $this->db->query('SELECT ' . $this->db->fieldName($field) . ' FROM ' . $this->db->tableName('groups') . ' WHERE ' . $this->db->fieldName('id') . ' = ' . $this->data['id'])->fetch();
         return $value[$field];
     }
 
@@ -308,7 +258,7 @@ class OTS_Group implements IOTS_DAO
  * 
  * Note: Make sure that you pass $value argument of correct type. This method determinates whether to quote field name. It is safe - it makes you sure that no unproper queries that could lead to SQL injection will be executed, but it can make your code working wrong way. For example: $object->setCustomField('foo', '1'); will quote 1 as as string ('1') instead of passing it as a integer.
  * 
- * @version 0.0.3
+ * @version 0.0.4+SVN
  * @since 0.0.3
  * @param string $field Field name.
  * @param mixed $value Field value.
@@ -324,18 +274,19 @@ class OTS_Group implements IOTS_DAO
         // quotes value for SQL query
         if(!( is_int($value) || is_float($value) ))
         {
-            $value = $this->db->SQLquote($value);
+            $value = $this->db->quote($value);
         }
 
-        $this->db->SQLquery('UPDATE ' . $this->db->tableName('groups') . ' SET ' . $this->db->fieldName($field) . ' = ' . $value . ' WHERE ' . $this->db->fieldName('id') . ' = ' . $this->data['id']);
+        $this->db->query('UPDATE ' . $this->db->tableName('groups') . ' SET ' . $this->db->fieldName($field) . ' = ' . $value . ' WHERE ' . $this->db->fieldName('id') . ' = ' . $this->data['id']);
     }
 
 /**
  * List of characters in given group.
  * 
- * @version 0.0.3
+ * @version 0.0.4+SVN
  * @return array Array of OTS_Player objects from given group.
  * @throws E_OTS_NotLoaded If group is not loaded.
+ * @deprecated 0.0.4+SVN Use getPlayersList().
  */
     public function getPlayers()
     {
@@ -346,7 +297,7 @@ class OTS_Group implements IOTS_DAO
 
         $players = array();
 
-        foreach( $this->db->SQLquery('SELECT ' . $this->db->fieldName('id') . ' FROM ' . $this->db->tableName('players') . ' WHERE ' . $this->db->fieldName('group_id') . ' = ' . $this->data['id'])->fetchAll() as $player)
+        foreach( $this->db->query('SELECT ' . $this->db->fieldName('id') . ' FROM ' . $this->db->tableName('players') . ' WHERE ' . $this->db->fieldName('group_id') . ' = ' . $this->data['id'])->fetchAll() as $player)
         {
             // creates new object
             $object = POT::getInstance()->createObject('Player');
@@ -355,6 +306,86 @@ class OTS_Group implements IOTS_DAO
         }
 
         return $players;
+    }
+
+/**
+ * List of characters in group.
+ * 
+ * In difference to {@link OTS_Group::getPlayers() getPlayers() method} this method returns filtered {@link OTS_Players_List OTS_Players_List} object instead of array of {@link OTS_Player OTS_Player} objects. It is more effective since OTS_Player_List doesn't perform all rows loading at once.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @return OTS_Players_List List of players from current group.
+ * @throws E_OTS_NotLoaded If group is not loaded.
+ */
+    public function getPlayersList()
+    {
+        if( !isset($this->data['id']) )
+        {
+            throw new E_OTS_NotLoaded();
+        }
+
+        $ots = POT::getInstance();
+
+        // creates filter
+        $filter = $ots->createFilter();
+        $filter->compareField('group_id', (int) $this->data['id']);
+
+        // creates list object
+        $list = $ots->createObject('Players_List');
+        $list->setFilter($filter);
+
+        return $list;
+    }
+
+/**
+ * Deletes group.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @throws E_OTS_NotLoaded If group is not loaded.
+ */
+    public function delete()
+    {
+        if( !isset($this->data['id']) )
+        {
+            throw new E_OTS_NotLoaded();
+        }
+
+        // deletes row from database
+        $this->db->query('DELETE FROM ' . $this->db->tableName('groups') . ' WHERE ' . $this->db->fieldName('id') . ' = ' . $this->data['id']);
+
+        // resets object handle
+        unset($this->data['id']);
+    }
+
+/**
+ * Returns players iterator.
+ * 
+ * There is no need to implement entire Iterator interface since we have {@link OTS_Players_List players list class} for it.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @throws E_OTS_NotLoaded If group is not loaded.
+ * @return Iterator List of players.
+ */
+    public function getIterator()
+    {
+        return $this->getPlayersList();
+    }
+
+/**
+ * Returns number of player within.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @throws E_OTS_NotLoaded If group is not loaded.
+ * @return int Count of players.
+ */
+    public function count()
+    {
+        // count( $this->getPlayersList() ); will be slower
+        return $this->getPlayersList()->count();
     }
 }
 

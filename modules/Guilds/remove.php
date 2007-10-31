@@ -30,7 +30,7 @@ if( !$guild->isLoaded() || ( !User::hasAccess(3) && Toolbox::guildAccess($guild)
 }
 
 // deletes guild - database triggers will handle connected data removal
-$ots->createObject('Guilds_List')->deleteGuild($guild);
+$guild->delete();
 
 // moves to guilds list
 OTSCMS::call('Guilds', 'list');

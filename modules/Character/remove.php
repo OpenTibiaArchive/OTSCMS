@@ -22,7 +22,7 @@
 // deletes character and redirects to management page
 $player = $ots->createObject('Player');
 $player->load( InputData::read('id') );
-$ots->createObject('Players_List')->deletePlayer($player);
+$player->delete();
 OTSCMS::call('Character', 'manage');
 
 ?>

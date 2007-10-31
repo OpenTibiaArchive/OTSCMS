@@ -36,7 +36,7 @@ $form->addField('account[password]', ComponentAdminForm::FieldText, $language['M
 $characters = array();
 
 // reads account's characters
-foreach( $account->getPlayers() as $character)
+foreach( $account->getPlayersList() as $character)
 {
     $characters[] = $character->getName() . ' (' . $character->getGroup()->getName() . ')';
 }

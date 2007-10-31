@@ -22,7 +22,7 @@
 // loads account
 $account = $ots->createObject('Account');
 $account->load( InputData::read('id') );
-$account->block();
+$account->unblock();
 $account->save();
 
 OTSCMS::call('Account', 'manage');

@@ -72,11 +72,11 @@ $table->idPrefix = 'memberID_';
 $members = array();
 
 // loads members
-foreach( $guild->getGuildRanks() as $rank)
+foreach( $guild->getGuildRanksList() as $rank)
 {
     $first = true;
 
-    foreach( $rank->getPlayers() as $player)
+    foreach( $rank->getPlayersList() as $player)
     {
         // kick link
         if($isVice)

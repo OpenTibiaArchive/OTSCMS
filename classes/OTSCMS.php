@@ -174,7 +174,8 @@ class OTSCMS
         $driver = array('MySQL' => POT::DB_MYSQL, 'SQLite' => POT::DB_SQLITE, 'PostgreSQL' => POT::DB_PGSQL);
         $db['driver'] = $driver[ $db['type'] ];
         $db['prefix'] = $db['ots_prefix'];
-        POT::getInstance()->connect(null, $db);
+        $ots = POT::getInstance();
+        $ots->connect(null, $db);
 
         $db = new SQL($db['host'], $db['user'], $db['password'], $db['database'], $db['cms_prefix'], $db['ots_prefix']);
         self::setResource('DB', $db);
@@ -305,9 +306,7 @@ class OTSCMS
         try
         {
             // checks IP banishment
-            $ban = $db->query('SELECT COUNT(`type`) AS `count` FROM {bans} WHERE `ip` & `mask` = ' . Toolbox::ip2long($_SERVER['REMOTE_ADDR']) . ' & `mask` AND (`time` > ' . time() . ' OR `time` = 0) AND `type` = 1')->fetch();
-
-            if($ban['count'] > 0)
+            if( $ots->isIPBanned($_SERVER['REMOTE_ADDR']) )
             {
                 // to skip to the end
                 throw new HandledException('IPBan');
@@ -320,9 +319,10 @@ class OTSCMS
                 try
                 {
                     // checks account ban
-                    $ban = $db->query('SELECT COUNT(`type`) AS `count` FROM {bans} WHERE `account` = ' . (int) $session->useraccount . ' AND (`time` > ' . time() . ' OR `time` = 0) AND `type` = 3')->fetch();
+                    $account = $ots->createObject('Account');
+                    $account->load( (int) Session::read('useraccount') );
 
-                    if($ban['count'] > 0)
+                    if( $account->isBanned() )
                     {
                         throw new HandledException('AccountBlocked');
                     }

@@ -22,7 +22,7 @@
 // deletes account
 $account = $ots->createObject('Account');
 $account->load(User::$number);
-$ots->createObject('Accounts_List')->deleteAccount($account);
+$account->delete();
 
 // redirects to logout page
 Toolbox::redirect('/logout');

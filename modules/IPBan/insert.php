@@ -23,14 +23,7 @@
 $ipban = InputData::read('ipban');
 
 // saves ban info
-$row = new OTS_Ban();
-$row['type'] = 1;
-$row['ip'] = Toolbox::ip2long($ipban['ip']);
-$row['mask'] = Toolbox::ip2long($ipban['mask']);
-$row['time'] = 0;
-$row['player'] = 0;
-$row['account'] = 0;
-$row->save();
+$ots->banIP($ipban['ip'], $ipban['mask']);
 
 OTSCMS::call('IPBan', 'manage');
 

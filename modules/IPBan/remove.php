@@ -23,8 +23,7 @@
 $ipban = InputData::read('ipban');
 
 // deletes ban info
-$delete = $db->prepare('DELETE FROM {bans} WHERE `ip` = :ip AND `mask` = :mask AND `type` = 1');
-$delete->execute( array(':ip' =>$ipban['ip'], ':mask' => $ipban['mask']) );
+$ots->unbanIP( Toolbox::ip2long($ipban['ip']), Toolbox::ip2long($ipban['mask']) );
 
 OTSCMS::call('IPBan', 'manage');
 

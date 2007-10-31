@@ -2,23 +2,30 @@
 
 /**#@+
  * @version 0.0.1
+ * @since 0.0.1
  */
 
 /**
  * This file contains main toolkit class. Please read README file for quick startup guide and/or tutorials for more info.
  * 
  * @package POT
- * @version 0.0.3+SVN
+ * @version 0.0.4+SVN
  * @author Wrzasq <wrzasq@gmail.com>
  * @copyright 2007 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
+ * @todo 0.0.6: Spawns support (OTBM support -> cache).
+ * @todo 0.1.0: Items list (items.xml + items.otb -> cache).
+ * @todo 0.1.0: Get rid of POT::getInstance()->create*() calls - use POT::getInstance()->getDBHandle() in constructors.
+ * @todo 0.1.0: Implement __get()/__set()/__call()/__toString(); ArrayAccess interface.
+ * @todo 1.0.0: Complete phpUnit test.
+ * @todo 1.0.0: More detailed documentation.
  */
 
 /**
  * Main POT class.
  * 
  * @package POT
- * @version 0.0.3+SVN
+ * @version 0.0.4+SVN
  */
 class POT
 {
@@ -33,15 +40,15 @@ class POT
 /**
  * PostgreSQL driver.
  * 
- * @version 0.0.3+SVN
- * @since 0.0.3+SVN
+ * @version 0.0.4
+ * @since 0.0.4
  */
     const DB_PGSQL = 3;
 /**
  * ODBC driver.
  * 
- * @version 0.0.3+SVN
- * @since 0.0.3+SVN
+ * @version 0.0.4
+ * @since 0.0.4
  */
     const DB_ODBC = 4;
 
@@ -56,22 +63,32 @@ class POT
 
 /**
  * None vocation.
+ * 
+ * @deprecated 0.0.4+SVN Vocations are now loaded dynamicly from vocations.xml file.
  */
     const VOCATION_NONE = 0;
 /**
  * Sorcerer.
+ * 
+ * @deprecated 0.0.4+SVN Vocations are now loaded dynamicly from vocations.xml file.
  */
     const VOCATION_SORCERER = 1;
 /**
  * Druid.
+ * 
+ * @deprecated 0.0.4+SVN Vocations are now loaded dynamicly from vocations.xml file.
  */
     const VOCATION_DRUID = 2;
 /**
  * Paladin.
+ * 
+ * @deprecated 0.0.4+SVN Vocations are now loaded dynamicly from vocations.xml file.
  */
     const VOCATION_PALADIN = 3;
 /**
  * Knight.
+ * 
+ * @deprecated 0.0.4+SVN Vocations are now loaded dynamicly from vocations.xml file.
  */
     const VOCATION_KNIGHT = 4;
 
@@ -216,15 +233,52 @@ class POT
 /**
  * First depot item sid.
  * 
- * @version 0.0.3+SVN
- * @since 0.0.3+SVN
+ * @version 0.0.4
+ * @since 0.0.4
  */
     const DEPOT_SID_FIRST = 100;
 
 /**
+ * IP ban.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ */
+    const BAN_IP = 1;
+/**
+ * Player ban.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ */
+    const BAN_PLAYER = 2;
+/**
+ * Account ban.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ */
+    const BAN_ACCOUNT = 3;
+
+/**
+ * Ascencind sorting order.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ */
+    const ORDER_ASC = 1;
+/**
+ * Descending sorting order.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ */
+    const ORDER_DESC = 2;
+
+/**
  * Singleton.
  * 
- * @return POT Global POD class instance.
+ * @return POT Global POT class instance.
  */
     public static function getInstance()
     {
@@ -300,7 +354,6 @@ class POT
  * 
  * @version 0.0.3
  * @param string $class Class name.
- * @example examples/autoload.php autoload.php
  */
     public function loadClass($class)
     {
@@ -315,7 +368,7 @@ class POT
  * 
  * OTServ database connection object.
  * 
- * @var IOTS_DB
+ * @var PDO
  */
     private $db;
 
@@ -337,7 +390,7 @@ class POT
  * - <var>driver</var> - optional, specifies driver, aplies when <var>$driver</var> method parameter is <i>null</i>
  * - <var>prefix</var> - optional, prefix for database tables, use if you have more then one OTServ installed on one database.
  * 
- * @version 0.0.3+SVN
+ * @version 0.0.4
  * @param int|null $driver Database driver type.
  * @param array $params Connection info.
  * @throws Exception When driver is not supported.
@@ -426,7 +479,7 @@ class POT
 
             // sends packet with request
             // 06 - length of packet, 255, 255 is the comamnd identifier, 'info' is a request
-            fwrite($socket, chr(6).chr(0).chr(255).chr(255).'info');
+            fwrite($socket, chr(6) . chr(0) . chr(255) . chr(255) . 'info');
 
             // reads respond
             $data = stream_get_contents($socket);
@@ -464,14 +517,198 @@ class POT
  * It is also important as serialised objects after unserialisation needs to be re-initialised with database connection.
  * </p>
  * 
- * @version 0.0.3+SVN
- * @since 0.0.3+SVN
- * @return IOTS_DB Database connection handle.
+ * @version 0.0.4
+ * @since 0.0.4
+ * @return PDO Database connection handle.
  * @internal You should not call this function in your external code without real need.
  */
     public function getDBHandle()
     {
         return $this->db;
+    }
+
+/**
+ * List of vocations.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @var array
+ */
+    private $vocations = array();
+
+/**
+ * Loads vocations list.
+ * 
+ * Loads vocations list from given file.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @param string $file vocations.xml file location.
+ */
+    public function loadVocations($file)
+    {
+        // loads DOM document
+        $vocations = new DOMDocument();
+        $vocations->load($file);
+
+        // loads vocations
+        foreach( $vocations->getElementsByTagName('vocation') as $vocation)
+        {
+            $this->vocations[ (int) $vocation->getAttribute('id') ] = $vocation->getAttribute('name');
+        }
+    }
+
+/**
+ * Returns vocation's ID.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @param string $name Vocation.
+ * @return int|bool ID (false if not found).
+ */
+    public function getVocationID($name)
+    {
+        return array_search($name, $this->vocations);
+    }
+
+/**
+ * Returns name of given vocation's ID.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @param int $id Vocation ID.
+ * @return string|bool Name (false if not found).
+ */
+    public function getVocationName($id)
+    {
+        if( isset($this->vocations[$id]) )
+        {
+            return $this->vocations[$id];
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+/**
+ * Returns list (id => name) of loaded vocations.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @return array List of vocations.
+ */
+    public function getVocationsList()
+    {
+        return $this->vocations;
+    }
+
+/**
+ * Bans given IP number.
+ * 
+ * Adds IP/mask ban. You can call this function with only one parameter to ban only given IP address without expiration.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @param string $ip IP to ban.
+ * @param string $mask Mask for ban (by default bans only given IP).
+ * @param int $time Time for time until expires (0 - forever).
+ */
+    public function banIP($ip, $mask = '255.255.255.255', $time = 0)
+    {
+        // long2ip( ip2long('255.255.255.255') ) != '255.255.255.255' -.-'
+        // it's because that PHP integer types are signed
+        if($ip == '255.255.255.255')
+        {
+            $ip = 4294967295;
+        }
+        else
+        {
+            $ip = sprintf('%u', ip2long($ip) );
+        }
+
+        if($mask == '255.255.255.255')
+        {
+            $mask = 4294967295;
+        }
+        else
+        {
+            $mask = sprintf('%u', ip2long($mask) );
+        }
+
+        $this->db->query('INSERT INTO ' . $this->db->tableName('bans') . ' (' . $this->db->fieldName('type') . ', ' . $this->db->fieldName('ip') . ', ' . $this->db->fieldName('mask') . ', ' . $this->db->fieldName('time') . ') VALUES (' . self::BAN_IP . ', ' . $ip . ', ' . $mask . ', ' . (int) $time . ')');
+    }
+
+/**
+ * Deletes ban from given IP number.
+ * 
+ * Removes given IP/mask ban.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @param string $ip IP to ban.
+ * @param string $mask Mask for ban (by default 255.255.255.255).
+ */
+    public function unbanIP($ip, $mask = '255.255.255.255')
+    {
+        // long2ip( ip2long('255.255.255.255') ) != '255.255.255.255' -.-'
+        // it's because that PHP integer types are signed
+        if($ip == '255.255.255.255')
+        {
+            $ip = 4294967295;
+        }
+        else
+        {
+            $ip = sprintf('%u', ip2long($ip) );
+        }
+
+        if($mask == '255.255.255.255')
+        {
+            $mask = 4294967295;
+        }
+        else
+        {
+            $mask = sprintf('%u', ip2long($mask) );
+        }
+
+        $this->db->query('DELETE FROM ' . $this->db->tableName('bans') . ' WHERE ' . $this->db->fieldName('type') . ' = ' . self::BAN_IP . ' AND ' . $this->db->fieldName('ip') . ' = ' . $ip . ' AND ' . $this->db->fieldName('mask') . ' = ' . $mask);
+    }
+
+/**
+ * Checks if given IP is banned.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @param string $ip IP to ban.
+ * @return bool True if IP number is banned, false otherwise.
+ */
+    public function isIPBanned($ip)
+    {
+        // long2ip( ip2long('255.255.255.255') ) != '255.255.255.255' -.-'
+        // it's because that PHP integer types are signed
+        if($ip == '255.255.255.255')
+        {
+            $ip = 4294967295;
+        }
+        else
+        {
+            $ip = sprintf('%u', ip2long($ip) );
+        }
+
+        $ban = $this->db->query('SELECT COUNT(' . $this->db->fieldName('type') . ') AS ' . $this->db->fieldName('count') . ' FROM ' . $this->db->tableName('bans') . ' WHERE ' . $this->db->fieldName('ip') . ' & ' . $this->db->fieldName('mask') . ' = ' . $ip . ' & ' . $this->db->fieldName('mask') . ' AND (' . $this->db->fieldName('time') . ' > ' . time() . ' OR ' . $this->db->fieldName('time') . ' = 0) AND ' . $this->db->fieldName('type') . ' = ' . self::BAN_IP)->fetch();
+        return $ban['count'] > 0;
+    }
+
+/**
+ * Creates lists filter.
+ * 
+ * @version 0.0.4+SVN
+ * @since 0.0.4+SVN
+ * @return OTS_SQLFilter Filter object.
+ */
+    public function createFilter()
+    {
+        return new OTS_SQLFilter($this->db);
     }
 }
 

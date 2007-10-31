@@ -29,7 +29,7 @@ $players = array();
 $account = $ots->createObject('Account');
 $account->load(User::$number);
 
-foreach( $account->getPlayers() as $player)
+foreach( $account->getPlayersList() as $player)
 {
     $players[ $player->getId() ] = $player->getName();
 }

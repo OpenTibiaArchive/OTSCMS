@@ -58,7 +58,7 @@ $table->idPrefix = 'rankID_';
 $ranks = array();
 
 // reads current guild ranks
-foreach( $guild->getGuildRanks() as $rank)
+foreach( $guild->getGuildRanksList() as $rank)
 {
     // skips leader rank if it's not leader on current account
     if($access == 2 && $rank->getLevel() == 3)

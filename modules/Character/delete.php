@@ -28,7 +28,7 @@ if( $player->getAccount()->getId() != User::$number)
     throw new NoAccessException();
 }
 
-$ots->createObject('Players_List')->deletePlayer($player);
+$player->delete();
 
 // redirectd to account management
 OTSCMS::call('Account', 'account');

@@ -22,7 +22,7 @@
 // deletes account
 $account = $ots->createObject('Account');
 $account->load( InputData::read('id') );
-$ots->createObject('Accounts_List')->deleteAccount($account);
+$account->delete();
 OTSCMS::call('Account', 'manage');
 
 ?>

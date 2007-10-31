@@ -22,7 +22,7 @@
 // checks characters limit
 $account = $ots->createObject('Account');
 $account->load(User::$number);
-if( count( $account->getPlayers() ) >= $config['system.account_limit'])
+if( count( $account->getPlayersList() ) >= $config['system.account_limit'])
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Character.Limit'];

@@ -53,7 +53,7 @@ $account->load(User::$number);
 $form = $template->createComponent('BBEditor');
 $form['action'] = '/admin/module=Topic&command=insert&bb[upperid]=' . $id . '&bb[istopic]=' . $newTopic;
 $form['fields'] = array('content' => $post);
-$form['characters'] = $account->getPlayers();
+$form['characters'] = $account->getPlayersList();
 $form->module = 'Topic';
 $form->adminActions = $newTopic && User::hasAccess(3);
 

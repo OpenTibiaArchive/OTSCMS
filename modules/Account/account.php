@@ -56,8 +56,6 @@ $profile['action'] = '/account/save';
 $profile['submit'] = $language['main.admin.UpdateSubmit'];
 $profile['id'] = 'userForm';
 
-$fields = $db->query('SELECT `signature`, `avatar`, `website` FROM {accounts} WHERE `id` = ' . $account->getId() )->fetch();
-
 // form fields
 $profile->addField('user[signature]', ComponentAdminForm::FieldArea, $language['Modules.Account.Signature'], $account->getCustomField('signature') );
 $profile->addField('user[avatar]', ComponentAdminForm::FieldText, $language['Modules.Account.Avatar'], $account->getCustomField('avatar') );
@@ -72,7 +70,7 @@ $list->idPrefix = 'characterID_';
 
 $characters = array();
 
-foreach( $account->getPlayers() as $player)
+foreach( $account->getPlayersList() as $player)
 {
     // actions links
     $root = XMLToolbox::createDocumentFragment();

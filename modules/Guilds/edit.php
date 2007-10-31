@@ -34,7 +34,7 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->getLevel() )
 $ranks = array();
 
 // guild ranks list
-foreach( $guild->getGuildRanks() as $guildRank)
+foreach( $guild->getGuildRanksList() as $guildRank)
 {
     $ranks[ $guildRank->getId() ] = $guildRank->getName();
 }
