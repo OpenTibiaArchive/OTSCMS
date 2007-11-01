@@ -33,7 +33,7 @@ class SQL extends SQL_Base
     public function __construct($host, $user, $password, $database, $cms_prefix, $ots_prefix)
     {
         parent::__construct($host, $user, $password, $database, $cms_prefix, $ots_prefix);
-        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('SQLite_Results') );
+        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('OTS_SQLite_Results') );
         $this->sqliteCreateFunction('regexp', array($this, 'regexp') );
     }
 
