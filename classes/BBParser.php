@@ -191,6 +191,7 @@ class BBParser
                     case 'mail':
                     case 'email':
                         $temp .= '</a>';
+                        break;
                     // ending of blocks of text
                     case 'quote':
                     case 'align':
@@ -445,6 +446,7 @@ class BBParser
                 // link
                 case 'url':
                 case 'mail':
+                case 'email':
                     $temp .= '</a>';
                     break;
                 // ending of blocks of text
