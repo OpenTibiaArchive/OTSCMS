@@ -223,6 +223,17 @@ CREATE TABLE [sites] (
     `is_home` INT DEFAULT 0
 );
 
+DROP TABLE [cache];
+
+CREATE TABLE [cache] (
+    `key` VARCHAR(32),
+    `id` INT,
+    `name` INT,
+    `content` BLOB,
+    `parent` INT,
+    `previous` INT
+);
+
 DROP VIEW [posts_with_authors];
 
 CREATE VIEW [posts_with_authors]

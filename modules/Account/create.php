@@ -42,14 +42,10 @@ if( $account->isLoaded() )
     return;
 }
 
-// default group
-$group = $ots->createObject('Group');
-$group->load($system['default_group']);
-
 // generates random account number
 try
 {
-    $number = $account->createEx($group, $config['system.min_number'], $config['system.max_number']);
+    $number = $account->create($config['system.min_number'], $config['system.max_number']);
 }
 catch(Exception $e)
 {

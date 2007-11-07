@@ -46,14 +46,17 @@ if( isset($name) )
     }
 
     // cities names
-    $spawns = new SpawnsReader($config['directories.data'] . 'world/' . $config['system.map']);
+    $cache = new OTBMCache($db);
+    $otbm = new OTS_OTBMFile();
+    $otbm->setCacheDriver($cache);
+    $otbm->loadFile($config['directories.data'] . 'world/' . $config['system.map']);
 
     // character info table
     $table = $template->createComponent('TableData');
     $table['caption'] = $language['Modules.Character.CharacterData'];
 
     $data = array($language['Modules.Character.Name'] => $character->getName(), $language['Modules.Character.Gender'] => $language['main.gender' . $character->getSex() ], $language['Modules.Character.Vocation'] => $language['main.vocation' . $character->getVocation() ], $language['Modules.Character.Experience'] => $character->getExperience(), $language['Modules.Character.Level'] => $character->getLevel(), $language['Modules.Character.MagicLevel'] => $character->getMagLevel(),
-    $language['Modules.Character.City'] => $spawns[ $character->getTownId() ]);
+    $language['Modules.Character.City'] => $otbm->getTownName( $character->getTownId() ) );
 
     // house
     $house = $db->query('SELECT `id` FROM {houses} WHERE `owner` = ' . $character->getId() )->fetch();

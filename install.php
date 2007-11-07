@@ -332,7 +332,7 @@ Mainly great thans to <b>Foziw</b> for the domain, <b>Invincible AznX</b> for ho
 
         $query = $sql->prepare('INSERT INTO [settings] (`name`, `content`) VALUES (:name, :content)');
 
-        $query->execute( array(':name' => 'version', ':content' => '3.1.0') );
+        $query->execute( array(':name' => 'version', ':content' => '3.1.1') );
         $query->execute( array(':name' => 'directories.languages', ':content' => $config['directories']['languages']) );
         $query->execute( array(':name' => 'directories.modules', ':content' => $config['directories']['modules']) );
         $query->execute( array(':name' => 'directories.skins', ':content' => $config['directories']['skins']) );

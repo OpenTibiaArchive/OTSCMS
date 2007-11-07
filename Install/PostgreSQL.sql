@@ -7,6 +7,7 @@ DROP VIEW IF EXISTS [player_skills];
 DROP VIEW IF EXISTS [private_messages];
 DROP VIEW IF EXISTS [posts_with_authors];
 
+DROP TABLE IF EXISTS [cache];
 DROP TABLE IF EXISTS [sites];
 DROP TABLE IF EXISTS [requests];
 DROP TABLE IF EXISTS [invites];
@@ -226,6 +227,15 @@ CREATE TABLE [sites] (
     `content` LONGTEXT,
     `is_home` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`id`)
+);
+
+CREATE TABLE [cache] (
+    `key` VARCHAR(32),
+    `id` INT,
+    `name` INT,
+    `content` BLOB,
+    `parent` INT,
+    `previous` INT
 );
 
 CREATE VIEW [posts_with_authors]

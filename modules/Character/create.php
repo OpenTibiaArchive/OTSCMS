@@ -41,15 +41,13 @@ $form->addField('character[vocation]', ComponentAdminForm::FieldRadio, $language
 // if rook is on then there is no need for city selection
 if(!$config['system.rook.enabled'])
 {
-    $towns = array();
-
     // reads all spawns
-    foreach( new SpawnsReader($config['directories.data'] . 'world/' . $config['system.map']) as $id => $town)
-    {
-        $towns[$id] = $town;
-    }
+    $cache = new OTBMCache($db);
+    $otbm = new OTS_OTBMFile();
+    $otbm->setCacheDriver($cache);
+    $otbm->loadFile($config['directories.data'] . 'world/' . $config['system.map']);
 
-    $form->addField('character[town]', ComponentAdminForm::FieldSelect, $language['Modules.Character.City'], array('options' => $towns) );
+    $form->addField('character[town]', ComponentAdminForm::FieldSelect, $language['Modules.Character.City'], array('options' => $otbm->getTownsList() ) );
 }
 
 ?>

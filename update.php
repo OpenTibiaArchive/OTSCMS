@@ -284,6 +284,24 @@ switch($config['version'])
         $template['skins'] = array();
         $template['links'] = array();
         $template['onlines'] = array();
+
+    // 3.1.0 and up
+    case '3.1.0':
+        // updates system version
+        $db->exec('UPDATE [settings] SET `content` = \'3.1.1\' WHERE `name` = \'version\'');
+
+        // creates cache table
+        switch( $db->getAttribute(PDO::ATTR_DRIVER_NAME) )
+        {
+            case 'mysql':
+                $db->query('CREATE TABLE [cache] (`key` VARCHAR(32), `id` INT, `name` INT, `content` BLOB, `parent` INT, `previous` INT) ENGINE = InnoDB CHARSET = utf8');
+                break;
+
+            case 'sqlite':
+            case 'pgsql':
+                $db->query('CREATE TABLE [cache] (`key` VARCHAR(32), `id` INT, `name` INT, `content` BLOB, `parent` INT, `previous` INT)');
+                break;
+        }
 }
 
 $raw = $template->createComponent('RAW');

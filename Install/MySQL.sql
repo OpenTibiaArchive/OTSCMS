@@ -7,6 +7,7 @@ DROP VIEW IF EXISTS [player_skills];
 DROP VIEW IF EXISTS [private_messages];
 DROP VIEW IF EXISTS [posts_with_authors];
 
+DROP TABLE IF EXISTS [cache];
 DROP TABLE IF EXISTS [sites];
 DROP TABLE IF EXISTS [requests];
 DROP TABLE IF EXISTS [invites];
@@ -63,8 +64,8 @@ CREATE TABLE [pms] (
     `id` SERIAL,
     `name` VARCHAR(255),
     `content` TEXT,
-    `from` INT NOT NULL,
-    `to` INT NOT NULL,
+    `from` INT UNSIGNED NOT NULL,
+    `to` INT UNSIGNED NOT NULL,
     `read` BOOLEAN DEFAULT FALSE,
     `date_time` INT UNSIGNED,
     PRIMARY KEY (`id`),
@@ -115,7 +116,7 @@ CREATE TABLE [options] (
 
 CREATE TABLE [votes] (
     `name` BIGINT UNSIGNED NOT NULL,
-    `content` INT NOT NULL,
+    `content` INT UNSIGNED NOT NULL,
     FOREIGN KEY (`name`) REFERENCES [options] (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`content`) REFERENCES {accounts} (`id`) ON DELETE CASCADE,
     UNIQUE KEY (`name`, `content`)
@@ -138,7 +139,7 @@ CREATE TABLE [posts] (
     `closed` BOOLEAN,
     `pinned` BOOLEAN,
     `content` TEXT,
-    `poster` INT NOT NULL,
+    `poster` INT UNSIGNED NOT NULL,
     `date_time` INT UNSIGNED,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`poster`) REFERENCES {players} (`id`),
@@ -204,8 +205,8 @@ CREATE TABLE [urls] (
 
 CREATE TABLE [invites] (
     `id` SERIAL,
-    `name` INT NOT NULL,
-    `content` INT NOT NULL,
+    `name` INT UNSIGNED NOT NULL,
+    `content` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`name`) REFERENCES {players} (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`content`) REFERENCES {guilds} (`id`) ON DELETE CASCADE
@@ -213,8 +214,8 @@ CREATE TABLE [invites] (
 
 CREATE TABLE [requests] (
     `id` SERIAL,
-    `name` INT NOT NULL,
-    `content` INT NOT NULL,
+    `name` INT UNSIGNED NOT NULL,
+    `content` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`name`) REFERENCES {players} (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`content`) REFERENCES {guilds} (`id`) ON DELETE CASCADE
@@ -226,6 +227,15 @@ CREATE TABLE [sites] (
     `content` LONGTEXT,
     `is_home` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`id`)
+) ENGINE = InnoDB CHARSET = utf8;
+
+CREATE TABLE [cache] (
+    `key` VARCHAR(32),
+    `id` INT,
+    `name` INT,
+    `content` BLOB,
+    `parent` INT,
+    `previous` INT
 ) ENGINE = InnoDB CHARSET = utf8;
 
 CREATE VIEW [posts_with_authors]
