@@ -20,8 +20,7 @@
 */
 
 // loads monsters list file
-$monsters = new DOMDocument();
-$monsters->load($config['directories.data'].'monster/monsters.xml');
+$ots->loadMonsters($config['directories.data'].'monster/');
 
 $list = $template->createComponent('ItemsList');
 $list['header'] = $language['Modules.Library.MonstersList'];
@@ -29,17 +28,15 @@ $list['header'] = $language['Modules.Library.MonstersList'];
 $temp = array();
 
 // loops through monsters
-foreach( $monsters->getElementsByTagName('monster') as $monster)
+foreach( $ots->getMonstersList() as $name)
 {
-    $name = $monster->getAttribute('name');
-
     // checks if it's monster and admin wants to display it - to enable it place image in monsters images directory
     if( !Toolbox::imageExists('Monsters/' . $name) )
     {
         continue;
     }
 
-    $temp[ preg_replace('/\.xml$/i', '', $monster->getAttribute('file') ) ] = ucwords($name);
+    $temp[$name] = ucwords($name);
 }
 
 // puts monsters into template

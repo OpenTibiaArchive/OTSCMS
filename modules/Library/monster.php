@@ -20,154 +20,77 @@
 */
 
 // protection from hackers
-$name = basename( InputData::read('name') );
+$name = InputData::read('name');
 
 // loads monster file
-$monster = new DOMDocument();
-$monster->load($config['directories.data'] . 'monster/' . $name . '.xml');
-$monster = $monster->firstChild;
+$ots->loadMonsters($config['directories.data'] . 'monster/');
+$monster = $ots->getMonster($name);
 
 // there has to be an image for that spell - that is the way how you can select which spells should be displayed
-if($monster->nodeName != 'monster' || !($extension = Toolbox::imageExists('Monsters/' . $name) ))
+if(!($extension = Toolbox::imageExists('Monsters/' . $name) ))
 {
     throw new HandledException('NotToDisplay');
 }
 
-$data = $template->createComponent('LibraryPage');
-$data['header'] = $language['Modules.Library.MonsterInformation'];
-$data['name'] = $monster->getAttribute('name');
-$data['experience'] = $monster->getAttribute('experience');
-$attacks = array();
-$voices = array();
-$defenses = array();
-$loot = array();
+$voices = $monster->getVoices();
 
-// reads loot items
-function lootItems(DOMElement $element)
+// composes quotes
+foreach($voices as $index => $voice)
 {
-    $items = array();
-
-    // reads all sub-elements of tag
-    foreach( $element->getElementsByTagName('*') as $tag)
-    {
-        switch($tag->nodeName)
-        {
-            // item tag is added to loot items
-            case 'item':
-                $items[] = $tag->getAttribute('id');
-                // there is no break - go ahead
-            // both item tag and inside tag can be searched
-            case 'inside':
-                $items += lootItems($tag);
-                break;
-        }
-    }
-
-    return $items;
+    $voices[$index] = '<span style="font-style: italic;">&quot;' . $voice . '&quot;</span>';
 }
 
-// iterates all monster informations
-foreach( $monster->getElementsByTagName('*') as $element)
+$loot = $monster->getLoot();
+
+if( !empty($loot) )
 {
-    switch($element->nodeName)
+    $names = array();
+
+    // loads items.xml file
+    foreach( new ItemsReader($config['directories.data'] . 'items/items.xml') as $id => $item)
     {
-        case 'health':
-            // monster's health
-            $data['health'] = $element->getAttribute('max');
-            break;
-
-        case 'attacks':
-            // help variables
-            $distance = array();
-            $instant = array();
-            $rune = array();
-
-            foreach( $element->getElementsByTagName('attack') as $attack)
-            {
-                switch( $attack->getAttribute('type') )
-                {
-                    case 'melee':
-                        $attacks['melee'] = 'Melee';
-                        break;
-
-                    case 'distance':
-                        $distance[] = $attack->getAttribute('name');
-                        break;
-
-                    case 'instant':
-                        $instant[] = '<span style="font-style: italic;">' . $attack->getAttribute('name') . '</span>';
-                        break;
-
-                    case 'rune':
-                        $rune[] = $attack->getAttribute('name');
-                        break;
-                }
-            }
-
-            // appends all attacks
-            if( !empty($distance) )
-            {
-                $attacks[] = 'Distance ('.implode(', ', $distance).')';
-            }
-            if( !empty($instant) )
-            {
-                $attacks[] = 'Spells ('.implode(', ', $instant).')';
-            }
-            if( !empty($rune) )
-            {
-                $attacks[] = 'Runes ('.implode(', ', $rune).')';
-            }
-            break;
-
-        case 'voices':
-            foreach( $element->getElementsByTagName('voice') as $sound)
-            {
-                // sounds
-                $voices[] = '<span style="font-style: italic;">&quot;' . $sound->getAttribute('sentence') . '&quot;</span>';
-            }
-            break;
-
-        case 'defenses':
-            foreach( $element->getElementsByTagName('defense') as $immunity)
-            {
-                // immunities
-                $defenses[] = $immunity->getAttribute('immunity');
-            }
-            break;
-
-        case 'loot':
-            $names = array();
-
-            // loads items.xml file
-            foreach( new ItemsReader($config['directories.data'] . 'items/items.xml') as $id => $item)
-            {
-                $names[$id] = $item['name'];
-            }
-
-            $loot = lootItems($element);
-            // replaces ids by names
-            foreach($loot as $index => $item)
-            {
-                // checks if there is name for such item
-                if( isset($names[$item]) )
-                {
-                    $loot[$index] = $names[$item];
-                }
-                // otherwise hide that item
-                else
-                {
-                    unset($loot[$index]);
-                }
-            }
-
-            break;
+        $names[$id] = $item['name'];
     }
+
+    // replaces ids by names
+    foreach($loot as $index => $item)
+    {
+        // checks if there is name for such item
+        if( isset($names[$item]) )
+        {
+            $loot[$index] = $names[$item];
+        }
+        // otherwise hide that item
+        else
+        {
+            unset($loot[$index]);
+        }
+    }
+}
+
+$defenses = array_merge( $monster->getDefenses(), $monster->getImmunities() );
+
+foreach($defenses as $index => $defense)
+{
+    $defemses[$index] = ucfirst($defense);
+}
+
+$attacks = $monster->getAttacks();
+
+foreach($attacks as $index => $attack)
+{
+    $attacks[$index] = ucfirst($attack);
 }
 
 // puts informations into monsters data
-$data['attacks'] = empty($attacks) ? '' : XMLToolbox::inparse( implode(', ', $attacks) );
+$data = $template->createComponent('LibraryPage');
+$data['header'] = $language['Modules.Library.MonsterInformation'];
+$data['name'] = $monster->getName();
+$data['experience'] = $monster->getExperience();
+$data['health'] = $monster->getHealth();
 $data['voices'] = empty($voices) ? '' : XMLToolbox::inparse( implode(', ', $voices) );
 $data['defenses'] = implode(', ', $defenses);
+$data['attacks'] = empty($attacks) ? '' : XMLToolbox::inparse( implode(', ', $attacks) );
 $data['loot'] = implode(', ', $loot);
 $data['image'] = str_replace('\\', '/', $config['directories.images']) . 'Monsters/' . $name . $extension;
 

@@ -90,7 +90,7 @@ class OTSCMS
         $file = $class;
 
         // defined class driver
-        if(self::$drivers[$class])
+        if( isset(self::$drivers[$class]) )
         {
             $file = self::$drivers[$class];
         }
