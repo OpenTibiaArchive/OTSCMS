@@ -27,6 +27,15 @@ $vocationCensus = Toolbox::dumpRecords( $db->query('SELECT `vocation` AS `key`, 
 $genderCount = array_sum($genderCensus) / 100;
 $vocationCount = array_sum($vocationCensus) / 100;
 
+$ots->loadVocations($config['directories.data'] . 'vocations.xml');
+$vocations = array();
+
+// creates vocations array
+foreach( $ots->getVocationsList() as $id => $name)
+{
+    $vocations[$name] => (int) $vocationCensus[$id] . ' (' . @intval($vocationCensus[$id] / $vocationCount) . '%)'
+}
+
 // gender census table
 // there could be 0 as a total number of characters
 // so we have to controll division by zero error
@@ -37,6 +46,6 @@ $gender['data'] = array($language['main.gender0'] => (int) $genderCensus[0] . ' 
 // vocation census table
 $vocation = $template->createComponent('TableData');
 $vocation['caption'] = $language['Modules.Statistics.CensusVocation'];
-$vocation['data'] = array($language['main.vocation0'] => (int) $vocationCensus[0] . ' (' . @intval($vocationCensus[0] / $vocationCount) . '%)', $language['main.vocation1'] => (int) $vocationCensus[1] . ' (' . @intval($vocationCensus[1] / $vocationCount) . '%)', $language['main.vocation2'] => (int) $vocationCensus[2] . ' (' . @intval($vocationCensus[2] / $vocationCount) . '%)', $language['main.vocation3'] => (int) $vocationCensus[3] . ' (' . @intval($vocationCensus[3] / $vocationCount) . '%)', $language['main.vocation4'] => (int) $vocationCensus[4] . ' (' . @intval($vocationCensus[4] / $vocationCount) . '%)');
+$vocation['data'] = $vocations;
 
 ?>

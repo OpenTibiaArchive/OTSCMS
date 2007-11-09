@@ -24,8 +24,11 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = '/admin/module=Character&command=settings';
 $form['submit'] = $language['Modules.Character.SelectSubmit'];
 
+// loads vocations
+$ots->loadVocations($config['directories.data'] . 'vocations.xml');
+
 $form->addField('gender', ComponentAdminForm::FieldSelect, $language['Modules.Character.SelectGender'], array('options' => array('*' => '*', 0 => $language['main.gender0'], 1 => $language['main.gender1']) ) );
-$form->addField('vocation', ComponentAdminForm::FieldSelect, $language['Modules.Character.SelectVocation'], array('options' => array('*' => '*', 0 => $language['main.vocation0'], 1 => $language['main.vocation1'], 2 => $language['main.vocation2'], 3 => $language['main.vocation3'], 4 => $language['main.vocation4']) ) );
+$form->addField('vocation', ComponentAdminForm::FieldSelect, $language['Modules.Character.SelectVocation'], array('options' => array_merge( array('*' => '*'), $ots->getVocationsList() ) ) );
 $form->addField('', ComponentAdminForm::FieldSeparator, XMLToolbox::inparse($language['Modules.Character.SelectHelp']) );
 
 ?>

@@ -31,11 +31,6 @@ return array(
     'library' => 'Biblioteka',
     'gender0' => 'Kobieta',
     'gender1' => 'Mężczyzna',
-    'vocation0' => 'Żadna',
-    'vocation1' => 'Mag',
-    'vocation2' => 'Druid',
-    'vocation3' => 'Paladyn',
-    'vocation4' => 'Rycerz',
     'menu' => array(
         'admin' => array(
             'Character_Manage' => 'Characters List',

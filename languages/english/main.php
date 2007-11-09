@@ -32,11 +32,6 @@ return array(
 
     'gender0' => 'Female',
     'gender1' => 'Male',
-    'vocation0' => 'None',
-    'vocation1' => 'Sorcerer',
-    'vocation2' => 'Druid',
-    'vocation3' => 'Paladin',
-    'vocation4' => 'Knight',
 
     'menu' => array(
         'admin' => array(

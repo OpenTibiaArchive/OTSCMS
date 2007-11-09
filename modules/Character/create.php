@@ -34,9 +34,12 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = '/characters/insert';
 $form['submit'] = $language['Modules.Character.InsertSubmit'];
 
+// loads vocations
+$ots->loadVocations($config['directories.data'] . 'vocations.xml');
+
 $form->addField('character[name]', ComponentAdminForm::FieldText, $language['Modules.Character.Name']);
 $form->addField('character[sex]', ComponentAdminForm::FieldRadio, $language['Modules.Character.Gender'], array('options' => array($language['main.gender0'], $language['main.gender1']) ) );
-$form->addField('character[vocation]', ComponentAdminForm::FieldRadio, $language['Modules.Character.Vocation'], array('options' => array($language['main.vocation0'], $language['main.vocation1'], $language['main.vocation2'], $language['main.vocation3'], $language['main.vocation4']) ) );
+$form->addField('character[vocation]', ComponentAdminForm::FieldRadio, $language['Modules.Character.Vocation'], array('options' => $ots->getVocationsList() ) );
 
 // if rook is on then there is no need for city selection
 if(!$config['system.rook.enabled'])

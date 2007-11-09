@@ -49,20 +49,13 @@ foreach( $spells->getElementsByTagName('*') as $spell)
     $data['words'] = $spell->getAttribute('words');
     $data['maglv'] = $spell->getAttribute('maglv');
     $data['mana'] = $spell->getAttribute('mana');
-    $data['vocations'] = array();
     $data['image'] = str_replace('\\', '/', $config['directories.images']) . 'Spells/' . $data['name'] . $extension;
 
     // finds all allowed vocations
     $vocations = array();
     foreach( $spell->getElementsByTagName('vocation') as $vocation)
     {
-        // makes sure that it's vocation tag and that it's not special vocation tag for monsters
-        if(( $vocation->getAttribute('id') == 0) || ( $vocation->getAttribute('id') == 5))
-        {
-            continue;
-        }
-
-        $vocations[] = $language['main.vocation' . $vocation->getAttribute('id') ];
+        $vocations[] = $vocation->getAttribute('name');
     }
     $data['vocations'] = implode(', ', $vocations);
 
