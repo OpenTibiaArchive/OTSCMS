@@ -70,7 +70,7 @@ $list->idPrefix = 'characterID_';
 
 $characters = array();
 
-foreach( $account->getPlayersList() as $player)
+foreach($account as $player)
 {
     // actions links
     $root = XMLToolbox::createDocumentFragment();

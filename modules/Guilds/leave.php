@@ -33,7 +33,7 @@ $account->load(User::$number);
 $players = array();
 
 // loads all non-leader members of this guild that belongs to currently logged account
-foreach( $account->getPlayersList() as $player)
+foreach($account as $player)
 {
     $rank = $player->getRank();
 

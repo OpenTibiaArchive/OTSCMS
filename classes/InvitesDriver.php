@@ -73,7 +73,7 @@ class InvitesDriver implements IOTS_GuildAction
         $rank = null;
 
         // finds normal member rank
-        foreach( $this->guild->getGuildRanksList() as $guildRank)
+        foreach($this->guild as $guildRank)
         {
             if( $guildRank->getLevel() == 1)
             {

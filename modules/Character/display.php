@@ -51,9 +51,6 @@ if( isset($name) )
     $otbm->setCacheDriver($cache);
     $otbm->loadFile($config['directories.data'] . 'world/' . $config['system.map']);
 
-    // loads vocations
-    $ots->loadVocations($config['directories.data'] . 'vocations.xml');
-
     // character info table
     $table = $template->createComponent('TableData');
     $table['caption'] = $language['Modules.Character.CharacterData'];
@@ -146,7 +143,7 @@ if( isset($name) )
 
     // other characters list
     $others = array();
-    foreach( $account->getPlayersList() as $other)
+    foreach($account as $other)
     {
         // checks if it's not current player
         if( $character->getId() != $other->getId() )

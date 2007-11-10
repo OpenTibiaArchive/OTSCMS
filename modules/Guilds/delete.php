@@ -33,7 +33,7 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->getLevel() )
 // gets any other rank from that guild with same access level
 $new = null;
 
-foreach( $guild->getGuildRanksList() as $guildRank)
+foreach($guild as $guildRank)
 {
     if( $rank->getId() != $guildRank->getId() && $rank->getLevel() == $guildRank->getLevel() )
     {
@@ -43,7 +43,7 @@ foreach( $guild->getGuildRanksList() as $guildRank)
 }
 
 // moves all members from old rank to new
-foreach( $new->getPlayersList() as $player)
+foreach($new as $player)
 {
     $player->getRank($new);
     $player->save();

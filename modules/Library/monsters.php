@@ -19,9 +19,6 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// loads monsters list file
-$ots->loadMonsters($config['directories.data'].'monster/');
-
 $list = $template->createComponent('ItemsList');
 $list['header'] = $language['Modules.Library.MonstersList'];
 

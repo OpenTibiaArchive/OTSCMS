@@ -51,7 +51,7 @@ $row->save();
 $leader = null;
 
 // reads guild leader rank created by database trigger
-foreach( $row->getGuildRanksList() as $rank)
+foreach($row as $rank)
 {
     if( $rank->getLevel() == 3)
     {

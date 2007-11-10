@@ -27,7 +27,6 @@ $vocationCensus = Toolbox::dumpRecords( $db->query('SELECT `vocation` AS `key`, 
 $genderCount = array_sum($genderCensus) / 100;
 $vocationCount = array_sum($vocationCensus) / 100;
 
-$ots->loadVocations($config['directories.data'] . 'vocations.xml');
 $vocations = array();
 
 // creates vocations array

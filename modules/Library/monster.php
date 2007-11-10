@@ -23,7 +23,6 @@
 $name = InputData::read('name');
 
 // loads monster file
-$ots->loadMonsters($config['directories.data'] . 'monster/');
 $monster = $ots->getMonster($name);
 
 // there has to be an image for that spell - that is the way how you can select which spells should be displayed

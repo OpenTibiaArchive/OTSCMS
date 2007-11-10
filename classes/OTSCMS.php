@@ -186,6 +186,12 @@ class OTSCMS
             $config[ $setting['name'] ] = $setting['content'];
         }
 
+        // loads vocations
+        $ots->loadVocations($config['directories.data'] . 'vocations.xml');
+
+        // loads monsters list file
+        $ots->loadMonsters($config['directories.data'].'monster/');
+
         // sets current language
         if( InputData::read('language') )
         {

@@ -22,7 +22,7 @@
 // checks characters limit
 $account = $ots->createObject('Account');
 $account->load(User::$number);
-if( count( $account->getPlayersList() ) >= $config['system.account_limit'])
+if( count($account) >= $config['system.account_limit'])
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Character.Limit'];
@@ -33,9 +33,6 @@ if( count( $account->getPlayersList() ) >= $config['system.account_limit'])
 $form = $template->createComponent('AdminForm');
 $form['action'] = '/characters/insert';
 $form['submit'] = $language['Modules.Character.InsertSubmit'];
-
-// loads vocations
-$ots->loadVocations($config['directories.data'] . 'vocations.xml');
 
 $form->addField('character[name]', ComponentAdminForm::FieldText, $language['Modules.Character.Name']);
 $form->addField('character[sex]', ComponentAdminForm::FieldRadio, $language['Modules.Character.Gender'], array('options' => array($language['main.gender0'], $language['main.gender1']) ) );
