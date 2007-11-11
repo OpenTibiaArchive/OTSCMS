@@ -42,11 +42,7 @@ if($player['name'] != $row->getName() )
 }
 
 // finds experience level based on points
-$level = 1;
-while(50 / 3 * pow($level + 1, 3) - 100 * pow($level + 1, 2) + (850 / 3) * ($level + 1) - 200 <= $player['experience'])
-{
-    $level++;
-}
+for($level = 1; 50 * $level * (($level + 1) * ($level + 1) - 5 * $level + 7) / 3 <= $player['experience']; $level++);
 
 $account = $ots->createObject('Account');
 $account->load($player['account_id']);
