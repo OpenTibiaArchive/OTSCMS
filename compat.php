@@ -78,7 +78,6 @@ if( ini_get('register_globals') )
     _compat_revert_register_globals($_POST);
     _compat_revert_register_globals($_REQUEST);
     _compat_revert_register_globals($_COOKIE);
-    _compat_revert_register_globals($_SESSION);
 }
 
 ?>

@@ -28,8 +28,8 @@ class OTSCMS
     // initializes system with given configuration table
     public static function init($config)
     {
-        // registers __autoload() handler
-        spl_autoload_register( array('OTSCMS', '__autoload') );
+        // registers default class loader
+        self::addAutoloadDriver('OTSCMS');
 
         // creates configuration resource
         $config = new DataContainer($config);
@@ -53,12 +53,11 @@ class OTSCMS
         die('<pre style="font-weight: bold;">FATAL ERROR: ' . $exception->getMessage() . '</pre>');
     }
 
-    private static $handlers = array();
-
     // allows adding custom class-families loading handlers
-    public static function addAutoloadDriver(AutoloadDriver $driver)
+    public static function addAutoloadDriver($driver)
     {
-        self::$handlers[] = $driver;
+        // registers __autoload() handler
+        spl_autoload_register( array($driver, '__autoload') );
     }
 
     private static $drivers = array();
@@ -93,17 +92,6 @@ class OTSCMS
         if( isset(self::$drivers[$class]) )
         {
             $file = self::$drivers[$class];
-        }
-        else
-        {
-            // checks all drivers handlers if this class matches any of them
-            foreach(self::$handlers as $handler)
-            {
-                if( $handler->match($class) )
-                {
-                    $file = $handler->$class;
-                }
-            }
         }
 
         $file .= '.php';

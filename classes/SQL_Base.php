@@ -101,10 +101,21 @@ abstract class SQL_Base extends PDO
         $statement->setFetchMode(PDO::FETCH_ASSOC);
         return $statement;
     }
+
+    // loads components classes
+    public static function __autoload($class)
+    {
+        if( preg_match('/^CMS_/', $class) )
+        {
+            $config = OTSCMS::getResource('Config');
+
+            // loads ActiveRecord class
+            include $config['directories.classes'] . 'ActiveRecords/' . preg_replace('/^CMS_/', '', $class) . '.php';
+        }
+    }
 }
 
 // database tables objects autoloading
-OTSCMS::addAutoloadDriver( new CMSTablesDriver() );
-OTSCMS::addAutoloadDriver( new OTSTablesDriver() );
+OTSCMS::addAutoloadDriver('SQL_Base');
 
 ?>

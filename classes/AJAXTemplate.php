@@ -83,10 +83,20 @@ class OTSTemplate extends DataContainer
     public function addJavaScript($file)
     {
     }
+
+    // loads components classes
+    public static function __autoload($class)
+    {
+        if( preg_match('/^Component/', $class) )
+        {
+            $config = OTSCMS::getResource('Config');
+
+            // loads component class
+            include $config['directories.classes'] . 'Components/' . preg_replace('/^Component/', '', $class) . '.php';
+        }
+    }
 }
 
-// adds components autoloading
-OTSCMS::addAutoloadDriver( new ComponentsDriver() );
 // AJAX component output
 OTSCMS::setDriver('TemplateComponent', 'AJAXComponent');
 

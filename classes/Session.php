@@ -34,6 +34,12 @@ class Session
     {
         self::$prefix = $prefix;
         session_start();
+
+        // continues prevention
+        if( ini_get('register_globals') )
+        {
+            _compat_revert_register_globals($_SESSION);
+        }
     }
 
     // clears session variable
