@@ -20,12 +20,15 @@
 */
 
 return array(
-    'SpellsList' => 'Spells',
+    'InstantsList' => 'Instant spells',
+    'RunesList' => 'Rune spells',
+    'ConjuresList' => 'Conjure spells',
     'SpellInformation' => 'Spell information',
     'SpellName' => 'Spell name',
     'SpellWords' => 'Formula',
     'SpellMLevel' => 'Required magic level to cast',
     'SpellMana' => 'Mana usage',
+    'SpellSoul' => 'Soul points usage',
     'SpellVocations' => 'Available for vocations',
     'MonstersList' => 'Monsters',
     'MonsterInformation' => 'Monster information',

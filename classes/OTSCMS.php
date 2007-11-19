@@ -192,6 +192,9 @@ class OTSCMS
         // loads monsters list file
         $ots->loadMonsters($config['directories.data'].'monster/');
 
+        // loads spells
+        $ots->loadSpells($config['directories.data'].'spells/spells.xml');
+
         // sets current language
         if( InputData::read('language') )
         {

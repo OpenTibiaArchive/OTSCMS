@@ -302,6 +302,15 @@ switch($config['version'])
                 $db->query('CREATE TABLE [cache] (`key` VARCHAR(32), `id` INT, `name` INT, `content` BLOB, `parent` INT, `previous` INT)');
                 break;
         }
+
+        $query = $sql->prepare('INSERT INTO [urls] (`name`, `content`, `order`) VALUES (:name, :content, :order)');
+
+        // updates spells library links
+        $query->execute( array(':name' => '^spells/instants/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_INSTANT, ':order' => 20) );
+        $query->execute( array(':name' => '^spells/runes/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_RUNE, ':order' => 20) );
+        $query->execute( array(':name' => '^spells/conjures/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_CONJURE, ':order' => 20) );
+
+        $db->exec('DELETE FROM [urls] WHERE `name` = \'^spells/(.+)$\' AND `content` = \'module=Library&command=spell&name=$1\'');
 }
 
 $raw = $template->createComponent('RAW');

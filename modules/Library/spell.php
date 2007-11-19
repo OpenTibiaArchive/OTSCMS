@@ -21,47 +21,53 @@
 
 // loads HTTP data
 $name = InputData::read('name');
+$type = InputData::read('type');
 
-// loads spells.xml file
-$spells = new DOMDocument();
-$spells->load($config['directories.data'] . 'spells/spells.xml');
+switch($type)
+{
+    // instant spell
+    case POT::SPELL_INSTANT:
+        $spell = $ots->getInstant($name);
+        break;
+
+    // rune spell
+    case POT::SPELL_RUNE:
+        $spell = $ots->getRune($name);
+        break;
+
+    // conjure spell
+    case POT::SPELL_CONJURE:
+        $spell = $ots->getConjure($name);
+        break;
+
+    default:
+        throw new HandledException('NotToDisplay');
+}
+
+// checks if spell is enabled
+if( !$spell->isEnabled() )
+{
+    throw new HandledException('NotToDisplay');
+}
+
+// checks if we should display it
+// there has to be an image for that spell - that is the way how you can select which spells should be displayed
+if(!($extension = Toolbox::imageExists('Spells/' . $spell->getName() ) ))
+{
+    throw new HandledException('NotToDisplay');
+}
 
 $data = $template->createComponent('LibraryPage');
 
-// loops through loaded spells to find our spell
-foreach( $spells->getElementsByTagName('*') as $spell)
-{
-    // checks if the formula matches query string and if spell is enabled
-    // also only spells are supported - runes are items
-    if( $spell->getAttribute('name') != $name || $spell->getAttribute('enabled') != 1)
-    {
-        continue;
-    }
+$data['name'] = $spell->getName();
+$data['words'] = $spell->getWords();
+$data['maglv'] = $spell->getMagicLevel();
+$data['mana'] = $spell->getMana();
+$data['soul'] = $spell->getSoul();
+$data['image'] = str_replace('\\', '/', $config['directories.images']) . 'Spells/' . $data['name'] . $extension;
 
-    // checks if we should display it
-    // there has to be an image for that spell - that is the way how you can select which spells should be displayed
-    if(!($extension = Toolbox::imageExists('Spells/' . $spell->getAttribute('name') ) ))
-    {
-        throw new HandledException('NotToDisplay');
-    }
-
-    $data['name'] = $spell->getAttribute('name');
-    $data['words'] = $spell->getAttribute('words');
-    $data['maglv'] = $spell->getAttribute('maglv');
-    $data['mana'] = $spell->getAttribute('mana');
-    $data['image'] = str_replace('\\', '/', $config['directories.images']) . 'Spells/' . $data['name'] . $extension;
-
-    // finds all allowed vocations
-    $vocations = array();
-    foreach( $spell->getElementsByTagName('vocation') as $vocation)
-    {
-        $vocations[] = $vocation->getAttribute('name');
-    }
-    $data['vocations'] = implode(', ', $vocations);
-
-    // we've fount it, dont have to loop next items
-    break;
-}
+// finds all allowed vocations
+$data['vocations'] = implode(', ', $spell->getVocations() );
 
 // puts spells and runes into template
 $data['header'] = $language['Modules.Library.SpellInformation'];
@@ -70,6 +76,7 @@ $data['header'] = $language['Modules.Library.SpellInformation'];
 $data->addLabel('words', $language['Modules.Library.SpellWords']);
 $data->addLabel('maglv', $language['Modules.Library.SpellMLevel']);
 $data->addLabel('mana', $language['Modules.Library.SpellMana']);
+$data->addLabel('soul', $language['Modules.Library.SpellSoul']);
 $data->addLabel('vocations', $language['Modules.Library.SpellVocations']);
 
 ?>

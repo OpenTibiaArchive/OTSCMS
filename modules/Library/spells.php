@@ -19,23 +19,22 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// loads spells.xml file
-$spells = new DOMDocument();
-$spells->load($config['directories.data'] . 'spells/spells.xml');
-
+// composes list of instant spells
 $list = $template->createComponent('ItemsList');
-$list['header'] = $language['Modules.Library.SpellsList'];
+$list['header'] = $language['Modules.Library.InstantsList'];
 
 $temp = array();
 
 // loops through loaded spells
-foreach( $spells->getElementsByTagName('*') as $spell)
+foreach( $ots->getInstantsList() as $spell)
 {
-    $name = $spell->getAttribute('name');
+    $spell = $ots->getInstant($spell);
+
+    $name = $spell->getName();
 
     // if spell isn't enabled then skip to next
     // and there has to be an image for that spell - that is the way how you can select which spells should be displayed
-    if( $spell->getAttribute('enabled') != 1 || !Toolbox::imageExists('Spells/' . $name) )
+    if( !$spell->isEnabled() || !Toolbox::imageExists('Spells/' . $name) )
     {
         continue;
     }
@@ -45,6 +44,60 @@ foreach( $spells->getElementsByTagName('*') as $spell)
 
 // puts spells into template
 $list['list'] = $temp;
-$list['link'] = '/spells/';
+$list['link'] = '/spells/instants/';
+
+// composes list of rune spells
+$list = $template->createComponent('ItemsList');
+$list['header'] = $language['Modules.Library.RunesList'];
+
+$temp = array();
+
+// loops through loaded spells
+foreach( $ots->getRunesList() as $spell)
+{
+    $spell = $ots->getRune($spell);
+
+    $name = $spell->getName();
+
+    // if spell isn't enabled then skip to next
+    // and there has to be an image for that spell - that is the way how you can select which spells should be displayed
+    if( !$spell->isEnabled() || !Toolbox::imageExists('Spells/' . $name) )
+    {
+        continue;
+    }
+
+    $temp[$name] = $name;
+}
+
+// puts spells into template
+$list['list'] = $temp;
+$list['link'] = '/spells/runes/';
+
+// composes list of conjure spells
+$list = $template->createComponent('ItemsList');
+$list['header'] = $language['Modules.Library.ConjuresList'];
+
+$temp = array();
+
+// loops through loaded spells
+foreach( $ots->getConjuresList() as $spell)
+{
+    $spell = $ots->getConjure($spell);
+
+    $name = $spell->getName();
+
+    // if spell isn't enabled then skip to next
+    // and there has to be an image for that spell - that is the way how you can select which spells should be displayed
+    if( !$spell->isEnabled() || !Toolbox::imageExists('Spells/' . $name) )
+    {
+        continue;
+    }
+
+    $temp[$name] = $name;
+}
+
+// puts spells into template
+$list['list'] = $temp;
+$list['link'] = '/spells/conjures/';
 
 ?>

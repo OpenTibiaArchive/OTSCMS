@@ -67,9 +67,6 @@ $player->setRank();
 $player->setLookAddons(0);
 $player->setTownId($system['rook']['enabled'] ? $system['rook']['id'] : $character['town']);
 
-// prepared query for reading profile
-$read = $db->prepare('SELECT `id`, `name`, `skill0`, `skill1`, `skill2`, `skill3`, `skill4`, `skill5`, `skill6`, `health`, `healthmax`, `direction`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `cap`, `food`, `loss_experience`, `loss_mana`, `loss_skills` FROM [profiles] WHERE `name` = :name');
-
 // reads deafult character profile
 $profile = new CMS_Profile('*.*');
 $sex = $player->getSex();

@@ -19,23 +19,23 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+header('Content-Type: text/html; charset=utf-8');
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>OTSCMS installation</title>
+        <style type="text/css">
+        </style>
+    </head>
+    <body>
+<?php
+
 // checks PHP version
-$php = explode('.', PHP_VERSION);
-if($php[0] < 5 || $php[1] < 2)
+if( version_compare(PHP_VERSION, '5.2.0', '<') )
 {
     die('<b>! Critical: you have to install PHP version <i>5.2</i> or newer.</b>');
-}
-
-// checks if mgaic quotes are turned off
-if( get_magic_quotes_gpc() )
-{
-    die('<b>! Critical: turn off <i>magic_quotes_gpc</i> in your PHP configuration.</b>');
-}
-
-// checks if register globals is disabled
-if( ini_get('register_globals') )
-{
-    die('<b>! Critical: turn off <i>register_globals</i> in your PHP configuration.</b>');
 }
 
 // checks if SPL is enabled
@@ -60,6 +60,12 @@ if( !extension_loaded('gd') )
 if( !extension_loaded('pcre') )
 {
     die('<b>! Critical: you have to install <i>PCRE</i> (Perl Compatible Regular Expression) extension.</b>');
+}
+
+// checks if mod_rewrite is enabled
+if( !in_array('mod_rewrite', apache_get_modules() ) )
+{
+    die('<b>! Critical: you have to install <i>mod_rewrite</i> (dynamic URLs mapping) Apache module.</b>');
 }
 
 if( !file_exists('config.php') )
@@ -249,6 +255,10 @@ header(\'Location: ../\');
 
         $query->execute( array(':name' => 'OTSCMS credits', ':content' => '<p class="justified">
 Describe of your site can goes here. You can edit this text in administration panel.
+</p>
+
+<p class="justified">
+<b>OTSCMS</b> uses <a href="http://otserv-aac.info/">PHP OTServ Toolkit</a>. While writing extensions for <b>OTSCMS</b> you can use any code written with <b>POT</b>!
 </p>
 
 <p class="justified">
@@ -467,7 +477,9 @@ Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, 
         $query->execute( array(':name' => '^news/?$', ':content' => 'module=News&command=list', ':order' => 50) );
         $query->execute( array(':name' => '^news/([0-9]+)$', ':content' => 'module=News&command=display&id=$1', ':order' => 30) );
         $query->execute( array(':name' => '^spells/?$', ':content' => 'module=Library&command=spells', ':order' => 50) );
-        $query->execute( array(':name' => '^spells/(.+)$', ':content' => 'module=Library&command=spell&name=$1', ':order' => 40) );
+        $query->execute( array(':name' => '^spells/instants/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_INSTANT, ':order' => 20) );
+        $query->execute( array(':name' => '^spells/runes/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_RUNE, ':order' => 20) );
+        $query->execute( array(':name' => '^spells/conjures/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_CONJURE, ':order' => 20) );
         $query->execute( array(':name' => '^monsters/?$', ':content' => 'module=Library&command=monsters', ':order' => 50) );
         $query->execute( array(':name' => '^monsters/(.+)$', ':content' => 'module=Library&command=monster&name=$1', ':order' => 40) );
         $query->execute( array(':name' => '^characters/?$', ':content' => 'module=Character&command=display', ':order' => 50) );
@@ -552,6 +564,8 @@ Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, 
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+include(\'compat.php\');
 
 $config[\'directories\'][\'classes\'] = \''.$config['directories']['classes'].'\';
 
@@ -706,3 +720,5 @@ if( !isset($_GET['advanced']) )
 echo '</tt>';
 
 ?>
+    </body>
+</html>

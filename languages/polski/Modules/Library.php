@@ -20,12 +20,15 @@
 */
 
 return array(
-    'SpellsList' => 'Lista czarów',
+    'InstantsList' => 'Czary natychmiastowe',
+    'RunesList' => 'Czary runiczne',
+    'ConjuresList' => 'Czary przywołań',
     'SpellInformation' => 'Informacje o czarze',
     'SpellName' => 'Nazwa czaru',
     'SpellWords' => 'Zaklęcie',
     'SpellMLevel' => 'Wymagany poziom magii do rzucania czaru',
     'SpellMana' => 'Zużycie many',
+    'SpellSoul' => 'Zużycie soulów',
     'SpellVocations' => 'Dostępny dla profesji',
     'MonstersList' => 'Potwory',
     'MonsterInformation' => 'Informacje',
