@@ -38,7 +38,7 @@ $list = $template->createComponent('ItemsList');
 $list['header'] = $language['Modules.Poll.PollsList'];
 
 // fetches polls list
-$list['list'] = Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM [polls]') );
+$list['list'] = $db->query('SELECT `id` AS `key`, `name` AS `value` FROM [polls]')->fetchAll(PDO::FETCH_KEY_PAIR);
 $list['link'] = '/polls/';
 $list['rowID'] = 'pollID_';
 

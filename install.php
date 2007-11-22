@@ -20,6 +20,7 @@
 */
 
 header('Content-Type: text/html; charset=utf-8');
+$version = '3.1.1';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -27,233 +28,768 @@ header('Content-Type: text/html; charset=utf-8');
     <head>
         <title>OTSCMS installation</title>
         <style type="text/css">
+body
+{
+    font-family: "Verdana", "Tahoma", sans-serif;
+}
+
+#wrapper
+{
+    font-size: 12px;
+    background-color: #CCCCCC;
+    width: 95%;
+    padding: 5px;
+    margin: 20px;
+    border: 1px solid #000000;
+}
+
+.hint
+{
+    font-style: italic;
+    font-size: 8px;
+    text-align: justify;
+    margin: 5px;
+    text-indent: 15px;
+}
+
+#pageFooter
+{
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+}
+
+.critical
+{
+    color: #FF0000;
+}
+
+.critical p
+{
+    text-indent: 30px;
+    text-align: justify;
+}
+
+.critical p:first-letter
+{
+    size: 20px;
+    font-weight: bold;
+}
+
+pre
+{
+    color: #000000;
+    border: 1px solid #000000;
+    background-color: #FFFFFF;
+    padding: 3px;
+    width: 90%;
+    margin: 3px;
+}
+
+.code
+{
+    font-family: monospace;
+}
+
+table
+{
+    width: 100%;
+}
+
+.formLeft
+{
+    width: 50%;
+    text-align: right;
+}
+
+.formRight
+{
+    width: 50%;
+    text-align: left;
+}
+
+td[colspan]
+{
+    width: 100%;
+    text-align: center;
+}
+
+.bold
+{
+    font-weight: bold;
+}
         </style>
     </head>
     <body>
+<div id="wrapper">
 <?php
 
-// checks PHP version
-if( version_compare(PHP_VERSION, '5.2.0', '<') )
+// by default server is fine
+$matches = true;
+
+$phpIni = false;
+$winOS = strtolower( substr(PHP_OS, 0, 3) ) == 'win';
+
+// displays requirement
+function requiredFeature($label, $text)
 {
-    die('<b>! Critical: you have to install PHP version <i>5.2</i> or newer.</b>');
+    echo '<div class="critical">
+    <h3>' . $label . '</h3>
+    <p>' . $text . '</p>
+</div>';
 }
 
-// checks if SPL is enabled
-if( !extension_loaded('SPL') )
+// creates index.php files inside all sub directories
+function indexDirectory($destination)
 {
-    die('<b>! Critical: you have to install <i>SPL</i> (Standard PHP Library) extension.</b>');
-}
+    // full index.php file path
+    $file = $destination . 'index.php';
 
-// checks if PDO is enabled
-if( !extension_loaded('PDO') )
-{
-    die('<b>! Critical: you have to install <i>PDO</i> (PHP Data Objects) extension.</b>');
-}
-
-// checks if GD is enabled
-if( !extension_loaded('gd') )
-{
-    die('<b>! Critical: you have to install <i>GD</i> (imaging library) extension.</b>');
-}
-
-// checks if PCRE is enabled
-if( !extension_loaded('pcre') )
-{
-    die('<b>! Critical: you have to install <i>PCRE</i> (Perl Compatible Regular Expression) extension.</b>');
-}
-
-// checks if mod_rewrite is enabled
-if( !in_array('mod_rewrite', apache_get_modules() ) )
-{
-    die('<b>! Critical: you have to install <i>mod_rewrite</i> (dynamic URLs mapping) Apache module.</b>');
-}
-
-if( !file_exists('config.php') )
-{
-    // we cann't do anything without configuration
-    die('<b>! Critical: could not load configuration file.</b>');
-}
-
-// checks if system has already been installed
-if( md5_file('config.php') != 'bf57949b48f7ad2e160a55b7cef815ed')
-{
-    die('<b>! Critical: you have already installed system once - in order to reinstall you need to copy clean <i>config.php</i> file from <i>OTSCMS Lite</i> package.</b>');
-}
-
-// checking if config.php file is writable
-if( !is_writable('config.php') )
-{
-    die('<b>! Critical: configuration file (<i>config.php</i>) is not writable. Please change it\'s permissions.</b>');
-}
-
-// this constant lets script to include config.php
-// after making it has protection frum running
-define('OTSCMS_INSTALL', '1');
-
-// loads basic configuration from config.php
-include('config.php');
-
-$command = $_REQUEST['command'];
-
-// installation output will look more... readable ;-)
-echo '<tt>'."\n";
-
-echo '+ Configuration file loaded<br/>'."\n";
-
-// checks if user posted a configuraiton command
-if( isset($command) && $command == 'install')
-{
-    // creates index.php files inside all sub directories
-    function indexDirectory($destination)
+    // saves index.php file, but not everwrites existing one
+    if( !file_exists($file) )
     {
-        // full index.php file path
-        $file = $destination.'index.php';
-
-        // saves index.php file, but not everwrites existing one
-        if( !file_exists($file) )
-        {
-            // saves file
-            echo '@ Creating : '.$file.'<br/>'."\n";
-            file_put_contents($file, '<?php
+        // saves file
+        echo '@ Creating : ' . $file . '<br />'."\n";
+        file_put_contents($file, '<?php
 
 // redirects to upper-directory
 
 header(\'Location: ../\');
 
 ?>');
-        }
-        else
-        {
-            echo '@ '.$file.' already exists<br/>'."\n";
-        }
+    }
+    else
+    {
+        echo '@ ' . $file . ' already exists<br />' . "\n";
+    }
 
-        // indexes also all sub-directories
-        $dir = opendir($destination);
-        while($current = readdir($dir) )
+    // indexes also all sub-directories
+    $dir = opendir($destination);
+    while($current = readdir($dir) )
+    {
+        // checks if those are directories, but not symbols of upper directory
+        if( is_dir($destination . $current) && $current != '.' && $current != '..' && is_writeable($destination . $current) )
         {
-            // checks if those are directories, but not symbols of upper directory
-            if( is_dir($destination.$current) && $current != '.' && $current != '..')
+            // if it's a directory then create index.php file there too
+            indexDirectory($destination . $current . '/');
+        }
+    }
+}
+
+// deletes a directory reccurently
+function deleteDirectory($source)
+{
+    echo '@ Deleting: ' . $source . '<br />' . "\n";
+
+    // copies all source directory files and sub-directories
+    $dir = opendir($source);
+    while($new = readdir($dir) )
+    {
+        // checks if those are not symbols of upper directory
+        if($new != '.' && $new != '..')
+        {
+            // if it's a directory the remove it reccurently too
+            if( is_dir($source.$new) )
             {
-                // if it's a directory then create index.php file there too
-                indexDirectory($destination.$current.'/');
+                if( !deleteDirectory($source . $new . '/') )
+                {
+                    echo '- Could not delete directory: ' . $source . $new . '/<br />' . "\n";
+                    return false;
+                }
+            }
+            // otherwise jsut copy a file
+            else
+            {
+                if( !@unlink($source . $new) )
+                {
+                    echo '- Could not delete file: ' . $source . $new . '<br />' . "\n";
+                    return false;
+                }
+                echo '@ Deleted file: ' . $source . $new . '<br />' . "\n";
             }
         }
     }
 
-    // deletes a directory reccurently
-    function deleteDirectory($source)
-    {
-        echo '@ Deleting: '.$source.'<br/>'."\n";
+    // creates destination directory
+    rmdir($source);
+    echo '@ Deleted directory: ' . $source . '<br />' . "\n";
 
-        // copies all source directory files and sub-directories
-        $dir = opendir($source);
-        while($new = readdir($dir) )
-        {
-            // checks if those are not symbols of upper directory
-            if($new != '.' && $new != '..')
+    // returns that directory coping succeeded
+    return true;
+}
+
+// checks PHP version
+if( version_compare(PHP_VERSION, '5.2.0', '<') )
+{
+    $matches = false;
+    requiredFeature('Outdated PHP version', 'PHP version installed on your server is ' . PHP_VERSION . '. OTSCMS requires version at least 5.2. You can download latest PHP version from <a href="http://www.php.net/">php.net</a>.');
+}
+
+// checks if SPL is enabled
+if( !extension_loaded('SPL') )
+{
+    // filename depended on platform
+    $file = $winOS ? 'php_spl.dll' : 'spl.so';
+
+    $matches = false;
+    requiredFeature('Missing SPL extension', 'OTSCMS requires SPL (Standard PHP Library) PHP extension for running. You must enable it in your <span class="code">php.ini</span> file by adding following line:</p>
+<pre class="code">extension=' . $file . '</pre>
+    <p>It\'s probably out there already, but commented by semicolon (<span class="code">;</span>). After enabling this extension, save <span class="code">php.ini</span> file and restart server.' . ($phpIni ? '' : '</p>
+    <p>Make sure you are editing correct <span class="code">php.ini</span> file as in some server packages there can be more then one files. Correct one is usualy the one that is in Apache\'s <span class="code">bin/</span> directory (where Apache executables are placed).'));
+    $phpIni = true;
+}
+
+// checks if PDO is enabled
+if( !extension_loaded('PDO') )
+{
+    // filename depended on platform
+    $file = $winOS ? 'php_pdo.dll' : 'pdo.so';
+
+    $matches = false;
+    requiredFeature('Missing PDO extension', 'OTSCMS requires PDO (PHP Data Objects) PHP extension for running. You must enable it in your <span class="code">php.ini</span> file by adding following line:</p>
+<pre class="code">extension=' . $file . '</pre>
+    <p>It\'s probably out there already, but commented by semicolon (<span class="code">;</span>). After enabling this extension, save <span class="code">php.ini</span> file and restart server.</p>
+    <p>Also PDO drivers for your database type are required so if you know which one you will use, enable it too (OTSCMS will tell you to do so later if you won\'t do it now).' . ($phpIni ? '' : '</p>
+    <p>Make sure you are editing correct <span class="code">php.ini</span> file as in some server packages there can be more then one files. Correct one is usualy the one that is in Apache\'s <span class="code">bin/</span> directory (where Apache executables are placed).'));
+    $phpIni = true;
+}
+
+// checks if GD is enabled
+if( !extension_loaded('gd') )
+{
+    // filename depended on platform
+    $file = $winOS ? 'php_gd.dll' : 'gd.so';
+
+    requiredFeature('Missing GD extension', 'OTSCMS uses PHP GD extension for Gallery module. If you want to use this module, uou must enable GD in your <span class="code">php.ini</span> file by adding following line:</p>
+<pre class="code">extension=' . $file . '</pre>
+    <p>It\'s probably out there already, but commented by semicolon (<span class="code">;</span>). After enabling this extension, save <span class="code">php.ini</span> file and restart server.' . ($phpIni ? '' : '</p>
+    <p>Make sure you are editing correct <span class="code">php.ini</span> file as in some server packages there can be more then one files. Correct one is usualy the one that is in Apache\'s <span class="code">bin/</span> directory (where Apache executables are placed).'));
+    $phpIni = true;
+}
+
+// checks if PCRE is enabled
+if( !extension_loaded('pcre') )
+{
+    // filename depended on platform
+    $file = $winOS ? 'php_pcre.dll' : 'pcre.so';
+
+    $matches = false;
+    requiredFeature('Missing PCRE extension', 'OTSCMS requires PCRE (Perl Compatible Regular Expressions) PHP extension for running. You must enable it in your <span class="code">php.ini</span> file by adding following line:</p>
+<pre class="code">extension=' . $file . '</pre>
+    <p>It\'s probably out there already, but commented by semicolon (<span class="code">;</span>). After enabling this extension, save <span class="code">php.ini</span> file and restart server.' . ($phpIni ? '' : '</p>
+    <p>Make sure you are editing correct <span class="code">php.ini</span> file as in some server packages there can be more then one files. Correct one is usualy the one that is in Apache\'s <span class="code">bin/</span> directory (where Apache executables are placed).'));
+    $phpIni = true;
+}
+
+// checks if mod_rewrite is enabled
+if( !in_array('mod_rewrite', apache_get_modules() ) )
+{
+    $matches = false;
+    requiredFeature('Missing mod_rewrite module', 'OTSCMS requires mod_rewrite Apache module for running. You must enable it in your <span class="code">httpd.conf</span> file by adding following line:</p>
+<pre class="code">LoadModule rewrite_module modules/mod_rewrite.so</pre>
+    <p>It\'s probably out there already, but commented by hash (<span class="code">#</span>). After enabling this extension, save <span class="code">httpd.conf</span> file and restart server.');
+}
+
+// checking if config.php file is writable
+if(!(( file_exists('config.php') && is_writable('config.php') ) || ( !file_exists('config.php') && is_writeable('.') ) ))
+{
+    $matches = false;
+    requiredFeature('<span class="code">config.php</span> is not writeable', 'OTSCMS can\'t write to configuration file. Setup will save startup database connection configuration in that file. Note that usualy user under which OTSCMS runs is the user under which HTTP server is running and usualy it\'s not the same as you, or your FTP user. To make it writeable for OTSCMS execute following command in your command line:</p>
+<pre class="code">touch config.php && chmod 777 config.php</pre>
+    <p>If you are running on Windows then check file properties.');
+}
+
+// we can proceed to installation steps
+if($matches)
+{
+    $command = '';
+
+    // reads command
+    if( isset($_REQUEST['command']) )
+    {
+        $command = $_REQUEST['command'];
+    }
+
+    switch($command)
+    {
+        // detailed database configuration
+        case 'database':
+            $db = array();
+
+            // loads data from config.lua
+            if( !empty($_FILES['lua']['name']) )
             {
-                // if it's a directory the remove it reccurently too
-                if( is_dir($source.$new) )
+                preg_match_all('/^([a-z0-9_]+) *= *"?(.*?)"?$/mi', file_get_contents($_FILES['lua']['tmp_name']), $lua);
+                $lua = array_combine($lua[1], $lua[2]);
+
+                // loads certain info
+
+                if( isset($lua['sql_type']) )
                 {
-                    if( !deleteDirectory($source.$new.'/') )
+                    switch($lua['sql_type'])
                     {
-                        echo '- Could not delete directory: '.$source.$new.'/<br/>'."\n";
-                        return false;
+                        case 'mysql':
+                            $db['type'] = 'MySQL';
+                            break;
+
+                        case 'sqlite':
+                            $db['type'] = 'SQLite';
+                            break;
+
+                        case 'pgsql':
+                            $db['type'] = 'PostgreSQL';
+                            break;
                     }
                 }
-                // otherwise jsut copy a file
-                else
+
+                if( isset($lua['sql_host']) )
                 {
-                    if( !@unlink($source.$new) )
-                    {
-                        echo '- Could not delete file: '.$source.$new.'<br/>'."\n";
-                        return false;
-                    }
-                    echo '@ Deleted file: '.$source.$new.'<br/>'."\n";
+                    $db['host'] = $lua['sql_host'];
+                }
+
+                if( isset($lua['sql_user']) )
+                {
+                    $db['user'] = $lua['sql_user'];
+                }
+
+                if( isset($lua['sql_port']) )
+                {
+                    $db['port'] = $lua['sql_port'];
+                }
+
+                if( isset($lua['sql_pass']) )
+                {
+                    $db['password'] = $lua['sql_pass'];
+                }
+
+                if( isset($lua['sql_db']) )
+                {
+                    $db['database'] = $lua['sql_db'];
+                }
+
+                if( isset($lua['md5passwords']) )
+                {
+                    $uses_md5 = $lua['md5passwords'] != '0' && $lua['md5passwords'] != 'no';
+                }
+
+                if( isset($lua['map'], $lua['mapkind']) && $lua['mapkind'] == 'OTBM')
+                {
+                    $mapfile = basename($lua['map']);
+                }
+
+                $online = array();
+
+                if( isset($lua['worldname']) )
+                {
+                    $online['name'] = $lua['worldname'];
+                }
+
+                if( isset($lua['ip']) )
+                {
+                    $online['content'] = $lua['ip'];
+                }
+
+                if( isset($lua['port']) )
+                {
+                    $online['port'] = $lua['port'];
                 }
             }
-        }
 
-        // creates destination directory
-        rmdir($source);
-        echo '@ Deleted directory: '.$source.'<br/>'."\n";
+            // overwrites settings by user choice
+            if( isset($_REQUEST['db']) )
+            {
+                $db['type'] = $_REQUEST['db']['type'];
+            }
 
-        // returns that directory coping succeeded
-        return true;
-    }
+            // checks if database type is supported
+            if( !in_array($db['type'], array('MySQL', 'SQLite', 'PostgreSQL') ) )
+            {
+                requiredFeature('Unsupported database type', 'OTSCMS supports MySQL, SQLite and PostrgeSQL databases. Your database type <span class="code">' . $db['type'] . '</span> is not supported, sorry. Make sure you have selected driver from list, or contact OTSCMS developers on <a href="http://otfans.net/forumdisplay.php?f=112">OTSCMS forum</a> posting your request to support this database type.');
+            }
+            // checks PDO driver
+            elseif( !extension_loaded( strtolower('pdo_' . $db['type']) ) )
+            {
+                // filename depended on platform
+                $file = $winOS ? 'php_pdo_' . $db['type'] . '.dll' : 'pdo_' . $db['type'] . '.so';
 
-    // pre-loads HTTP data
-    $db = $_POST['db'];
+                requiredFeature('Missing PDO driver', 'PDO driver for your database type is not loaded. PDO itself is only data access interface, it requires drivers to connect to certain type of database. You must enable it in your <span class="code">php.ini</span> file by adding following line:</p>
+<pre class="code">extension=' . $file . '</pre>
+    <p>It\'s probably out there already, but commented by semicolon (<span class="code">;</span>). After enabling this extension, save <span class="code">php.ini</span> file and restart server.' . ($phpIni ? '' : '</p>
+    <p>Make sure you are editing correct <span class="code">php.ini</span> file as in some server packages there can be more then one files. Correct one is usualy the one that is in Apache\'s <span class="code">bin/</span> directory (where Apache executables are placed).'));
+            }
+            // continues
+            else
+            {
+?>
+<form action="/install.php" method="post" enctype="multipart/form-data">
+<input type="hidden" name="command" value="account" />
+<input type="hidden" name="db[type]" value="<?php echo $db['type']; ?>" />
+<input type="hidden" name="mapfile" value="<?php echo isset($mapfile) ? $mapfile : 'map.otbm'; ?>" />
+<?php if( isset($online['name']) ): ?>
+<input type="hidden" name="online[name]" value="<?php echo $online['name']; ?>" />
+<?php endif; ?>
+<?php if( isset($online['content']) ): ?>
+<input type="hidden" name="online[content]" value="<?php echo $online['content']; ?>" />
+<?php endif; ?>
+<?php if( isset($online['port']) ): ?>
+<input type="hidden" name="online[port]" value="<?php echo $online['port']; ?>" />
+<?php endif; ?>
+<table>
+<tbody>
+<?php switch($db['type']): ?>
+<?php case 'MySQL': ?>
+    <tr>
+        <td class="formLeft">MySQL server:</td>
+        <td class="formRight">
+            <input type="text" name="db[host]" value="<?php echo isset($db['host']) ? $db['host'] . ( isset($db['port']) && $db['port'] != '3306' ? ':' . $db['port'] : '') : 'localhost'; ?>" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">MySQL user:</td>
+        <td class="formRight">
+            <input type="text" name="db[user]" value="<?php echo isset($db['user']) ? $db['user'] : 'root'; ?>" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">Password:</td>
+        <td class="formRight">
+            <input type="text" name="db[password]" value="<?php echo isset($db['password']) ? $db['password'] : ''; ?>" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">Database name:</td>
+        <td class="formRight">
+            <input type="text" name="db[database]" value="<?php echo isset($db['database']) ? $db['database'] : 'otserv'; ?>" />
+        </td>
+    </tr>
+<?php break; ?>
+<?php case 'SQLite': ?>
+    <tr>
+        <td class="formLeft">Path to database file:</td>
+        <td class="formRight">
+            <input type="text" name="db[host]" value="/path/to/otserv/<?php echo isset($db['db']) ? $db['db'] : 'db.s3db'; ?>" />
+        </td>
+    </tr>
+<input type="hidden" name="db[user]" value="" />
+<input type="hidden" name="db[password]" value="" />
+<input type="hidden" name="db[database]" value="" />
+<?php break; ?>
+<?php case 'PostgreSQL': ?>
+    <tr>
+        <td class="formLeft">PostgreSQL server:</td>
+        <td class="formRight">
+            <input type="text" name="db[host]" value="<?php echo isset($db['host']) ? $db['host'] . ( isset($db['port']) && $db['port'] != '5432' ? ':' . $db['port'] : '') : 'localhost'; ?>" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">PostgreSQL user:</td>
+        <td class="formRight">
+            <input type="text" name="db[user]" value="<?php echo isset($db['user']) ? $db['user'] : ''; ?>" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">Password:</td>
+        <td class="formRight">
+            <input type="text" name="db[password]" value="<?php echo isset($db['password']) ? $db['password'] : ''; ?>" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">Database name:</td>
+        <td class="formRight">
+            <input type="text" name="db[database]" value="<?php echo isset($db['database']) ? $db['database'] : 'otserv'; ?>" />
+        </td>
+    </tr>
+<?php break; ?>
+<?php endswitch; ?>
+    <tr>
+        <td class="formLeft">Use MD5 for passwords:
+<p class="hint">MD5 is hashing algorithm that makes password safer. This is not an OPTION - turn it on only if your OTServ uses MD5!</p>
+        </td>
+        <td class="formRight">
+            <label><input type="radio" name="uses_md5" value="1"<?php echo isset($uses_md5) && $uses_md5 ? ' checked="checked"': ''; ?> />Enable</label><br />
+            <label><input type="radio" name="uses_md5" value="0"<?php echo isset($uses_md5) && $uses_md5 ? '': ' checked="checked"'; ?> />Disable</label><br />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" value="Proceed" /></td>
+    </tr>
+<?php
 
-    // checks if PDO driver is installed
-    if( !extension_loaded( strtolower('pdo_' . $db['type']) ) )
-    {
-        die('You have to install ' . $db['type'] . ' driver for PDO.');
-    }
+if( !isset($_GET['advanced']) )
+{
+?>
+    <tr id="advanced_button">
+        <td colspan="2">
+            <a href="/install.php?advanced" onclick="var advanced_settings = document.getElementById('advanced_settings').style; advanced_settings.display = 'table'; advanced_settings.visibility = 'visible'; this.parentNode.removeChild(this); return false;">Advanced options</a>
+        </td>
+    </tr>
+<?php
+}
 
-    // install scheme
-    $install = file_get_contents('Install/' . $db['type'] . '.sql');
+?>
+</tbody>
+</table>
 
-    // loads database handler file
-    $config['db'] = $db;
-    require_once($config['directories']['classes'] . 'OTSCMS.php');
-    $sql = new SQL($db['host'], $db['user'], $db['password'], $db['database'], $db['cms_prefix'], $db['ots_prefix']);
+<table id="advanced_settings"<?php if( !isset($_GET['advanced']) ) { echo ' style="display: none; visibility: hidden;"'; } ?>>
+<tbody>
+    <tr>
+        <td class="formLeft">Should install directory be deleted after installation:</td>
+        <td class="formRight">
+            <label><input type="checkbox" name="del_install" />Delete</label>
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">Prefix for <span style="font-weight: bold;">OTSCMS</span> tables (we recommend to leave it as it is):</td>
+        <td class="formRight">
+            <input type="text" name="db[cms_prefix]" value="otscms_" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">Prefix for <span style="font-weight: bold;">OTServ</span> tables (we recommend to leave it as it is - type only if you use one! Leave empty if you don't know what it is!):</td>
+        <td class="formRight">
+            <input type="text" name="db[ots_prefix]" value="" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" value="Proceed" /></td>
+    </tr>
+</tbody>
+</table>
+</form>
+<?php
+            }
 
-    // current query
-    $step = 0;
-    $last = 0;
+            break;
 
-    // installs database scheme
-    for($i = 0; $i < strlen($install); $i++)
-    {
-        // one level deeper
-        if( strtoupper( substr($install, $i, 5) ) == 'BEGIN')
-        {
-            $step++;
-            $i += 4;
-        }
+        // detailed installation info
+        case 'account':
+            // pre-loads HTTP data
+            $db = $_POST['db'];
 
-        // one level finished
-        if( strtoupper( substr($install, $i, 4) ) == 'END;')
-        {
-            $step--;
-            $i += 2;
-        }
+            // install scheme
+            if( !file_exists('Install/' . $db['type'] . '.sql') )
+            {
+                requiredFeature('Missing installation schema', 'Installation schema file is missing. Please copy installation schemas (<span class="code">Install/</span> directory) from OTSCMS Lite package to your OTSCMS directory.');
+                break;
+            }
 
-        // checks if current query is finished
-        if(!$step && $install[$i] == ';')
-        {
-            // reads last query and moves pointer after it
-            $query = trim( substr($install, $last, $i - $last) );
-            $last = $i + 1;
+            // loads database handler file
+            $config['db'] = $db;
+            $config['directories']['classes'] = 'classes/';
+            require_once('classes/OTSCMS.php');
 
             try
             {
-                $sql->exec($query);
+                $sql = new SQL($db['host'], $db['user'], $db['password'], $db['database'], $db['cms_prefix'], $db['ots_prefix']);
             }
             catch(PDOException $e)
             {
-                // ignore DROP queries and ALTER queries on existing collumns
-                if( strtoupper( substr($query, 0, 4) ) != 'DROP' && !( strtoupper( substr($query, 0, 5) ) == 'ALTER' && stripos( $e->getMessage(), 'duplicate column name') !== false))
+                requiredFeature('Database connection error', 'Could not connect to database. PDO returned following message:</p>
+<pre class="code">' . $e->getMessage() . '</pre>
+    <p>You can continue installation on your own risk, but we recommend you to check database information.');
+            }
+
+?>
+<form action="/install.php" method="post">
+<input type="hidden" name="command" value="install" />
+<input type="hidden" name="db[type]" value="<?php echo $db['type']; ?>" />
+<input type="hidden" name="db[host]" value="<?php echo $db['host']; ?>" />
+<input type="hidden" name="db[user]" value="<?php echo $db['user']; ?>" />
+<input type="hidden" name="db[password]" value="<?php echo $db['password']; ?>" />
+<input type="hidden" name="db[database]" value="<?php echo $db['database']; ?>" />
+<input type="hidden" name="db[cms_prefix]" value="<?php echo $db['cms_prefix']; ?>" />
+<input type="hidden" name="db[ots_prefix]" value="<?php echo $db['ots_prefix']; ?>" />
+<input type="hidden" name="mapfile" value="<?php echo $_POST['mapfile']; ?>" />
+<input type="hidden" name="del_install" value="<?php echo isset($_POST['del_install']) && $_POST['del_install'] ? '1' : '0'; ?>" />
+<input type="hidden" name="uses_md5" value="<?php echo $_POST['uses_md5']; ?>" />
+<?php if( isset($_POST['online']['name']) ): ?>
+<input type="hidden" name="online[name]" value="<?php echo $_POST['online']['name']; ?>" />
+<?php endif; ?>
+<?php if( isset($_POST['online']['content']) ): ?>
+<input type="hidden" name="online[content]" value="<?php echo $_POST['online']['content']; ?>" />
+<?php endif; ?>
+<?php if( isset($_POST['online']['port']) ): ?>
+<input type="hidden" name="online[port]" value="<?php echo $_POST['online']['port']; ?>" />
+<?php endif; ?>
+<table>
+<tbody>
+    <tr>
+        <td class="formLeft">Create new GameMaster account:
+<p class="hint">This is usefull when you have empty database as this will allow you to log into OTSCMS administration panel. You don't need it if you install OTSCMS on already running OTServ database with existing GameMaster players.</p>
+        </td>
+        <td class="formRight">
+            <input type="checkbox" name="create_gm" value="1" checked="checked" onclick="document.getElementById('gm_account').disabled = !this.checked; document.getElementById('gm_password').disabled = !this.checked; document.getElementById('gm_name').disabled = !this.checked;" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">Account number:</td>
+        <td class="formRight">
+            <input type="text" name="gm_account" id="gm_account" value="111111" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">Password:</p>
+        </td>
+        <td class="formRight">
+            <input type="text" name="gm_password" id="gm_password" value="tibia" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">Nick:</p>
+        </td>
+        <td class="formRight">
+            <input type="text" name="gm_name" id="gm_name" value="OTSCMS" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" value="Install" /></td>
+    </tr>
+</table>
+</form>
+<?php
+            break;
+
+        // final installation
+        case 'install':
+            echo '<pre class="code">';
+
+            // pre-loads HTTP data
+            $db = $_POST['db'];
+
+            // install scheme
+            $install = file_get_contents('Install/' . $db['type'] . '.sql');
+
+            // loads database handler file
+            $config['db'] = $db;
+            $config['directories']['classes'] = 'classes/';
+            require_once('classes/OTSCMS.php');
+            $sql = new SQL($db['host'], $db['user'], $db['password'], $db['database'], $db['cms_prefix'], $db['ots_prefix']);
+
+            // current query
+            $step = 0;
+            $last = 0;
+
+            // installs database scheme
+            for($i = 0; $i < strlen($install); $i++)
+            {
+                // one level deeper
+                if( strtoupper( substr($install, $i, 5) ) == 'BEGIN')
                 {
-                    echo '- Error during executing SQL query: ' . $query . ' returned ' . $e . '<br/>'."\n";
+                    $step++;
+                    $i += 4;
+                }
+
+                // one level finished
+                if( strtoupper( substr($install, $i, 4) ) == 'END;')
+                {
+                    $step--;
+                    $i += 2;
+                }
+
+                // checks if current query is finished
+                if(!$step && $install[$i] == ';')
+                {
+                    // reads last query and moves pointer after it
+                    $query = trim( substr($install, $last, $i - $last) );
+                    $last = $i + 1;
+
+                    try
+                    {
+                        $sql->exec($query);
+                    }
+                    catch(PDOException $e)
+                    {
+                        // ignore DROP queries and ALTER queries on existing collumns
+                        if( strtoupper( substr($query, 0, 4) ) != 'DROP' && !( strtoupper( substr($query, 0, 5) ) == 'ALTER' && stripos( $e->getMessage(), 'duplicate column name') !== false))
+                        {
+                            echo '<span class="critical,bold">- Error during executing SQL query:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;' . $query . '<br />
+returned:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;' . $e . '</span></pre>' . "\n";
+                            break 2;
+                        }
+                    }
                 }
             }
-        }
-    }
 
-    echo '+ Database scheme installed<br/>'."\n";
+            echo '<span class="bold">+ Database scheme installed</span><br />' . "\n";
 
-    try
-    {
-        // inserts database startup content
+            try
+            {
+                // inserts database startup content
 
-        $sql->beginTransaction();
+                $sql->beginTransaction();
 
-        // home website
-        $query = $sql->prepare('INSERT INTO [sites] (`name`, `content`, `is_home`) VALUES (:name, :content, 1)');
+                // startup GM account
+                if( isset($_POST['create_gm']) && $_POST['create_gm'])
+                {
+                    // POT initialization
+                    $driver = array('MySQL' => POT::DB_MYSQL, 'SQLite' => POT::DB_SQLITE, 'PostgreSQL' => POT::DB_PGSQL);
+                    $db['driver'] = $driver[ $db['type'] ];
+                    $db['prefix'] = $db['ots_prefix'];
+                    $ots = POT::getInstance();
+                    $ots->connect(null, $db);
 
-        $query->execute( array(':name' => 'OTSCMS credits', ':content' => '<p class="justified">
+                    // GM account
+                    $account = $ots->createObject('Account');
+                    $account->create($_POST['gm_account'], $_POST['gm_account']);
+                    $account->unblock();
+                    $account->setPassword($_POST['uses_md5'] ? md5($_POST['gm_password']) : $_POST['gm_password']);
+                    $account->save();
+
+                    echo '+ GM account created<br />' . "\n";
+
+                    // searches for GM group
+                    $filter = $ots->createFilter();
+                    $filter->compareField('access', 3, OTS_SQLFilter::OPERATOR_NLOWER);
+
+                    // loads user group
+                    $list = $ots->createObject('Groups_List');
+                    $list->setFilter($filter);
+
+                    // GM gorup
+                    if( count($list) > 0)
+                    {
+                        $list->rewind();
+                        $group = $list->current();
+                    }
+                    // creates new group
+                    else
+                    {
+                        $group = $ots->createObject('Group');
+                        $group->setName('OTSCMS');
+                        $group->setAccess(3);
+                        $group->setMaxDepotItems(1000);
+                        $group->setMaxVIPList(50);
+                        $group->save();
+                        echo 'GameMasters group not found, created new one<br />' . "\n";
+                    }
+
+                    // creates GM character
+                    $player = $ots->createObject('Player');
+                    $player->setAccount($account);
+                    $player->setGroup($group);
+                    $player->setName($_POST['gm_name']);
+                    $player->setRank();
+                    $player->setTownId(1);
+                    $player->setConditions('');
+                    $player->save();
+
+                    echo '+ GM character created<br />' . "\n";
+                }
+
+                // default OTS server for online statistics
+                if( isset($_POST['online']['name'], $_POST['online']['content'], $_POST['online']['port']) )
+                {
+                    $online = $_POST['online'];
+                    $query = $sql->prepare('INSERT INTO [online] (`name`, `content`, `port`) VALUES (:name, :content, :port)');
+                    $query->execute( array(':name' => $online['name'], ':content' => $online['content'], ':port' => $online['port']) );
+                }
+
+                // home website
+                $query = $sql->prepare('INSERT INTO [sites] (`name`, `content`, `is_home`) VALUES (:name, :content, 1)');
+
+                $query->execute( array(':name' => 'OTSCMS credits', ':content' => '<p class="justified">
 Describe of your site can goes here. You can edit this text in administration panel.
 </p>
 
@@ -266,7 +802,7 @@ There are many people who contributed with our team in developing this project.
 </p>
 
 <p class="justified">
-Mainly great thans to <b>Foziw</b> for the domain, <b>Invincible AznX</b> for hosting and <b>Yorick</b> for forum!
+Mainly great thans to <b>Foziw</b> for the domain and <b>Yorick</b> for forum!
 </p>
 
 <h3>OTSCMS Dev-Team members</h3>
@@ -340,211 +876,213 @@ Mainly great thans to <b>Foziw</b> for the domain, <b>Invincible AznX</b> for ho
 <li><b>Rozek</b> - technical consultation.</li>
 </ul>') );
 
-        $query = $sql->prepare('INSERT INTO [settings] (`name`, `content`) VALUES (:name, :content)');
+                $query = $sql->prepare('INSERT INTO [settings] (`name`, `content`) VALUES (:name, :content)');
 
-        $query->execute( array(':name' => 'version', ':content' => '3.1.1') );
-        $query->execute( array(':name' => 'directories.languages', ':content' => $config['directories']['languages']) );
-        $query->execute( array(':name' => 'directories.modules', ':content' => $config['directories']['modules']) );
-        $query->execute( array(':name' => 'directories.skins', ':content' => $config['directories']['skins']) );
-        $query->execute( array(':name' => 'directories.images', ':content' => $config['directories']['images']) );
-        $query->execute( array(':name' => 'directories.data', ':content' => '/path/to/your/otserv/data/') );
-        $query->execute( array(':name' => 'cookies.prefix', ':content' => 'otscms_') );
-        $query->execute( array(':name' => 'cookies.path', ':content' => '/') );
-        $query->execute( array(':name' => 'cookies.domain', ':content' => '.example.com') );
-        $query->execute( array(':name' => 'cookies.expire', ':content' => 2592000) );
-        $query->execute( array(':name' => 'system.md5', ':content' => (int) $_POST['uses_md5']) );
-        $query->execute( array(':name' => 'system.use_mail', ':content' => 0) );
-        $query->execute( array(':name' => 'system.nick_length', ':content' => 3) );
-        $query->execute( array(':name' => 'system.default_group', ':content' => 1) );
-        $query->execute( array(':name' => 'system.min_number', ':content' => 0) );
-        $query->execute( array(':name' => 'system.max_number', ':content' => 999999) );
-        $query->execute( array(':name' => 'system.account_limit', ':content' => 5) );
-        $query->execute( array(':name' => 'system.map', ':content' => 'map.otbm') );
-        $query->execute( array(':name' => 'system.rook.enabled', ':content' => 0) );
-        $query->execute( array(':name' => 'system.rook.id', ':content' => 0) );
-        $query->execute( array(':name' => 'system.depots.count', ':content' => 2) );
-        $query->execute( array(':name' => 'system.depots.item', ':content' => 2590) );
-        $query->execute( array(':name' => 'system.depots.chest', ':content' => 2594) );
-        $query->execute( array(':name' => 'statistics.page', ':content' => 30) );
-        $query->execute( array(':name' => 'site.language', ':content' => 'english') );
-        $query->execute( array(':name' => 'site.skin', ':content' => 'Default') );
-        $query->execute( array(':name' => 'site.title', ':content' => 'Powered by OTSCMS 3 - http://www.otscms.com/') );
-        $query->execute( array(':name' => 'site.date_format', ':content' => 'j F Y G:i') );
-        $query->execute( array(':name' => 'site.news_limit', ':content' => 5) );
-        $query->execute( array(':name' => 'gallery.mini_x', ':content' => 100) );
-        $query->execute( array(':name' => 'gallery.mini_y', ':content' => 100) );
-        $query->execute( array(':name' => 'forum.limit', ':content' => 20) );
-        $query->execute( array(':name' => 'forum.avatar.max_x', ':content' => 80) );
-        $query->execute( array(':name' => 'forum.avatar.max_y', ':content' => 80) );
-        $query->execute( array(':name' => 'mail.from', ':content' => 'you@example.com') );
-        $query->execute( array(':name' => 'mail.smtp.host', ':content' => 'localhost') );
-        $query->execute( array(':name' => 'mail.smtp.port', ':content' => 25) );
-        $query->execute( array(':name' => 'mail.smtp.use_auth', ':content' => 0) );
-        $query->execute( array(':name' => 'mail.smtp.user', ':content' => '') );
-        $query->execute( array(':name' => 'mail.smtp.password', ':content' => '') );
+                $query->execute( array(':name' => 'version', ':content' => $version) );
+                $query->execute( array(':name' => 'directories.languages', ':content' => 'languages/') );
+                $query->execute( array(':name' => 'directories.modules', ':content' => 'modules/') );
+                $query->execute( array(':name' => 'directories.skins', ':content' => 'skins/') );
+                $query->execute( array(':name' => 'directories.images', ':content' => 'images/') );
+                $query->execute( array(':name' => 'directories.data', ':content' => '/path/to/your/otserv/data/') );
+                $query->execute( array(':name' => 'cookies.prefix', ':content' => 'otscms_') );
+                $query->execute( array(':name' => 'cookies.path', ':content' => '/') );
+                $query->execute( array(':name' => 'cookies.domain', ':content' => '.example.com') );
+                $query->execute( array(':name' => 'cookies.expire', ':content' => 2592000) );
+                $query->execute( array(':name' => 'system.md5', ':content' => (bool) $_POST['uses_md5']) );
+                $query->execute( array(':name' => 'system.use_mail', ':content' => false) );
+                $query->execute( array(':name' => 'system.nick_length', ':content' => 3) );
+                $query->execute( array(':name' => 'system.default_group', ':content' => 1) );
+                $query->execute( array(':name' => 'system.min_number', ':content' => 0) );
+                $query->execute( array(':name' => 'system.max_number', ':content' => 999999) );
+                $query->execute( array(':name' => 'system.account_limit', ':content' => 5) );
+                $query->execute( array(':name' => 'system.map', ':content' => $_POST['mapfile']) );
+                $query->execute( array(':name' => 'system.rook.enabled', ':content' => false) );
+                $query->execute( array(':name' => 'system.rook.id', ':content' => 0) );
+                $query->execute( array(':name' => 'system.depots.count', ':content' => 2) );
+                $query->execute( array(':name' => 'system.depots.item', ':content' => 2590) );
+                $query->execute( array(':name' => 'system.depots.chest', ':content' => 2594) );
+                $query->execute( array(':name' => 'statistics.page', ':content' => 30) );
+                $query->execute( array(':name' => 'site.language', ':content' => 'english') );
+                $query->execute( array(':name' => 'site.skin', ':content' => 'Default') );
+                $query->execute( array(':name' => 'site.title', ':content' => 'Powered by OTSCMS 3 - http://www.otscms.com/') );
+                $query->execute( array(':name' => 'site.date_format', ':content' => 'j F Y G:i') );
+                $query->execute( array(':name' => 'site.news_limit', ':content' => 5) );
+                $query->execute( array(':name' => 'gallery.mini_x', ':content' => 100) );
+                $query->execute( array(':name' => 'gallery.mini_y', ':content' => 100) );
+                $query->execute( array(':name' => 'forum.limit', ':content' => 20) );
+                $query->execute( array(':name' => 'forum.avatar.max_x', ':content' => 80) );
+                $query->execute( array(':name' => 'forum.avatar.max_y', ':content' => 80) );
+                $query->execute( array(':name' => 'mail.from', ':content' => 'you@example.com') );
+                $query->execute( array(':name' => 'mail.smtp.host', ':content' => 'localhost') );
+                $query->execute( array(':name' => 'mail.smtp.port', ':content' => 25) );
+                $query->execute( array(':name' => 'mail.smtp.use_auth', ':content' => false) );
+                $query->execute( array(':name' => 'mail.smtp.user', ':content' => '') );
+                $query->execute( array(':name' => 'mail.smtp.password', ':content' => '') );
 
-        $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTSCMS\', \'http://www.otscms.com/\')');
-        $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTFans\', \'http://www.otfans.net/\')');
-        $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTServ AAC\', \'http://www.otserv-aac.info/\')');
-        $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'Open Tibia Server List\', \'http://www.otservlist.org/\')');
-        $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTServ News\', \'http://www.otservnews.org/\')');
+                $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTSCMS\', \'http://www.otscms.com/\')');
+                $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTFans\', \'http://otfans.net/\')');
+                $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'PHP OTServ Toolkit\', \'http://otserv-aac.info/\')');
+                $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'Open Tibia Server List\', \'http://www.otservlist.org/\')');
+                $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTServ News\', \'http://www.otservnews.org/\')');
 
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Access.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.account\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.change\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.create\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.forgot\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.login\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.password\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.remind\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.save\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.signup\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.suspend\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.change\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.create\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.delete\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.display\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.insert\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.save\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Download.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Download.download\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Download.list\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Forum.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Forum.board\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Gallery.edit\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Gallery.insert\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Gallery.remove\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Gallery.update\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Guilds.*\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Guilds.display\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Guilds.list\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'IPBan.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Links.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Logger.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.edit\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.insert\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.manage\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.remove\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.update\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Online.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Options.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'PM.*\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'PM.manage\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'PM.remove\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Poll.edit\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Poll.insert\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Poll.remove\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Poll.update\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Poll.vote\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Post.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Post.new\', 0)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Post.view\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Sites.*\', 3)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Sites.display\', -1)');
-        $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Sites.list\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Access.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.account\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.change\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.create\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.forgot\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.login\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.password\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.remind\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.save\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.signup\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.suspend\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.change\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.create\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.delete\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.display\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.insert\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Character.save\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Download.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Download.download\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Download.list\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Forum.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Forum.board\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Gallery.edit\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Gallery.insert\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Gallery.remove\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Gallery.update\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Guilds.*\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Guilds.display\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Guilds.list\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'IPBan.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Links.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Logger.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.edit\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.insert\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.manage\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.remove\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.update\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Online.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Options.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'PM.*\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'PM.manage\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'PM.remove\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Poll.edit\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Poll.insert\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Poll.remove\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Poll.update\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Poll.vote\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Post.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Post.new\', 0)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Post.view\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Sites.*\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Sites.display\', -1)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Sites.list\', -1)');
 
-        $sql->exec('INSERT INTO [download] (`name`, `content`, `binary`, `file`) VALUES (\'OTSCMS Lite\', \'Latest <span style="font-weight: bold;">OTSCMS Lite</span>.<br />
+                $sql->exec('INSERT INTO [download] (`name`, `content`, `binary`, `file`) VALUES (\'OTSCMS Lite\', \'Latest <span style="font-weight: bold;">OTSCMS Lite</span>.<br />
 <br />
 Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, \'http://www.otscms.com/latest.php/lite\')');
-        $sql->exec('INSERT INTO [download] (`name`, `content`, `binary`, `file`) VALUES (\'OTSCMS Easy\', \'Latest <span style="font-weight: bold;">OTSCMS Easy</span>.<br />
+                $sql->exec('INSERT INTO [download] (`name`, `content`, `binary`, `file`) VALUES (\'OTSCMS Easy\', \'Latest <span style="font-weight: bold;">OTSCMS Easy</span>.<br />
 <br />
 Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, \'http://www.otscms.com/latest.php/easy\')');
 
-        $sql->exec('INSERT INTO [profiles] (`name`, `health`, `healthmax`, `direction`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `cap`) VALUES (\'*.*\', 250, 250, 0, 0, 30, 50, 20, 40, 0, 0, 0, 0, 0, 220)');
-        $sql->exec('INSERT INTO [profiles] (`name`, `looktype`) VALUES (\'0.*\', 136)');
-        $sql->exec('INSERT INTO [profiles] (`name`, `looktype`) VALUES (\'1.*\', 128)');
+                $sql->exec('INSERT INTO [profiles] (`name`, `health`, `healthmax`, `direction`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `cap`) VALUES (\'*.*\', 250, 250, 0, 0, 30, 50, 20, 40, 0, 0, 0, 0, 0, 220)');
+                $sql->exec('INSERT INTO [profiles] (`name`, `looktype`) VALUES (\'' . POT::SEX_FEMALE . '.*\', 136)');
+                $sql->exec('INSERT INTO [profiles] (`name`, `looktype`) VALUES (\'' . POT::SEX_MALE . '.*\', 128)');
 
-        $query = $sql->prepare('INSERT INTO [urls] (`name`, `content`, `order`) VALUES (:name, :content, :order)');
+                $query = $sql->prepare('INSERT INTO [urls] (`name`, `content`, `order`) VALUES (:name, :content, :order)');
 
-        $query->execute( array(':name' => '^.*$', ':content' => 'module=News&command=home', ':order' => 100) );
-        $query->execute( array(':name' => '^admin/?(.*)$', ':content' => '$1', ':order' => 10) );
-        $query->execute( array(':name' => '^logout/?$', ':content' => 'module=Account&command=account&userlogout=1', ':order' => 50) );
-        $query->execute( array(':name' => '^vote/?$', ':content' => 'module=Poll&command=vote', ':order' => 50) );
-        $query->execute( array(':name' => '^library/?$', ':content' => 'module=Library&command=main', ':order' => 50) );
-        $query->execute( array(':name' => '^download/?$', ':content' => 'module=Download&command=list', ':order' => 50) );
-        $query->execute( array(':name' => '^gallery/?$', ':content' => 'module=Gallery&command=list', ':order' => 50) );
-        $query->execute( array(':name' => '^signup/?$', ':content' => 'module=Account&command=signup', ':order' => 50) );
-        $query->execute( array(':name' => '^signup/submit$', ':content' => 'module=Account&command=create', ':order' => 20) );
-        $query->execute( array(':name' => '^password/forgot$', ':content' => 'module=Account&command=forgot', ':order' => 20) );
-        $query->execute( array(':name' => '^password/remind$', ':content' => 'module=Account&command=remind', ':order' => 20) );
-        $query->execute( array(':name' => '^password/change$', ':content' => 'module=Account&command=change', ':order' => 20) );
-        $query->execute( array(':name' => '^account/?$', ':content' => 'module=Account&command=account', ':order' => 50) );
-        $query->execute( array(':name' => '^account/save$', ':content' => 'module=Account&command=save', ':order' => 20) );
-        $query->execute( array(':name' => '^account/suspend$', ':content' => 'module=Account&command=suspend', ':order' => 20) );
-        $query->execute( array(':name' => '^archive/?$', ':content' => 'module=News&command=archive', ':order' => 50) );
-        $query->execute( array(':name' => '^news/?$', ':content' => 'module=News&command=list', ':order' => 50) );
-        $query->execute( array(':name' => '^news/([0-9]+)$', ':content' => 'module=News&command=display&id=$1', ':order' => 30) );
-        $query->execute( array(':name' => '^spells/?$', ':content' => 'module=Library&command=spells', ':order' => 50) );
-        $query->execute( array(':name' => '^spells/instants/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_INSTANT, ':order' => 20) );
-        $query->execute( array(':name' => '^spells/runes/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_RUNE, ':order' => 20) );
-        $query->execute( array(':name' => '^spells/conjures/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_CONJURE, ':order' => 20) );
-        $query->execute( array(':name' => '^monsters/?$', ':content' => 'module=Library&command=monsters', ':order' => 50) );
-        $query->execute( array(':name' => '^monsters/(.+)$', ':content' => 'module=Library&command=monster&name=$1', ':order' => 40) );
-        $query->execute( array(':name' => '^characters/?$', ':content' => 'module=Character&command=display', ':order' => 50) );
-        $query->execute( array(':name' => '^characters/([0-9]+)/delete$', ':content' => 'module=Character&command=delete&id=$1', ':order' => 10) );
-        $query->execute( array(':name' => '^characters/([0-9]+)/change$', ':content' => 'module=Character&command=change&id=$1', ':order' => 10) );
-        $query->execute( array(':name' => '^characters/([0-9]+)/save$', ':content' => 'module=Character&command=save&id=$1', ':order' => 10) );
-        $query->execute( array(':name' => '^characters/create$', ':content' => 'module=Character&command=create', ':order' => 20) );
-        $query->execute( array(':name' => '^characters/insert$', ':content' => 'module=Character&command=insert', ':order' => 20) );
-        $query->execute( array(':name' => '^characters/(.+)$', ':content' => 'module=Character&command=display&name=$1', ':order' => 40) );
-        $query->execute( array(':name' => '^characters/(.+)/message$', ':content' => 'module=PM&command=new&to=$1', ':order' => 30) );
-        $query->execute( array(':name' => '^statistics/?$', ':content' => 'module=Statistics&command=census', ':order' => 50) );
-        $query->execute( array(':name' => '^statistics/(.*)$', ':content' => 'module=Statistics&command=highscores&list=$1', ':order' => 40) );
-        $query->execute( array(':name' => '^statistics/(.*)/page([0-9]+)$', ':content' => 'module=Statistics&command=highscores&list=$1&page=$2', ':order' => 30) );
-        $query->execute( array(':name' => '^guild/quit$', ':content' => 'module=Guilds&command=quit', ':order' => 20) );
-        $query->execute( array(':name' => '^guild/add$', ':content' => 'module=Guilds&command=add', ':order' => 20) );
-        $query->execute( array(':name' => '^guild/insert$', ':content' => 'module=Guilds&command=insert', ':order' => 20) );
-        $query->execute( array(':name' => '^guild/create$', ':content' => 'module=Guilds&command=create', ':order' => 20) );
-        $query->execute( array(':name' => '^guilds/?$', ':content' => 'module=Guilds&command=list', ':order' => 50) );
-        $query->execute( array(':name' => '^guilds/([0-9]+)$', ':content' => 'module=Guilds&command=display&id=$1', ':order' => 30) );
-        $query->execute( array(':name' => '^guides/?$', ':content' => 'module=Sites&command=list', ':order' => 50) );
-        $query->execute( array(':name' => '^guides/([0-9]+)$', ':content' => 'module=Sites&command=display&id=$1', ':order' => 40) );
-        $query->execute( array(':name' => '^forum/?$', ':content' => 'module=Forum&command=board&id=0', ':order' => 50) );
-        $query->execute( array(':name' => '^forum/([0-9]+)$', ':content' => 'module=Forum&command=board&id=$1', ':order' => 40) );
-        $query->execute( array(':name' => '^forum/([0-9]+)/page([0-9]+)$', ':content' => 'module=Forum&command=board&id=$1&page=$2', ':order' => 30) );
-        $query->execute( array(':name' => '^forum/([0-9]+)/reply$', ':content' => 'module=Topic&command=new&boardid=$1', ':order' => 20) );
-        $query->execute( array(':name' => '^posts/([0-9]+)$', ':content' => 'module=Topic&command=view&id=$1', ':order' => 40) );
-        $query->execute( array(':name' => '^posts/([0-9]+)/page([0-9]+)$', ':content' => 'module=Topic&command=view&id=$1&page=$2', ':order' => 30) );
-        $query->execute( array(':name' => '^posts/([0-9]+)/reply$', ':content' => 'module=Topic&command=new&topicid=$1', ':order' => 20) );
-        $query->execute( array(':name' => '^posts/([0-9]+)/quote/([0-9]+)$', ':content' => 'module=Topic&command=new&topicid=$1&quoteid=$2', ':order' => 10) );
-        $query->execute( array(':name' => '^poll/?$', ':content' => 'module=Poll&command=latest', ':order' => 60) );
-        $query->execute( array(':name' => '^polls/?$', ':content' => 'module=Poll&command=list', ':order' => 50) );
-        $query->execute( array(':name' => '^polls/([0-9]+)$', ':content' => 'module=Poll&command=display&id=$1', ':order' => 40) );
-        $query->execute( array(':name' => '^inbox/?$', ':content' => 'module=PM&command=inbox', ':order' => 50) );
-        $query->execute( array(':name' => '^outbox/?$', ':content' => 'module=PM&command=sent', ':order' => 50) );
-        $query->execute( array(':name' => '^message/([0-9]+)$', ':content' => 'module=PM&command=display&id=$1', ':order' => 30) );
-        $query->execute( array(':name' => '^message/([0-9]+)/delete$', ':content' => 'module=PM&command=delete&id=$1', ':order' => 20) );
-        $query->execute( array(':name' => '^message/([0-9]+)/reply$', ':content' => 'module=PM&command=reply&id=$1', ':order' => 20) );
-        $query->execute( array(':name' => '^message/([0-9]+)/forward$', ':content' => 'module=PM&command=fw&id=$1', ':order' => 20) );
-        $query->execute( array(':name' => '^message/new$', ':content' => 'module=PM&command=new', ':order' => 20) );
-        $query->execute( array(':name' => '^send/?$', ':content' => 'module=PM&command=send', ':order' => 50) );
+                $query->execute( array(':name' => '^.*$', ':content' => 'module=News&command=home', ':order' => 100) );
+                $query->execute( array(':name' => '^admin/?(.*)$', ':content' => '$1', ':order' => 10) );
+                $query->execute( array(':name' => '^logout/?$', ':content' => 'module=Accoubr />nt&command=account&userlogout=1', ':order' => 50) );
+                $query->execute( array(':name' => '^vote/?$', ':content' => 'module=Poll&command=vote', ':order' => 50) );
+                $query->execute( array(':name' => '^library/?$', ':content' => 'module=Library&command=main', ':order' => 50) );
+                $query->execute( array(':name' => '^download/?$', ':content' => 'module=Download&command=list', ':order' => 50) );
+                $query->execute( array(':name' => '^gallery/?$', ':content' => 'module=Gallery&command=list', ':order' => 50) );
+                $query->execute( array(':name' => '^signup/?$', ':content' => 'module=Account&command=signup', ':order' => 50) );
+                $query->execute( array(':name' => '^signup/submit$', ':content' => 'module=Account&command=create', ':order' => 20) );
+                $query->execute( array(':name' => '^password/forgot$', ':content' => 'module=Account&command=forgot', ':order' => 20) );
+                $query->execute( array(':name' => '^password/remind$', ':content' => 'module=Account&command=remind', ':order' => 20) );
+                $query->execute( array(':name' => '^password/change$', ':content' => 'module=Account&command=change', ':order' => 20) );
+                $query->execute( array(':name' => '^account/?$', ':content' => 'module=Account&command=account', ':order' => 50) );
+                $query->execute( array(':name' => '^account/save$', ':content' => 'module=Account&command=save', ':order' => 20) );
+                $query->execute( array(':name' => '^account/suspend$', ':content' => 'module=Account&command=suspend', ':order' => 20) );
+                $query->execute( array(':name' => '^archive/?$', ':content' => 'module=News&command=archive', ':order' => 50) );
+                $query->execute( array(':name' => '^news/?$', ':content' => 'module=News&command=list', ':order' => 50) );
+                $query->execute( array(':name' => '^news/([0-9]+)$', ':content' => 'module=News&command=display&id=$1', ':order' => 30) );
+                $query->execute( array(':name' => '^spells/?$', ':content' => 'module=Library&command=spells', ':order' => 50) );
+                $query->execute( array(':name' => '^spells/instants/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_INSTANT, ':order' => 20) );
+                $query->execute( array(':name' => '^spells/runes/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_RUNE, ':order' => 20) );
+                $query->execute( array(':name' => '^spells/conjures/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_CONJURE, ':order' => 20) );
+                $query->execute( array(':name' => '^monsters/?$', ':content' => 'module=Library&command=monsters', ':order' => 50) );
+                $query->execute( array(':name' => '^monsters/(.+)$', ':content' => 'module=Library&command=monster&name=$1', ':order' => 40) );
+                $query->execute( array(':name' => '^characters/?$', ':content' => 'module=Character&command=display', ':order' => 50) );
+                $query->execute( array(':name' => '^characters/([0-9]+)/delete$', ':content' => 'module=Character&command=delete&id=$1', ':order' => 10) );
+                $query->execute( array(':name' => '^characters/([0-9]+)/change$', ':content' => 'module=Character&command=change&id=$1', ':order' => 10) );
+                $query->execute( array(':name' => '^characters/([0-9]+)/save$', ':content' => 'module=Character&command=save&id=$1', ':order' => 10) );
+                $query->execute( array(':name' => '^characters/create$', ':content' => 'module=Character&command=create', ':order' => 20) );
+                $query->execute( array(':name' => '^characters/insert$', ':content' => 'module=Character&command=insert', ':order' => 20) );
+                $query->execute( array(':name' => '^characters/(.+)$', ':content' => 'module=Character&command=display&name=$1', ':order' => 40) );
+                $query->execute( array(':name' => '^characters/(.+)/message$', ':content' => 'module=PM&command=new&to=$1', ':order' => 30) );
+                $query->execute( array(':name' => '^statistics/?$', ':content' => 'module=Statistics&command=census', ':order' => 50) );
+                $query->execute( array(':name' => '^statistics/(.*)$', ':content' => 'module=Statistics&command=highscores&list=$1', ':order' => 40) );
+                $query->execute( array(':name' => '^statistics/(.*)/page([0-9]+)$', ':content' => 'module=Statistics&command=highscores&list=$1&page=$2', ':order' => 30) );
+                $query->execute( array(':name' => '^guild/quit$', ':content' => 'module=Guilds&command=quit', ':order' => 20) );
+                $query->execute( array(':name' => '^guild/add$', ':content' => 'module=Guilds&command=add', ':order' => 20) );
+                $query->execute( array(':name' => '^guild/insert$', ':content' => 'module=Guilds&command=insert', ':order' => 20) );
+                $query->execute( array(':name' => '^guild/create$', ':content' => 'module=Guilds&command=create', ':order' => 20) );
+                $query->execute( array(':name' => '^guilds/?$', ':content' => 'module=Guilds&command=list', ':order' => 50) );
+                $query->execute( array(':name' => '^guilds/([0-9]+)$', ':content' => 'module=Guilds&command=display&id=$1', ':order' => 30) );
+                $query->execute( array(':name' => '^guides/?$', ':content' => 'module=Sites&command=list', ':order' => 50) );
+                $query->execute( array(':name' => '^guides/([0-9]+)$', ':content' => 'module=Sites&command=display&id=$1', ':order' => 40) );
+                $query->execute( array(':name' => '^forum/?$', ':content' => 'module=Forum&command=board&id=0', ':order' => 50) );
+                $query->execute( array(':name' => '^forum/([0-9]+)$', ':content' => 'module=Forum&command=board&id=$1', ':order' => 40) );
+                $query->execute( array(':name' => '^forum/([0-9]+)/page([0-9]+)$', ':content' => 'module=Forum&command=board&id=$1&page=$2', ':order' => 30) );
+                $query->execute( array(':name' => '^forum/([0-9]+)/reply$', ':content' => 'module=Topic&command=new&boardid=$1', ':order' => 20) );
+                $query->execute( array(':name' => '^posts/([0-9]+)$', ':content' => 'module=Topic&command=view&id=$1', ':order' => 40) );
+                $query->execute( array(':name' => '^posts/([0-9]+)/page([0-9]+)$', ':content' => 'module=Topic&command=view&id=$1&page=$2', ':order' => 30) );
+                $query->execute( array(':name' => '^posts/([0-9]+)/reply$', ':content' => 'module=Topic&command=new&topicid=$1', ':order' => 20) );
+                $query->execute( array(':name' => '^posts/([0-9]+)/quote/([0-9]+)$', ':content' => 'module=Topic&command=new&topicid=$1&quoteid=$2', ':order' => 10) );
+                $query->execute( array(':name' => '^poll/?$', ':content' => 'module=Poll&command=latest', ':order' => 60) );
+                $query->execute( array(':name' => '^polls/?$', ':content' => 'module=Poll&command=list', ':order' => 50) );
+                $query->execute( array(':name' => '^polls/([0-9]+)$', ':content' => 'module=Poll&command=display&id=$1', ':order' => 40) );
+                $query->execute( array(':name' => '^inbox/?$', ':content' => 'module=PM&command=inbox', ':order' => 50) );
+                $query->execute( array(':name' => '^outbox/?$', ':content' => 'module=PM&command=sent', ':order' => 50) );
+                $query->execute( array(':name' => '^message/([0-9]+)$', ':content' => 'module=PM&command=display&id=$1', ':order' => 30) );
+                $query->execute( array(':name' => '^message/([0-9]+)/delete$', ':content' => 'module=PM&command=delete&id=$1', ':order' => 20) );
+                $query->execute( array(':name' => '^message/([0-9]+)/reply$', ':content' => 'module=PM&command=reply&id=$1', ':order' => 20) );
+                $query->execute( array(':name' => '^message/([0-9]+)/forward$', ':content' => 'module=PM&command=fw&id=$1', ':order' => 20) );
+                $query->execute( array(':name' => '^message/new$', ':content' => 'module=PM&command=new', ':order' => 20) );
+                $query->execute( array(':name' => '^send/?$', ':content' => 'module=PM&command=send', ':order' => 50) );
 
-        $sql->commit();
+                $sql->commit();
 
-        echo '+ Database content inserted<br/>'."\n";
+                echo '<span class="bold">+ Database content inserted</span><br />' . "\n";
 
-        // deletes Install directory if user wanted to do so
-        if($_POST['del_install'])
-        {
-            if( deleteDirectory('Install/') )
-            {
-                echo '> Install directory deleted<br/>'."\n";
-            }
-            else
-            {
-                echo '- Could not delete install directory<br/>'."\n";
-            }
-        }
+                // deletes Install directory if user wanted to do so
+                if($_POST['del_install'])
+                {
+                    if( deleteDirectory('Install/') )
+                    {
+                        echo '<span class="bold">+ Install directory deleted</span><br />' . "\n";
+                    }
+                    else
+                    {
+                        echo '<span class="critical">- Could not delete install directory</span><br />' . "\n";
+                    }
+                }
 
-        // creating index.php files in all sub-directories
-        echo '> Creating index.php files<br/>'."\n";
-        indexDirectory('./');
-        echo '+ Directories indexed<br/>'."\n";
+                // creating index.php files in all accessible sub-directories
+                echo 'Creating index.php files...<br />' . "\n";
+                indexDirectory('images/');
+                indexDirectory('skins/');
+                indexDirectory('fckeditor/');
+                echo '<span class="bold">+ Directories indexed</span><br />' . "\n";
 
-        // saving configuretion file
-        file_put_contents('config.php', '<?php
+                // saving configuretion file
+                file_put_contents('config.php', '<?php
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
@@ -567,158 +1105,99 @@ Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, 
 
 include(\'compat.php\');
 
-$config[\'directories\'][\'classes\'] = \''.$config['directories']['classes'].'\';
+$config[\'directories\'][\'classes\'] = \'classes/\';
 
-$config[\'db\'][\'type\'] = \''.$db['type'].'\';
-$config[\'db\'][\'host\'] = \''.$db['host'].'\';
-$config[\'db\'][\'user\'] = \''.$db['user'].'\';
-$config[\'db\'][\'password\'] = \''.$db['password'].'\';
-$config[\'db\'][\'database\'] = \''.$db['database'].'\';
-$config[\'db\'][\'cms_prefix\'] = \''.$db['cms_prefix'].'\';
-$config[\'db\'][\'ots_prefix\'] = \''.$db['ots_prefix'].'\';
+$config[\'db\'][\'type\'] = \'' . $db['type'] . '\';
+$config[\'db\'][\'host\'] = \'' . $db['host'] . '\';
+$config[\'db\'][\'user\'] = \'' . $db['user'] . '\';
+$config[\'db\'][\'password\'] = \'' . $db['password'] . '\';
+$config[\'db\'][\'database\'] = \'' . $db['database'] . '\';
+$config[\'db\'][\'cms_prefix\'] = \'' . $db['cms_prefix'] . '\';
+$config[\'db\'][\'ots_prefix\'] = \'' . $db['ots_prefix'] . '\';
 
 ?>
 ');
-        echo '> Configuration saved in config.php<br/>'."\n";
-    }
-    catch(Exception $e)
-    {
-        $sql->rollback();
-        echo '<b>! CRITICAL: ' . $e->getMessage() . '</b>' . "\n";
-    }
-}
-// else displays installation panel
-else
-{
-?>
-<form action="install.php" method="post">
-    <table style="width: 100%;">
-        <tr>
-            <td colspan="2" style="width: 100%; text-align: center; font-weight: bold; text-decoration: underline;">
-                OTServ database connection settings.
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 50%; text-align: right;">
-                OTServ database connection type: 
-            </td>
-            <td style="width: 50%; text-align: left;">
-                <label><input type="radio" name="db[type]" value="MySQL" selected="selected"/>MySQL</label><br/>
-                <label><input type="radio" name="db[type]" value="SQLite"/>SQLite</label><br/>
-                <label><input type="radio" name="db[type]" value="PostgreSQL"/>PostgreSQL</label><br/>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 50%; text-align: right;">
-                OTServ host: 
-            </td>
-            <td style="width: 50%; text-align: left;">
-                <input type="text" name="db[host]" value="localhost"/>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="width: 100%; text-align: lustify;">
-                <span style="font-weight: bold;">MySQL, PostgreSQL</span>: database server.<br/>
-                <span style="font-weight: bold;">SQLite</span>: Path to database file.<br/>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 50%; text-align: right;">
-                Database user (not used by <span style="font-weight: bold;">SQLite</span>): 
-            </td>
-            <td style="width: 50%; text-align: left;">
-                <input type="text" name="db[user]"/>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 50%; text-align: right;">
-                Database password (not used by <span style="font-weight: bold;">SQLite</span>): 
-            </td>
-            <td style="width: 50%; text-align: left;">
-                <input type="text" name="db[password]"/>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 50%; text-align: right;">
-                Database name (not used by <span style="font-weight: bold;">SQLite</span>): 
-            </td>
-            <td style="width: 50%; text-align: left;">
-                <input type="text" name="db[database]" value="otserv"/>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 50%; text-align: right;">
-                Use MD5 for passwords: 
-            </td>
-            <td style="width: 50%; text-align: left;">
-                <label><input type="radio" name="uses_md5" value="0" checked="checked"/>Disable</label>
-                <label><input type="radio" name="uses_md5" value="1"/>Enable</label><br/>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="width: 100%; text-align: lustify;">
-                MD5 is hashing algorithm that makes password safer. This is not an OPTION - it must correspond with your OTServ configuration!
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="width: 100%; text-align: center;">
-                <input type="submit" value="Install"/>
-                <hr />
-            </td>
-        </tr>
-<?php
+                echo '<span class="bold">+ Configuration saved in config.php</span><br />' . "\n";
+            }
+            catch(Exception $e)
+            {
+                $sql->rollback();
+                echo '<span class="critical,bold">! CRITICAL: ' . $e->getMessage() . '</span>' . "\n";
+            }
+            break;
 
-if( !isset($_GET['advanced']) )
-{
+        // first screen
+        default:
 ?>
-        <tr id="advanced_button">
-            <td colspan="2" style="width: 100%; text-align: center;">
-                <a href="install.php?advanced=1" onclick="var advanced_settings = document.getElementById('advanced_settings').style; advanced_settings.display = 'table'; advanced_settings.visibility = 'visible'; this.parentNode.removeChild(this); return false;">Advanced options</a>
-            </td>
-        </tr>
-<?php
-}
-
-?>
-    </table>
-    <table id="advanced_settings" style="width: 100%;<?php if( !isset($_GET['advanced']) ) { echo ' display: none; visibility: hidden;'; } ?>">
-        <tr>
-            <td style="width: 50%; text-align: right;">
-                Should install directory be deleted after installation: 
-            </td>
-            <td style="width: 50%; text-align: left;">
-                <label><input type="checkbox" name="del_install"/>Delete</label>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 50%; text-align: right;">
-                Prefix for <span style="font-weight: bold;">OTSCMS</span> tables (we recommend to leave it as it is): 
-            </td>
-            <td style="width: 50%; text-align: left;">
-                <input type="text" name="db[cms_prefix]" value="otscms_"/>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 50%; text-align: right;">
-                Prefix for <span style="font-weight: bold;">OTServ</span> tables (we recommend to leave it as it is - type only if you use one! Leave empty if you don't know what it is!): 
-            </td>
-            <td style="width: 50%; text-align: left;">
-                <input type="text" name="db[ots_prefix]" value=""/>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="width: 100%; text-align: center;">
-                <input type="submit" value="Install"/>
-            </td>
-        </tr>
-    </table>
-    <input type="hidden" name="command" value="install"/>
+<form action="/install.php" method="post" enctype="multipart/form-data">
+<input type="hidden" name="command" value="database" />
+<table>
+<tbody>
+    <tr>
+        <td class="formLeft">Choose database type...</td>
+        <td class="formRight">
+            <label><input type="radio" name="db[type]" value="MySQL" selected="selected" />MySQL</label><br />
+            <label><input type="radio" name="db[type]" value="SQLite" />SQLite</label><br />
+            <label><input type="radio" name="db[type]" value="PostgreSQL" />PostgreSQL</label><br />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">...or submit your <span class="code">config.lua</span> file for auto-detection.</td>
+        <td class="formRight">
+            <input type="file" name="lua" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" value="Proceed" /></td>
+    </tr>
+</tbody>
+</table>
 </form>
 <?php
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
-echo '</tt>';
-
 ?>
+</div>
+            <div id="pageFooter">
+                Powered by <a href="http://www.otscms.com/">OTSCMS</a> v <?php echo $version; ?>; Copyright &copy; 2005 - 2007 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.<br />
+<a href="http://otserv-aac.info/">
+    <img alt="This site was smoked" src="http://otserv-aac.info/pot.png"/>
+</a>
+            </div>
     </body>
 </html>

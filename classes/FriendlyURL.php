@@ -43,7 +43,7 @@ class InputData
     // returns HTTP data variable
     public static function read($name)
     {
-        return self::$data[$name];
+        return isset(self::$data[$name]) ? self::$data[$name] : null;
     }
 
     // sets new value for given input variable

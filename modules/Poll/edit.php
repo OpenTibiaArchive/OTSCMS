@@ -39,6 +39,6 @@ $form['data'] = $poll;
 
 // options edit
 $edit = $template->createComponent('PollOptions');
-$edit['options'] = Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM [options] WHERE `poll` = ' . $poll['id']) );
+$edit['options'] = $db->query('SELECT `id` AS `key`, `name` AS `value` FROM [options] WHERE `poll` = ' . $poll['id'])->fetchAll(PDO::FETCH_KEY_PAIR);
 
 ?>

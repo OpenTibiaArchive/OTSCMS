@@ -32,7 +32,7 @@ $list = $template->createComponent('ItemsList');
 $list['header'] = $language['Modules.Sites.SitesList'];
 
 // fetches polls list
-$list['list'] = Toolbox::dumpRecords( $db->query('SELECT `id` AS `key`, `name` AS `value` FROM [sites]') );
+$list['list'] = $db->query('SELECT `id` AS `key`, `name` AS `value` FROM [sites]')->fetchAll(PDO::FETCH_KEY_PAIR);
 $list['link'] = '/guides/';
 $list['rowID'] = 'siteID_';
 

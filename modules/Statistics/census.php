@@ -20,8 +20,8 @@
 */
 
 // loads census statistics
-$genderCensus = Toolbox::dumpRecords( $db->query('SELECT `sex` AS `key`, COUNT(`id`) AS `value` FROM {players} GROUP BY `sex`') );
-$vocationCensus = Toolbox::dumpRecords( $db->query('SELECT `vocation` AS `key`, COUNT(`id`) AS `value` FROM {players} GROUP BY `vocation`') );
+$genderCensus = $db->query('SELECT `sex` AS `key`, COUNT(`id`) AS `value` FROM {players} GROUP BY `sex`')->fetchAll(PDO::FETCH_KEY_PAIR);
+$vocationCensus = $db->query('SELECT `vocation` AS `key`, COUNT(`id`) AS `value` FROM {players} GROUP BY `vocation`')->fetchAll(PDO::FETCH_KEY_PAIR);
 
 // prepares calculation variables
 $genderCount = array_sum($genderCensus) / 100;
@@ -32,7 +32,7 @@ $vocations = array();
 // creates vocations array
 foreach( $ots->getVocationsList() as $id => $name)
 {
-    $vocations[$name] => (int) $vocationCensus[$id] . ' (' . @intval($vocationCensus[$id] / $vocationCount) . '%)'
+    $vocations[$name] = (int) $vocationCensus[$id] . ' (' . @intval($vocationCensus[$id] / $vocationCount) . '%)';
 }
 
 // gender census table

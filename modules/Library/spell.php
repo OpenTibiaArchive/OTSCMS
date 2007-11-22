@@ -64,7 +64,7 @@ $data['words'] = $spell->getWords();
 $data['maglv'] = $spell->getMagicLevel();
 $data['mana'] = $spell->getMana();
 $data['soul'] = $spell->getSoul();
-$data['image'] = str_replace('\\', '/', $config['directories.images']) . 'Spells/' . $data['name'] . $extension;
+$data['image'] = '/' . str_replace('\\', '/', $config['directories.images']) . 'Spells/' . $data['name'] . $extension;
 
 // finds all allowed vocations
 $data['vocations'] = implode(', ', $spell->getVocations() );

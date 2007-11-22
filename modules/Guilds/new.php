@@ -22,7 +22,7 @@
 // creates new rank
 $rank = $ots->createObject('GuildRank');
 $guild = $ots->createObject('Guild');
-$guild->load($input['guild_id');
+$guild->load($input['guild_id']);
 
 
 // checks if user is able to create this rank

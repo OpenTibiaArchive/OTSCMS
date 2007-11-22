@@ -1,8 +1,8 @@
 <?php
 
 /**#@+
- * @version 0.0.7+SVN
- * @since 0.0.7+SVN
+ * @version 0.0.7
+ * @since 0.0.7
  */
 
 /**
@@ -10,6 +10,7 @@
  * @author Wrzasq <wrzasq@gmail.com>
  * @copyright 2007 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
+ * @todo 1.0.0: Link conjures with item types when items support will be added.
  */
 
 /**

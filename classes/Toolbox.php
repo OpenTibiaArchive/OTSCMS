@@ -143,20 +143,6 @@ class Toolbox
         return $vote['count'] > 0;
     }
 
-    // dumps record set into associative array
-    public static function dumpRecords(PDOStatement $result)
-    {
-        $array = array();
-
-        // $result must have `key` and `value` field aliases
-        foreach($result as $row)
-        {
-            $array[ $row['key'] ] = $row['value'];
-        }
-
-        return $array;
-    }
-
     // returns translation of given language from given string
     public static function languagePart($string, $language)
     {

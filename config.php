@@ -18,17 +18,12 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 // this is a temporary state before installation will be completed
 if( !defined('OTSCMS_INSTALL') )
 {
     header('Location: /install.php');
     die('OTSCMS not installed. Please run install.php.');
 }
-
-$config['directories']['classes'] = 'classes/';
-$config['directories']['languages'] = 'languages/';
-$config['directories']['modules'] = 'modules/';
-$config['directories']['skins'] = 'skins/';
-$config['directories']['images'] = 'images/';
 
 ?>

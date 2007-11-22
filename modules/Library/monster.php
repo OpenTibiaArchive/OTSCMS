@@ -91,7 +91,7 @@ $data['voices'] = empty($voices) ? '' : XMLToolbox::inparse( implode(', ', $voic
 $data['defenses'] = implode(', ', $defenses);
 $data['attacks'] = empty($attacks) ? '' : XMLToolbox::inparse( implode(', ', $attacks) );
 $data['loot'] = implode(', ', $loot);
-$data['image'] = str_replace('\\', '/', $config['directories.images']) . 'Monsters/' . $name . $extension;
+$data['image'] = '/' . str_replace('\\', '/', $config['directories.images']) . 'Monsters/' . $name . $extension;
 
 // sets labels
 $data->addLabel('experience', $language['Modules.Library.MonsterExperience']);
