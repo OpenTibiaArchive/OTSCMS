@@ -573,9 +573,16 @@ if( !isset($_GET['advanced']) )
                 break;
             }
 
+            // fix for POT
+            if($db['type'] == 'SQLite')
+            {
+                $db['database'] = $db['host'];
+            }
+
             // loads database handler file
             $config['db'] = $db;
             $config['directories']['classes'] = 'classes/';
+            POT::getInstance();
             require_once('classes/OTSCMS.php');
 
             try
@@ -663,6 +670,7 @@ if( !isset($_GET['advanced']) )
             $config['db'] = $db;
             $config['directories']['classes'] = 'classes/';
             require_once('classes/OTSCMS.php');
+            POT::getInstance();
             $sql = new SQL($db['host'], $db['user'], $db['password'], $db['database'], $db['cms_prefix'], $db['ots_prefix']);
 
             // current query
@@ -1155,40 +1163,6 @@ $config[\'db\'][\'ots_prefix\'] = \'' . $db['ots_prefix'] . '\';
 </form>
 <?php
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 ?>
