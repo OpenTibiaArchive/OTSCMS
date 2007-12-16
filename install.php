@@ -582,8 +582,8 @@ if( !isset($_GET['advanced']) )
             // loads database handler file
             $config['db'] = $db;
             $config['directories']['classes'] = 'classes/';
-            POT::getInstance();
             require_once('classes/OTSCMS.php');
+            POT::getInstance();
 
             try
             {

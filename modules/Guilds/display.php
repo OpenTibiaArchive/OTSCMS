@@ -94,7 +94,7 @@ foreach($guild as $rank)
             {
                 $kick = XMLToolbox::createElement('a');
                 $kick->setAttribute('href', '/admin/module=Guilds&command=kick&id=' . $player->getId() );
-                $kick->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Guilds.ConfirmKick'] . '\') ) { return pageGuilds.kick(' . $row['id'] . '); } else { return false; }');
+                $kick->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Guilds.ConfirmKick'] . '\') ) { return pageGuilds.kick(' . $player->getId() . '); } else { return false; }');
                 $kick->addContent($language['Modules.Guilds.KickSubmit']);
                 $actions->addContents(' | ', $kick);
             }
@@ -118,7 +118,7 @@ foreach($guild as $rank)
         }
 
         // only first row of given rank will be labeled
-        $members[] = array('id' => $row['id'], 'rank' => $first ? $rank->getName() : '', 'name' => $name, 'actions' => $actions);
+        $members[] = array('id' => $player->getId(), 'rank' => $first ? $rank->getName() : '', 'name' => $name, 'actions' => $actions);
 
         // marks current rank as done
         $first = false;

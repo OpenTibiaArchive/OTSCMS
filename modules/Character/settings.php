@@ -92,14 +92,17 @@ $message = $template->createComponent('Message');
 $message['message'] = $language['Modules.Character.SettingsHelp'];
 
 // loads items.xml file
-$reader = new ItemsReader($config['directories.data'] . 'items/items.xml');
+$cache = new ItemsCache($db);
+$reader = new OTS_ItemsList();
+$reader->setCacheDriver($cache);
+$reader->loadItems($config['directories.data'] . 'items');
 
 // creates items array
 $items = array();
 
-foreach($reader as $id => $element)
+foreach($reader as $item)
 {
-    $items[$id] = $element['name'];
+    $items[ $item->getId() ] = $item->getName();
 }
 
 // current items list
@@ -132,10 +135,10 @@ $containers = array();
 foreach( $db->query('SELECT `id`, `content`, `slot`, `count` FROM [containers] WHERE `profile` = ' . $profile['id']) as $container)
 {
     // loads item
-    $container['name'] = $reader[ $container['content'] ]['name'];
+    $container['name'] = $reader->getItemType($container['content'])->getName();
 
     // checks if this item can be a container
-    if($reader[ $container['content'] ]['container'])
+    if( $reader->getItemType($container['content'])->getGroup() == OTS_ItemType::ITEM_GROUP_CONTAINER)
     {
         $slots[ $container['id'] ] = $language['Modules.Character.ContainerType'] . ' #' . $container['id'] . ' (' . $container['name'] . ')';
     }

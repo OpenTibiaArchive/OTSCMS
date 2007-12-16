@@ -109,7 +109,8 @@ class XMLToolbox
     public static function inparse($text)
     {
         // document for parsing text tree
-        $xml = DOMDocument::loadXML('<?xml version="1.0" encoding="utf-8"?><root>' . $text . '</root>');
+        $xml = new DOMDocument();
+        $xml->loadXML('<?xml version="1.0" encoding="utf-8"?><root>' . $text . '</root>');
 
         // container for loaded tree
         $tree = self::createDocumentFragment();

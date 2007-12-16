@@ -234,6 +234,16 @@ CREATE TABLE [cache] (
     `previous` INT
 );
 
+DROP TABLE [items];
+
+CREATE TABLE [items] (
+    `key` VARCHAR(32),
+    `id` INT,
+    `name` VARCHAR(255),
+    `group` INT,
+    `type` INT
+);
+
 DROP VIEW [posts_with_authors];
 
 CREATE VIEW [posts_with_authors]

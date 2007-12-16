@@ -294,12 +294,14 @@ switch($config['version'])
         switch( $db->getAttribute(PDO::ATTR_DRIVER_NAME) )
         {
             case 'mysql':
-                $db->query('CREATE TABLE [cache] (`key` VARCHAR(32), `id` INT, `name` INT, `content` BLOB, `parent` INT, `previous` INT) ENGINE = InnoDB CHARSET = utf8');
+                $db->exec('CREATE TABLE [cache] (`key` VARCHAR(32), `id` INT, `name` INT, `content` BLOB, `parent` INT, `previous` INT) ENGINE = InnoDB CHARSET = utf8');
+                $db->exec('CREATE TABLE [items] ( `key` VARCHAR(32), `id` INT, `name` VARCHAR(255), `group` INT, `type` INT)');
                 break;
 
             case 'sqlite':
             case 'pgsql':
-                $db->query('CREATE TABLE [cache] (`key` VARCHAR(32), `id` INT, `name` INT, `content` BLOB, `parent` INT, `previous` INT)');
+                $db->exec('CREATE TABLE [cache] (`key` VARCHAR(32), `id` INT, `name` INT, `content` BLOB, `parent` INT, `previous` INT)');
+                $db->exec('CREATE TABLE [items] (`key` VARCHAR(32), `id` INT, `name` VARCHAR(255), `group` INT, `type` INT)');
                 break;
         }
 

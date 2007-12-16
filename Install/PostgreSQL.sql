@@ -7,6 +7,7 @@ DROP VIEW IF EXISTS [player_skills];
 DROP VIEW IF EXISTS [private_messages];
 DROP VIEW IF EXISTS [posts_with_authors];
 
+DROP TABLE IF EXISTS [items];
 DROP TABLE IF EXISTS [cache];
 DROP TABLE IF EXISTS [sites];
 DROP TABLE IF EXISTS [requests];
@@ -236,6 +237,14 @@ CREATE TABLE [cache] (
     `content` BLOB,
     `parent` INT,
     `previous` INT
+);
+
+CREATE TABLE [items] (
+    `key` VARCHAR(32),
+    `id` INT,
+    `name` VARCHAR(255),
+    `group` INT,
+    `type` INT
 );
 
 CREATE VIEW [posts_with_authors]

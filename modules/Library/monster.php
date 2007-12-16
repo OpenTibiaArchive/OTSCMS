@@ -46,9 +46,14 @@ if( !empty($loot) )
     $names = array();
 
     // loads items.xml file
-    foreach( new ItemsReader($config['directories.data'] . 'items/items.xml') as $id => $item)
+    $cache = new ItemsCache($db);
+    $items = new OTS_ItemsList();
+    $items->setCacheDriver($cache);
+    $items->loadItems($config['directories.data'] . 'items');
+
+    foreach($items as $item)
     {
-        $names[$id] = $item['name'];
+        $names[ $id->getId() ] = $item->getName();
     }
 
     // replaces ids by names

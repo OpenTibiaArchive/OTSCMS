@@ -21,8 +21,9 @@
  * OTBM format reader.
  * 
  * @package POT
+ * @version 0.0.8+SVN
  */
-class OTS_OTBMFile extends OTS_FileLoader
+class OTS_OTBMFile extends OTS_FileLoader implements Iterator, Countable
 {
 /**
  * Description attribute.
@@ -407,6 +408,76 @@ class OTS_OTBMFile extends OTS_FileLoader
         {
             return false;
         }
+    }
+
+/**
+ * Returns amount of towns loaded.
+ * 
+ * @version 0.0.8+SVN
+ * @since 0.0.8+SVN
+ * @return int Count of towns.
+ */
+    public function count()
+    {
+        return count($this->towns);
+    }
+
+/**
+ * Returns town at current position in iterator.
+ * 
+ * @version 0.0.8+SVN
+ * @since 0.0.8+SVN
+ * @return string Town name.
+ */
+    public function current()
+    {
+        return current($this->towns);
+    }
+
+/**
+ * Moves to next iterator town.
+ * 
+ * @version 0.0.8+SVN
+ * @since 0.0.8+SVN
+ */
+    public function next()
+    {
+        next($this->towns);
+    }
+
+/**
+ * Returns ID of current position.
+ * 
+ * @version 0.0.8+SVN
+ * @since 0.0.8+SVN
+ * @return int Current position key.
+ */
+    public function key()
+    {
+        return key($this->towns);
+    }
+
+/**
+ * Checks if there is anything more in interator.
+ * 
+ * @version 0.0.8+SVN
+ * @since 0.0.8+SVN
+ * @return bool If iterator has anything more.
+ */
+    public function valid()
+    {
+        return key($this->towns) !== null;
+    }
+
+/**
+ * Resets iterator index.
+ * 
+ * @version 0.0.8+SVN
+ * @since 0.0.8+SVN
+ */
+    public function rewind()
+    {
+        reset($this->towns);
     }
 }
 
