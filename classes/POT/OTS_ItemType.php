@@ -1,8 +1,8 @@
 <?php
 
 /**#@+
- * @version 0.0.8+SVN
- * @since 0.0.8+SVN
+ * @version 0.0.8
+ * @since 0.0.8
  */
 
 /**
@@ -529,6 +529,25 @@ class OTS_ItemType
     public function isHorizontal()
     {
         return ($this->flags & self::FLAG_HORIZONTAL) == self::FLAG_HORIZONTAL;
+    }
+
+/**
+ * Creates instance of this type.
+ * 
+ * @return OTS_Item Item instance.
+ */
+    public function createItem()
+    {
+        // container
+        if($this->group == self::ITEM_GROUP_CONTAINER)
+        {
+            return new OTS_Container($this->id);
+        }
+        // normal item
+        else
+        {
+            return new OTS_Item($this->id);
+        }
     }
 }
 

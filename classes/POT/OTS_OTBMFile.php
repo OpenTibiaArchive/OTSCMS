@@ -21,7 +21,7 @@
  * OTBM format reader.
  * 
  * @package POT
- * @version 0.0.8+SVN
+ * @version 0.0.8
  */
 class OTS_OTBMFile extends OTS_FileLoader implements Iterator, Countable
 {
@@ -413,8 +413,8 @@ class OTS_OTBMFile extends OTS_FileLoader implements Iterator, Countable
 /**
  * Returns amount of towns loaded.
  * 
- * @version 0.0.8+SVN
- * @since 0.0.8+SVN
+ * @version 0.0.8
+ * @since 0.0.8
  * @return int Count of towns.
  */
     public function count()
@@ -425,8 +425,8 @@ class OTS_OTBMFile extends OTS_FileLoader implements Iterator, Countable
 /**
  * Returns town at current position in iterator.
  * 
- * @version 0.0.8+SVN
- * @since 0.0.8+SVN
+ * @version 0.0.8
+ * @since 0.0.8
  * @return string Town name.
  */
     public function current()
@@ -437,8 +437,8 @@ class OTS_OTBMFile extends OTS_FileLoader implements Iterator, Countable
 /**
  * Moves to next iterator town.
  * 
- * @version 0.0.8+SVN
- * @since 0.0.8+SVN
+ * @version 0.0.8
+ * @since 0.0.8
  */
     public function next()
     {
@@ -448,8 +448,8 @@ class OTS_OTBMFile extends OTS_FileLoader implements Iterator, Countable
 /**
  * Returns ID of current position.
  * 
- * @version 0.0.8+SVN
- * @since 0.0.8+SVN
+ * @version 0.0.8
+ * @since 0.0.8
  * @return int Current position key.
  */
     public function key()
@@ -460,8 +460,8 @@ class OTS_OTBMFile extends OTS_FileLoader implements Iterator, Countable
 /**
  * Checks if there is anything more in interator.
  * 
- * @version 0.0.8+SVN
- * @since 0.0.8+SVN
+ * @version 0.0.8
+ * @since 0.0.8
  * @return bool If iterator has anything more.
  */
     public function valid()
@@ -472,8 +472,8 @@ class OTS_OTBMFile extends OTS_FileLoader implements Iterator, Countable
 /**
  * Resets iterator index.
  * 
- * @version 0.0.8+SVN
- * @since 0.0.8+SVN
+ * @version 0.0.8
+ * @since 0.0.8
  */
     public function rewind()
     {

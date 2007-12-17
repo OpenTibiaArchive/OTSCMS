@@ -15,6 +15,8 @@
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
  * @todo 0.0.9: Houses support.
  * @todo 0.1.0: Get rid of POT::getInstance()->create*() calls - use POT::getInstance()->getDBHandle() in constructors.
+ * @todo 0.1.0: Provide suite for automatic items, spells, monsters and other data/ directory info loading.
+ * @todo 0.1.0: Handle instances of loaded data/ directory resources to allow exchange data between classes and objects.
  * @todo 0.1.0: Implement __get()/__set()/__call()/__toString(); ArrayAccess interface.
  * @todo 0.1.0: Put items map handling into POT class or separate vocations, monsters and spells too.
  * @todo 1.0.0: Complete phpUnit test.
