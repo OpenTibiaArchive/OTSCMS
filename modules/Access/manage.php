@@ -24,7 +24,7 @@ $template->addJavaScript('access');
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Access&command=insert';
+$form['action'] = 'admin/module=Access&command=insert';
 $form['submit'] = $language['main.admin.InsertSubmit'];
 $form['id'] = 'accessForm';
 
@@ -33,7 +33,7 @@ $groups = array(-1 => $language['Modules.Access.Level-1'], 0 => $language['Modul
 
 foreach( new OTS_Groups_List() as $group)
 {
-    $groups[ $group->getAccess() ] = $group->getName();
+    $groups[$group->access] = $group->name;
 }
 
 // reads modules list

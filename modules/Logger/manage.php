@@ -42,7 +42,7 @@ $list['list'] = $logs;
 
 // clear logs link
 $a = XMLToolbox::createElement('a');
-$a->setAttribute('href', '/admin/module=Logger&command=clean');
+$a->setAttribute('href', 'admin/module=Logger&command=clean');
 $a->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Logger.ConfirmClean'] . '\') ) { return pageLogger.run(); } else { return false; }');
 $a->addContent($language['Modules.Logger.CleanSubmit']);
 

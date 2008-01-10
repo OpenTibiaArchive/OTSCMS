@@ -21,11 +21,11 @@
 
 // profile selection form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Character&command=settings';
+$form['action'] = 'admin/module=Character&command=settings';
 $form['submit'] = $language['Modules.Character.SelectSubmit'];
 
 $form->addField('gender', ComponentAdminForm::FieldSelect, $language['Modules.Character.SelectGender'], array('options' => array('*' => '*', 0 => $language['main.gender0'], 1 => $language['main.gender1']) ) );
-$form->addField('vocation', ComponentAdminForm::FieldSelect, $language['Modules.Character.SelectVocation'], array('options' => array_merge( array('*' => '*'), $ots->getVocationsList() ) ) );
+$form->addField('vocation', ComponentAdminForm::FieldSelect, $language['Modules.Character.SelectVocation'], array('options' => array_merge( array('*' => '*'), $ots->getVocationsList()->getIterator()->getArrayCopy() ) ) );
 $form->addField('', ComponentAdminForm::FieldSeparator, XMLToolbox::inparse($language['Modules.Character.SelectHelp']) );
 
 ?>

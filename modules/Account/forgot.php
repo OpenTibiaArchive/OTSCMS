@@ -21,7 +21,7 @@
 
 // password remind form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/password/remind';
+$form['action'] = 'password/remind';
 $form['submit'] = $language['Modules.Account.RemindSubmit'];
 
 // form fields

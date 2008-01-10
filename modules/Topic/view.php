@@ -39,7 +39,7 @@ $page = isset($page) ? (int) $page : 1;
 // pagination if required
 $pages = $template->createComponent('Pages');
 $pages['page'] = $page;
-$pages['link'] = '/posts/' . $post['id'];
+$pages['link'] = 'posts/' . $post['id'];
 
     // counts of pages
 $count = $db->query('SELECT COUNT(`id`) / ' . $config['forum.limit'] . ' AS `count` FROM [posts] WHERE (`istopic` = 0 AND `upperid` = ' . $post['id'] . ') OR `id` = ' . $post['id'])->fetch();

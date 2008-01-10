@@ -21,7 +21,7 @@
 
 // guild creation form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/guild/quit';
+$form['action'] = 'guild/quit';
 $form['submit'] = $language['Modules.Guilds.LeaveSubmit'];
 
 $guild = new OTS_Guild();

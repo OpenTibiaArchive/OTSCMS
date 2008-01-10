@@ -51,7 +51,7 @@ $account->load(User::$number);
 
 // bb message editor
 $form = $template->createComponent('BBEditor');
-$form['action'] = '/admin/module=Topic&command=insert&bb[upperid]=' . $id . '&bb[istopic]=' . $newTopic;
+$form['action'] = 'admin/module=Topic&command=insert&bb[upperid]=' . $id . '&bb[istopic]=' . $newTopic;
 $form['fields'] = array('content' => $post);
 $form['characters'] = $account->playersList;
 $form->module = 'Topic';

@@ -24,17 +24,17 @@ $guilds = array();
 
 foreach( new OTS_Guilds_List() as $guild)
 {
-    $guilds[ $guild->getId() ] = $guild->getName();
+    $guilds[$guild->id] = $guild->name;
 }
 
 // news display component
 $list = $template->createComponent('ItemsList');
 $list['header'] = $language['Modules.Guilds.GuildsList'];
-$list['link'] = '/guilds/';
+$list['link'] = 'guilds/';
 $list['list'] = $guilds;
 
 // archive link
 $link = $template->createComponent('Links');
-$link['links'] = array( array('label' => $language['Modules.Guilds.CreateSubmit'], 'link' => '/guild/create') );
+$link['links'] = array( array('label' => $language['Modules.Guilds.CreateSubmit'], 'link' => 'guild/create') );
 
 ?>

@@ -139,7 +139,7 @@ class OTSCMS
         // checks if module exists
         if( !file_exists($config['directories.modules'] . $module . '/' . $command . '.php') )
         {
-            Toolbox::redirect('/');
+            Toolbox::redirect('home');
         }
 
         // runs module
@@ -191,7 +191,7 @@ class OTSCMS
         // loads map
         $ots->loadMap($config['directories.data'] . 'world/' . $config['system.map']);
 
-        // loads map
+        // loads item types
         $ots->loadItems($config['directories.data'] . 'items');
 
         // sets current language
@@ -365,7 +365,7 @@ class OTSCMS
             // not-logged users may just need to log-in to receive access
             if(!User::$logged)
             {
-                Toolbox::redirect('/account');
+                Toolbox::redirect('account');
             }
 
             // logs exception

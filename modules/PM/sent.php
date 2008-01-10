@@ -32,12 +32,12 @@ foreach( $db->query('SELECT `id`, `name`, `read`, `date_time`, `to` FROM [privat
 {
     // display link
     $a = XMLToolbox::createElement('a');
-    $a->setAttribute('href', '/message/' . $pm['id']);
+    $a->setAttribute('href', 'message/' . $pm['id']);
     $a->addContent($pm['name']);
 
     // target profile link
     $link = XMLToolbox::createElement('a');
-    $link->setAttribute('href', '/characters/' . urlencode($pm['to']) );
+    $link->setAttribute('href', 'characters/' . urlencode($pm['to']) );
     $link->addContent($pm['to']);
 
     $pms[] = array('id' => $pm['id'], 'name' => $a, 'to' => $link, 'date_time' => date($config['site.date_format'], $pm['date_time']) );

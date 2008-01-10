@@ -66,7 +66,7 @@ $password = substr( md5( uniqid( rand(), true) ), 1, 8);
 
 // sets all info
 $account->blocked = false;
-$account->password = $config['system.use_md5'] ? md5($password) : $password;
+$account->password = $config['system.md5'] ? md5($password) : $password;
 $account->eMail = $email;
 $account->save();
 

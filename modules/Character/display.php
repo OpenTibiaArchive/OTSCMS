@@ -70,7 +70,7 @@ if( isset($name) )
 
         $guild = $rank->guild;
 
-        $a->setAttribute('href', '/guilds/' . $guild->id);
+        $a->setAttribute('href', 'guilds/' . $guild->id);
         $a->addContent($guild->name);
 
         $root->addContents($rank->name . ' ' . $language['Modules.Character.InGuild'] . ' ', $a);
@@ -82,7 +82,7 @@ if( isset($name) )
     $data[ $language['Modules.Character.LastLogin'] ] = date($config['site.date_format'], $character->lastLogin);
 
     // forum profile part
-    $account = $character->getAccount();
+    $account = $character->account;
     $signature = $account->getCustomField('signature');
     $avatar = $account->getCustomField('avatar');
     $website = $account->getCustomField('website');
@@ -122,7 +122,7 @@ if( isset($name) )
 
     // PM link
     $link = $template->createComponent('Links');
-    $link['links'] = array( array('link' => '/characters/' . urlencode($character->name) . '/message', 'label' => $language['Modules.Account.PMSubmit']) );
+    $link['links'] = array( array('link' => 'characters/' . urlencode($character->name) . '/message', 'label' => $language['Modules.Account.PMSubmit']) );
 
     // other characters list
     $others = array();
@@ -138,7 +138,7 @@ if( isset($name) )
     if( !empty($others) )
     {
         $list = $template->createComponent('ItemsList');
-        $list['link'] = '/characters/';
+        $list['link'] = 'characters/';
         $list['list'] = $others;
         $list['header'] = $language['Modules.Character.OtherCharacter'];
     }
@@ -146,7 +146,7 @@ if( isset($name) )
 
 // character search form
 $form = $template->createComponent('Signup');
-$form['action'] = '/characters/';
+$form['action'] = 'characters/';
 $form['text'] = $language['Modules.Character.TypeName'];
 $form['name'] = 'name';
 $form['submit'] = $language['Modules.Character.DisplaySubmit'];

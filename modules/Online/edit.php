@@ -24,7 +24,7 @@ $online = new CMS_Online( (int) InputData::read('id') );
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Online&command=update&id=' . $online['id'];
+$form['action'] = 'admin/module=Online&command=update&id=' . $online['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 $form['id'] = 'onlineForm';
 

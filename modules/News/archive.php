@@ -21,7 +21,7 @@
 
 $list = $template->createComponent('ItemsList');
 $list['header'] = $language['Modules.News.Archive'];
-$list['link'] = '/news/';
+$list['link'] = 'news/';
 
 $news = array();
 

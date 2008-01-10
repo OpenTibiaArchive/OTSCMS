@@ -42,7 +42,7 @@ $data['data'] = array($language['Modules.Account.AccountNumber'] => $account->id
 
 // password change form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/password/change';
+$form['action'] = 'password/change';
 $form['submit'] = $language['Modules.Account.ChangeSubmit'];
 
 // form fields
@@ -52,7 +52,7 @@ $form->addField('newpassword2', ComponentAdminForm::FieldPassword, $language['Mo
 
 // forum profile
 $profile = $template->createComponent('AdminForm');
-$profile['action'] = '/account/save';
+$profile['action'] = 'account/save';
 $profile['submit'] = $language['main.admin.UpdateSubmit'];
 $profile['id'] = 'userForm';
 
@@ -77,13 +77,13 @@ foreach($account as $player)
 
     // delete link
     $delete = XMLToolbox::createElement('a');
-    $delete->setAttribute('href', '/characters/' . $player->id . '/delete');
+    $delete->setAttribute('href', 'characters/' . $player->id . '/delete');
     $delete->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Account.DeleteConfirm'] . '\') ) { return pageCharacter.Delete(' . $player->id . '); } else { return false; }');
     $delete->addContent($language['main.admin.DeleteSubmit']);
 
     // edit link
     $edit = XMLToolbox::createElement('a');
-    $edit->setAttribute('href', '/characters/' . $player->id . '/change');
+    $edit->setAttribute('href', 'characters/' . $player->id . '/change');
     $edit->addContent($language['main.admin.EditSubmit']);
 
     $root->addContents($delete, ' | ', $edit);

@@ -85,15 +85,15 @@ foreach($guild as $rank)
 
             // edition link
             $edit = XMLToolbox::createElement('a');
-            $edit->setAttribute('href', '/admin/module=Guilds&command=edit&id=' . $player->id);
+            $edit->setAttribute('href', 'admin/module=Guilds&command=edit&id=' . $player->id);
             $edit->addContent($language['main.admin.EditSubmit']);
             $actions->addContent($edit);
 
             // leader can't be kicked
-            if( $rank->getLevel() < 3)
+            if($rank->level < 3)
             {
                 $kick = XMLToolbox::createElement('a');
-                $kick->setAttribute('href', '/admin/module=Guilds&command=kick&id=' . $player->id);
+                $kick->setAttribute('href', 'admin/module=Guilds&command=kick&id=' . $player->id);
                 $kick->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Guilds.ConfirmKick'] . '\') ) { return pageGuilds.kick(' . $player->id . '); } else { return false; }');
                 $kick->addContent($language['Modules.Guilds.KickSubmit']);
                 $actions->addContents(' | ', $kick);
@@ -107,7 +107,7 @@ foreach($guild as $rank)
         // character view link
         $name = XMLToolbox::createDocumentFragment();
         $link = XMLToolbox::createElement('a');
-        $link->setAttribute('href', '/characters/' . urlencode($player->name) );
+        $link->setAttribute('href', 'characters/' . urlencode($player->name) );
         $link->addContent($player->name);
         $name->addContent($link);
 
@@ -142,28 +142,28 @@ $links = array();
 
 if($isLeader || User::hasAccess(3) )
 {
-    $links[] = array('link' => '/admin/module=Guilds&command=remove&id=' . $guild->id, 'label' => $language['main.admin.DeleteSubmit'], 'confirm' => $language['main.admin.ConfirmDelete']);
+    $links[] = array('link' => 'admin/module=Guilds&command=remove&id=' . $guild->id, 'label' => $language['main.admin.DeleteSubmit'], 'confirm' => $language['main.admin.ConfirmDelete']);
 }
 
 if($isVice)
 {
-    $links[] = array('link' => '/admin/module=Guilds&command=invite&id=' . $guild->id, 'label' => $language['Modules.Guilds.InviteSubmit']);
-    $links[] = array('link' => '/admin/module=Guilds&command=manage&id=' . $guild->id, 'label' => $language['Modules.Guilds.ManageSubmit']);
+    $links[] = array('link' => 'admin/module=Guilds&command=invite&id=' . $guild->id, 'label' => $language['Modules.Guilds.InviteSubmit']);
+    $links[] = array('link' => 'admin/module=Guilds&command=manage&id=' . $guild->id, 'label' => $language['Modules.Guilds.ManageSubmit']);
 }
 
 if($isMember && !$isLeader)
 {
-    $links[] = array('link' => '/admin/module=Guilds&command=leave&id=' . $guild->id, 'label' => $language['Modules.Guilds.LeaveSubmit']);
+    $links[] = array('link' => 'admin/module=Guilds&command=leave&id=' . $guild->id, 'label' => $language['Modules.Guilds.LeaveSubmit']);
 }
 
 if($isInvited)
 {
-    $links[] = array('link' => '/admin/module=Guilds&command=join&id=' . $guild->id, 'label' => $language['Modules.Guilds.JoinSubmit']);
+    $links[] = array('link' => 'admin/module=Guilds&command=join&id=' . $guild->id, 'label' => $language['Modules.Guilds.JoinSubmit']);
 }
 
 if(!$isMember && User::$logged)
 {
-    $links[] = array('link' => '/admin/module=Guilds&command=request&id=' . $guild->id, 'label' => $language['Modules.Guilds.RequestSubmit']);
+    $links[] = array('link' => 'admin/module=Guilds&command=request&id=' . $guild->id, 'label' => $language['Modules.Guilds.RequestSubmit']);
 }
 
 if( !empty($links) )

@@ -36,7 +36,7 @@ class InvitesDriver implements IOTS_GuildAction
         $this->guild = $guild;
         $this->db = OTSCMS::getResource('DB');
 
-        $this->guild->setInvitesDriver($this);
+        $this->guild->invitesDriver = $this;
     }
 
     // returns all invited players to current guild

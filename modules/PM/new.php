@@ -24,7 +24,7 @@ $account->load(User::$number);
 
 // bb message editor
 $form = $template->createComponent('BBEditor');
-$form['action'] = '/send';
+$form['action'] = 'send';
 $form['fields'] = array('name' => InputData::read('name'), 'content' => InputData::read('content'), 'to' => InputData::read('to') );
 $form['characters'] = $account->playersList;
 $form->module = 'PM';

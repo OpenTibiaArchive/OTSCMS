@@ -25,7 +25,7 @@ $list['header'] = $language['Modules.Library.MonstersList'];
 $temp = array();
 
 // loops through monsters
-foreach( $ots->getMonstersList() as $name)
+foreach( $ots->getMonstersList() as $name => $monster)
 {
     // checks if it's monster and admin wants to display it - to enable it place image in monsters images directory
     if( !Toolbox::imageExists('Monsters/' . $name) )
@@ -38,6 +38,6 @@ foreach( $ots->getMonstersList() as $name)
 
 // puts monsters into template
 $list['list'] = $temp;
-$list['link'] = '/monsters/';
+$list['link'] = 'monsters/';
 
 ?>

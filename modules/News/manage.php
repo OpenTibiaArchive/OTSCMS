@@ -23,7 +23,7 @@ $template->addJavaScript('news');
 
 // new news form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=News&command=insert';
+$form['action'] = 'admin/module=News&command=insert';
 $form['submit'] = $language['main.admin.InsertSubmit'];
 $form['id'] = 'newsForm';
 

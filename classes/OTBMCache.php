@@ -55,7 +55,7 @@ class OTBMCache implements IOTS_FileCache
 
         // default root node
         $root = new OTS_FileNode();
-        $root->setType(OTS_OTBMFile::OTBM_NODE_ROOTV1);
+        $root->type = OTS_OTBMFile::OTBM_NODE_ROOTV1;
 
         $nodes = array();
 
@@ -63,8 +63,8 @@ class OTBMCache implements IOTS_FileCache
         foreach($cache as $id => $record)
         {
             $node = new OTS_FileNode();
-            $node->setType($record['name']);
-            $node->setBuffer($record['content']);
+            $node->type = $record['name'];
+            $node->buffer = $record['content'];
 
             $nodes[$id] = $node;
 
@@ -83,13 +83,13 @@ class OTBMCache implements IOTS_FileCache
             // sets child relative
             if($record['parent'])
             {
-                $nodes[ $record['parent'] ]->setChild($node);
+                $nodes[ $record['parent'] ]->child = $node;
             }
 
             // sets sibling relative
             if($record['previous'])
             {
-                $nodes[ $record['previous'] ]->setNext($node);
+                $nodes[ $record['previous'] ]->next = $node;
             }
         }
 
@@ -101,7 +101,7 @@ class OTBMCache implements IOTS_FileCache
         // IDs counter
         static $i = 0;
         static $insert = null;
-        static $types = array(OTS_OTBMFile::OTBM_NODE_ROOTV1, OTS_OTBMFile::OTBM_NODE_MAP_DATA, OTS_OTBMFile::OTBM_NODE_TOWNS, OTS_OTBMFile::OTBM_NODE_TOWN);
+        static $types = array(OTS_OTBMFile::OTBM_NODE_ROOTV1, OTS_OTBMFile::OTBM_NODE_MAP_DATA, OTS_OTBMFile::OTBM_NODE_TOWNS, OTS_OTBMFile::OTBM_NODE_TOWN, OTS_OTBMFile::OTBM_NODE_TILE_AREA, OTS_OTBMFile::OTBM_NODE_HOUSETILE);
 
         // initial loop info
         $i++;
@@ -117,11 +117,12 @@ class OTBMCache implements IOTS_FileCache
         while($root)
         {
             // checks if we have to save this node - skip not used by OTSCMS
-            if( in_array( $root->getType(), $types) )
+            if( in_array($root->type, $types) )
             {
-                $insert->execute( array(':key' => $md5, ':id' => $i, ':name' => $root->getType(), ':content' => $root->getBuffer(), ':parent' => $parent, ':previous' => $previous) );
+                $insert->execute( array(':key' => $md5, ':id' => $i, ':name' => $root->type, ':content' => $root->buffer, ':parent' => $parent, ':previous' => $previous) );
 
-                $child = $root->getChild();
+                $child = $root->child;
+                $previous = $i;
 
                 // saves child node
                 if( isset($child) )
@@ -131,11 +132,10 @@ class OTBMCache implements IOTS_FileCache
 
                 // sets values for next node
                 $parent = 0;
-                $previous = $i;
                 $i++;
             }
 
-            $root = $root->getNext();
+            $root = $root->next;
         }
     }
 }

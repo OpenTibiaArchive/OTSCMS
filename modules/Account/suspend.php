@@ -25,6 +25,6 @@ $account->load(User::$number);
 $account->delete();
 
 // redirects to logout page
-Toolbox::redirect('/logout');
+Toolbox::redirect('logout');
 
 ?>

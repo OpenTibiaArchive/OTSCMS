@@ -22,17 +22,17 @@
 $template->addJavaScript('account');
 
 $accounts = array();
-$md5 = $config['system.use_md5'];
+$md5 = $config['system.md5'];
 
 // reads accounts
 foreach( new OTS_Accounts_List() as $account)
 {
-    $row = array('id' => $account->getId(), 'email' => $account->getEMail(), 'blocked' => $account->isBlocked() ? $language['Modules.Account.Blocked'] : $language['Modules.Account.Unblocked'] );
+    $row = array('id' => $account->id, 'email' => $account->eMail, 'blocked' => $account->blocked ? $language['Modules.Account.Blocked'] : $language['Modules.Account.Unblocked'] );
 
     // if MD5 is disabled we can display passwords
     if(!$md5)
     {
-        $row['password'] = $account->getPassword();
+        $row['password'] = $account->password;
     }
 
     $accounts[] = $row;

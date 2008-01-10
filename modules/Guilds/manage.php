@@ -41,7 +41,7 @@ GuildID = ' . $guild->id . ';
 
 // new rank form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Guilds&command=new&rank[guild_id]=' . $guild->id;
+$form['action'] = 'admin/module=Guilds&command=new&rank[guild_id]=' . $guild->id;
 $form['submit'] = $language['Modules.Guilds.NewSubmit'];
 $form['id'] = 'ranksForm';
 
@@ -68,7 +68,7 @@ foreach($guild as $rank)
 
     // deletion link
     $link = XMLToolbox::createElement('a');
-    $link->setAttribute('href', '/admin/module=Guilds&command=delete&id=' . $rank->id);
+    $link->setAttribute('href', 'admin/module=Guilds&command=delete&id=' . $rank->id);
     $link->setAttribute('onclick', 'if( confirm(\'' . $language['main.admin.ConfirmDelete'] . '\') ) { return pageGuilds.Delete(' . $rank->id . '); } else { return false; }');
     $link->addContent($language['main.admin.DeleteSubmit']);
 

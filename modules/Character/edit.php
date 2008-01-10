@@ -25,7 +25,7 @@ $player->load( InputData::read('id') );
 
 // creates edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Character&command=update&id=' . $player->id;
+$form['action'] = 'admin/module=Character&command=update&id=' . $player->id;
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
 $accounts = array();

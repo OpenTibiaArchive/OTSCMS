@@ -53,7 +53,7 @@ class ComponentTopic extends TemplateComponent
             $td->setAttribute('class', 'postAuthor');
 
             $a = XMLToolbox::createElement('a');
-            $a->setAttribute('href', '/characters/' . $post['poster']);
+            $a->setAttribute('href', 'characters/' . $post['poster']);
             $a->addContent($post['poster']);
             $td->addContents($a, XMLToolbox::createElement('br') );
 
@@ -87,7 +87,7 @@ class ComponentTopic extends TemplateComponent
             if($this->admin)
             {
                 $a = XMLToolbox::createElement('a');
-                $a->setAttribute('href', '/admin/module=Topic&command=remove&id=' . $post['id']);
+                $a->setAttribute('href', 'admin/module=Topic&command=remove&id=' . $post['id']);
                 $a->setAttribute('onclick', 'return confirm(Language[0]);');
                 $a->addContent($language['main.admin.DeleteSubmit']);
                 $td->addContents($a, ' | ');
@@ -97,12 +97,12 @@ class ComponentTopic extends TemplateComponent
             if($this->user)
             {
                 $a = XMLToolbox::createElement('a');
-                $a->setAttribute('href', '/posts/' . $this['id'] . '/quote/' . $post['id']);
+                $a->setAttribute('href', 'posts/' . $this['id'] . '/quote/' . $post['id']);
                 $a->addContent($language['Modules.Topic.QuoteSubmit']);
                 $td->addContents($a, ' | ');
 
                 $a = XMLToolbox::createElement('a');
-                $a->setAttribute('href', '/characters/' . urlencode($post['poster']) . '/message');
+                $a->setAttribute('href', 'characters/' . urlencode($post['poster']) . '/message');
                 $a->addContent($language['Modules.Account.PMSubmit']);
                 $td->addContent($a);
             }
@@ -120,16 +120,16 @@ class ComponentTopic extends TemplateComponent
         if($this->admin)
         {
             $remove = XMLToolbox::createElement('a');
-            $remove->setAttribute('href', '/admin/module=Topic&command=remove&id=' . $this['id']);
+            $remove->setAttribute('href', 'admin/module=Topic&command=remove&id=' . $this['id']);
             $remove->setAttribute('onclick', 'return confirm(Language[0]);');
             $remove->addContent($language['main.admin.DeleteSubmit']);
 
             $openClose = XMLToolbox::createElement('a');
-            $openClose->setAttribute('href', '/admin/module=Topic&command=' . ($this['closed'] ? 'open' : 'close') . '&id=' . $this['id']);
+            $openClose->setAttribute('href', 'admin/module=Topic&command=' . ($this['closed'] ? 'open' : 'close') . '&id=' . $this['id']);
             $openClose->addContent($this['closed'] ? $language['Modules.Forum.OpenSubmit'] : $language['Modules.Forum.CloseSubmit']);
 
             $pinUnpin = XMLToolbox::createElement('a');
-            $pinUnpin->setAttribute('href', '/admin/module=Topic&command=' . ($this['pinned'] ? 'unpin' : 'pin') . '&id=' . $this['id']);
+            $pinUnpin->setAttribute('href', 'admin/module=Topic&command=' . ($this['pinned'] ? 'unpin' : 'pin') . '&id=' . $this['id']);
             $pinUnpin->addContent($this['pinned'] ? $language['Modules.Forum.UnpinSubmit'] : $language['Modules.Forum.PinSubmit']);
 
             // appends links and separators to root element

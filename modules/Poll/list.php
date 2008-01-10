@@ -25,7 +25,7 @@ if( User::hasAccess(3) )
 {
     // new poll form
     $form = $template->createComponent('AdminForm');
-    $form['action'] = '/admin/module=Poll&command=insert';
+    $form['action'] = 'admin/module=Poll&command=insert';
     $form['submit'] = $language['main.admin.InsertSubmit'];
     $form['id'] = 'pollForm';
 
@@ -39,7 +39,7 @@ $list['header'] = $language['Modules.Poll.PollsList'];
 
 // fetches polls list
 $list['list'] = $db->query('SELECT `id` AS `key`, `name` AS `value` FROM [polls]')->fetchAll(PDO::FETCH_KEY_PAIR);
-$list['link'] = '/polls/';
+$list['link'] = 'polls/';
 $list['rowID'] = 'pollID_';
 
 // admin actions

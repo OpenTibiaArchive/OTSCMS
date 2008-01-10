@@ -58,7 +58,7 @@ foreach( $db->query('SELECT `id`, `name`, `content` FROM [boards] WHERE `upperid
     // composes forum link
     $root = XMLToolbox::createDocumentFragment();
     $a = XMLToolbox::createElement('a');
-    $a->setAttribute('href', '/forum/' . $sub['id']);
+    $a->setAttribute('href', 'forum/' . $sub['id']);
     $a->addContent($sub['name']);
 
     $root->addContents($a, XMLToolbox::createElement('br'), $sub['content']);
@@ -73,14 +73,14 @@ foreach( $db->query('SELECT `id`, `name`, `content` FROM [boards] WHERE `upperid
 
         $a = XMLToolbox::createElement('a');
         $img = XMLToolbox::createElement('img');
-        $a->setAttribute('href', '/posts/' . $lastPost['id']);
+        $a->setAttribute('href', 'posts/' . $lastPost['id']);
         $img->setAttribute('src', $template['baseHref'] . 'images/arrow.png');
         $img->setAttribute('alt', $language['Modules.Forum.LastPost']);
         $a->addContent($img);
         $last->addContents($a, date($config['site.date_format'], $lastPost['date_time']), XMLToolbox::createElement('br'), $language['Modules.Forum.by'] . ' ');
 
         $a = XMLToolbox::createElement('a');
-        $a->setAttribute('href', '/characters/' . urlencode($lastPost['poster']) );
+        $a->setAttribute('href', 'characters/' . urlencode($lastPost['poster']) );
         $a->addContent($lastPost['poster']);
         $last->addContent($a);
     }
@@ -101,7 +101,7 @@ if( User::hasAccess(3) )
 {
     // new sub-board form
     $form = $template->createComponent('AdminForm');
-    $form['action'] = '/admin/module=Forum&command=insert&board[upperid]=' . (int) $id;
+    $form['action'] = 'admin/module=Forum&command=insert&board[upperid]=' . (int) $id;
     $form['submit'] = $language['main.admin.InsertSubmit'];
     $form['id'] = 'forumForm';
 
@@ -119,7 +119,7 @@ if($id)
     // pagination if required
     $pages = $template->createComponent('Pages');
     $pages['page'] = $page;
-    $pages['link'] = '/forum/' . $id;
+    $pages['link'] = 'forum/' . $id;
 
     // counts of pages
     $count = $db->query('SELECT COUNT(`id`) / ' . $config['forum.limit'] . ' AS `count` FROM [posts] WHERE `istopic` = 1 AND `upperid` = ' . $id)->fetch();

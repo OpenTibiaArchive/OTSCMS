@@ -24,7 +24,7 @@ $link = new CMS_Link( (int) InputData::read('id') );
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Links&command=update&id=' . $link['id'];
+$form['action'] = 'admin/module=Links&command=update&id=' . $link['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 $form['id'] = 'linkForm';
 

@@ -44,7 +44,7 @@ foreach( $ots->getInstantsList() as $spell)
 
 // puts spells into template
 $list['list'] = $temp;
-$list['link'] = '/spells/instants/';
+$list['link'] = 'spells/instants/';
 
 // composes list of rune spells
 $list = $template->createComponent('ItemsList');
@@ -71,7 +71,7 @@ foreach( $ots->getRunesList() as $spell)
 
 // puts spells into template
 $list['list'] = $temp;
-$list['link'] = '/spells/runes/';
+$list['link'] = 'spells/runes/';
 
 // composes list of conjure spells
 $list = $template->createComponent('ItemsList');
@@ -98,6 +98,6 @@ foreach( $ots->getConjuresList() as $spell)
 
 // puts spells into template
 $list['list'] = $temp;
-$list['link'] = '/spells/conjures/';
+$list['link'] = 'spells/conjures/';
 
 ?>

@@ -46,7 +46,7 @@ class ComponentForumTrace extends TemplateComponent
 
         // first step
         $a = XMLToolbox::createElement('a');
-        $a->setAttribute('href', '/forum/');
+        $a->setAttribute('href', 'forum/');
         $a->addContent($language['main.forum']);
         $div->addContent($a);
 
@@ -54,7 +54,7 @@ class ComponentForumTrace extends TemplateComponent
         foreach( array_reverse($path) as $step)
         {
             $a = XMLToolbox::createElement('a');
-            $a->setAttribute('href', '/forum/' . $step['id']);
+            $a->setAttribute('href', 'forum/' . $step['id']);
             $a->addContent($step['name']);
             $div->addContents(' ', XMLToolbox::createEntityReference('raquo'), ' ', $a);
         }

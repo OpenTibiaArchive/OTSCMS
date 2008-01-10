@@ -26,7 +26,7 @@ $poll = new CMS_Poll( (int) InputData::read('id') );
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Poll&command=update&id=' . $poll['id'];
+$form['action'] = 'admin/module=Poll&command=update&id=' . $poll['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 $form['id'] = 'pollForm';
 

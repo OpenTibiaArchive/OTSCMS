@@ -21,7 +21,7 @@
 
 // guild request form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin.php?modeule=Guilds&command=send&id=' . InputData::read('id');
+$form['action'] = 'admin.php?modeule=Guilds&command=send&id=' . InputData::read('id');
 $form['submit'] = $language['Modules.Guilds.RequestSubmit'];
 
 $players = array();

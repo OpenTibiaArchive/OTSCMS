@@ -40,7 +40,7 @@ if( is_numeric($gender) )
 
 if( is_numeric($vocation) )
 {
-    $vocation = $language['main.vocation' . $vocation];
+    $vocation = $ots->getVocationName($vocation);
 }
 
 $name = $gender . '.' . $vocation;
@@ -55,7 +55,7 @@ profileID = ' . $profile['id'] . ';
 
 // settings form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Character&command=set&id=' . $profile['id'];
+$form['action'] = 'admin/module=Character&command=set&id=' . $profile['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 $form['id'] = 'profileForm';
 
@@ -153,7 +153,7 @@ $list['list'] = $containers;
 
 // new item insertion form
 $new = $template->createComponent('AdminForm');
-$new['action'] = '/admin/module=Character&command=push&id=' . $profile['id'];
+$new['action'] = 'admin/module=Character&command=push&id=' . $profile['id'];
 $new['submit'] = $language['main.admin.InsertSubmit'];
 $new['id'] = 'containerForm';
 $new->addField('container[content]', ComponentAdminForm::FieldSelect, $language['Modules.Character.ContainerName'], array('options' => $items) );

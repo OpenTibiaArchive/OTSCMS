@@ -30,7 +30,7 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
 
 // guild creation form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Guilds&command=append&id=' . $guild->id;
+$form['action'] = 'admin/module=Guilds&command=append&id=' . $guild->id;
 $form['submit'] = $language['Modules.Guilds.InviteSubmit'];
 
 $form->addField('character', ComponentAdminForm::FieldText, $language['Modules.Guilds.InviteCharacter']);

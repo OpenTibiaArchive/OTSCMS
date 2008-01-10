@@ -51,7 +51,7 @@ class ComponentPollVoting extends TemplateComponent
         {
             $root = XMLToolbox::createElement('form');
             $root->setAttribute('id', 'pollForm');
-            $root->setAttribute('action', '/vote/');
+            $root->setAttribute('action', 'vote/');
             $root->setAttribute('method', 'post');
             $root->addContent($table);
         }

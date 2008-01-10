@@ -29,7 +29,7 @@ $row->eMail = $account['email'];
 // checks if new password is set
 if( trim($account['password']) )
 {
-    $row->password = $config['system.use_md5'] ? md5($account['password']) : $account['password'];
+    $row->password = $config['system.md5'] ? md5($account['password']) : $account['password'];
 }
 
 $row->save();

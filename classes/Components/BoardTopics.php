@@ -90,7 +90,7 @@ class ComponentBoardTopics extends TemplateComponent
 
             // topic link
             $a = XMLToolbox::createElement('a');
-            $a->setAttribute('href', '/posts/' . $topic['id']);
+            $a->setAttribute('href', 'posts/' . $topic['id']);
             $a->addContent($topic['name']);
 
             // topic closed
@@ -105,7 +105,7 @@ class ComponentBoardTopics extends TemplateComponent
             // author
             $td = XMLToolbox::createElement('td');
             $a = XMLToolbox::createElement('a');
-            $a->setAttribute('href', '/characters/' . urlencode($topic['poster']) );
+            $a->setAttribute('href', 'characters/' . urlencode($topic['poster']) );
             $a->addContent($topic['poster']);
             $td->addContent($a);
             $row->addContent($td);
@@ -125,14 +125,14 @@ class ComponentBoardTopics extends TemplateComponent
             {
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
-                $a->setAttribute('href', '/posts/' . $topic['id']);
+                $a->setAttribute('href', 'posts/' . $topic['id']);
                 $img->setAttribute('src', $this->owner['baseHref'] . 'images/arrow.png');
                 $img->setAttribute('alt', $language['Modules.Forum.LastPost']);
                 $a->addContent($img);
                 $td->addContents($a, date( $config['site.date_format'], $lastPost['date_time']), XMLToolbox::createElement('br'), $language['Modules.Forum.by'] . ' ');
 
                 $a = XMLToolbox::createElement('a');
-                $a->setAttribute('href', '/characters/' . urlencode($lastPost['poster']) );
+                $a->setAttribute('href', 'characters/' . urlencode($lastPost['poster']) );
                 $a->addContent($lastPost['poster']);
                 $td->addContent($a);
             }
@@ -151,20 +151,20 @@ class ComponentBoardTopics extends TemplateComponent
 
                 // remove topic
                 $a = XMLToolbox::createElement('a');
-                $a->setAttribute('href', '/admin/module=Topic&command=remove&id=' . $topic['id']);
+                $a->setAttribute('href', 'admin/module=Topic&command=remove&id=' . $topic['id']);
                 $a->setAttribute('onclick', 'if( confirm(Language[0]) ) { return pageForum.Delete(' . $topic['id'] . '); } else { return false; }');
                 $a->addContent($language['main.admin.DeleteSubmit']);
                 $td->addContents($a, ' | ');
 
                 // pin/unpin
                 $a = XMLToolbox::createElement('a');
-                $a->setAttribute('href', '/admin/module=Topic&command=' . ($topic['pinned'] ? 'unpin' : 'pin') . '&id=' . $topic['id']);
+                $a->setAttribute('href', 'admin/module=Topic&command=' . ($topic['pinned'] ? 'unpin' : 'pin') . '&id=' . $topic['id']);
                 $a->addContent($language['Modules.Forum.' . ($topic['pinned'] ? 'Unpin' : 'Pin') . 'Submit']);
                 $td->addContents($a, ' | ');
 
                 // open/close
                 $a = XMLToolbox::createElement('a');
-                $a->setAttribute('href', '/admin/module=Topic&command=' . ($topic['closed'] ? 'open' : 'close') . '&id=' . $topic['id']);
+                $a->setAttribute('href', 'admin/module=Topic&command=' . ($topic['closed'] ? 'open' : 'close') . '&id=' . $topic['id']);
                 $a->addContent($language['Modules.Forum.' . ($topic['closed'] ? 'Open' : 'Close') . 'Submit']);
                 $td->addContent($a);
 

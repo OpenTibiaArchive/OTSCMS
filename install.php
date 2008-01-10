@@ -424,7 +424,6 @@ if($matches)
 <form action="install.php" method="post" enctype="multipart/form-data">
 <input type="hidden" name="command" value="account" />
 <input type="hidden" name="db[type]" value="<?php echo $db['type']; ?>" />
-<input type="hidden" name="mapfile" value="<?php echo isset($mapfile) ? $mapfile : 'map.otbm'; ?>" />
 <?php if( isset($online['name']) ): ?>
 <input type="hidden" name="online[name]" value="<?php echo $online['name']; ?>" />
 <?php endif; ?>
@@ -508,6 +507,18 @@ if($matches)
         <td class="formRight">
             <label><input type="radio" name="uses_md5" value="1"<?php echo isset($uses_md5) && $uses_md5 ? ' checked="checked"': ''; ?> />Enable</label><br />
             <label><input type="radio" name="uses_md5" value="0"<?php echo isset($uses_md5) && $uses_md5 ? '': ' checked="checked"'; ?> />Disable</label><br />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">data/ directory path:</td>
+        <td class="formRight">
+            <input type="text" name="data_directory" value="/path/to/data/" />
+        </td>
+    </tr>
+    <tr>
+        <td class="formLeft">Map filename:</td>
+        <td class="formRight">
+            <input type="text" name="mapfile" value="<?php echo isset($mapfile) ? $mapfile : 'map.otbm'; ?>" />
         </td>
     </tr>
     <tr>
@@ -607,6 +618,7 @@ if( !isset($_GET['advanced']) )
 <input type="hidden" name="db[cms_prefix]" value="<?php echo $db['cms_prefix']; ?>" />
 <input type="hidden" name="db[ots_prefix]" value="<?php echo $db['ots_prefix']; ?>" />
 <input type="hidden" name="mapfile" value="<?php echo $_POST['mapfile']; ?>" />
+<input type="hidden" name="data_directory" value="<?php echo $_POST['data_directory']; ?>" />
 <input type="hidden" name="del_install" value="<?php echo isset($_POST['del_install']) && $_POST['del_install'] ? '1' : '0'; ?>" />
 <input type="hidden" name="uses_md5" value="<?php echo $_POST['uses_md5']; ?>" />
 <?php if( isset($_POST['online']['name']) ): ?>
@@ -774,7 +786,7 @@ returned:<br />
                     }
 
                     // creates GM character
-                    $player = OTS_Player();
+                    $player = new OTS_Player();
                     $player->account = $account;
                     $player->group = $group;
                     $player->name = $_POST['gm_name'];
@@ -891,7 +903,7 @@ Mainly great thans to <b>Foziw</b> for the domain and <b>Yorick</b> for forum!
                 $query->execute( array(':name' => 'directories.modules', ':content' => 'modules/') );
                 $query->execute( array(':name' => 'directories.skins', ':content' => 'skins/') );
                 $query->execute( array(':name' => 'directories.images', ':content' => 'images/') );
-                $query->execute( array(':name' => 'directories.data', ':content' => '/path/to/your/otserv/data/') );
+                $query->execute( array(':name' => 'directories.data', ':content' => $_POST['data_directory']) );
                 $query->execute( array(':name' => 'cookies.prefix', ':content' => 'otscms_') );
                 $query->execute( array(':name' => 'cookies.path', ':content' => '/') );
                 $query->execute( array(':name' => 'cookies.domain', ':content' => '.example.com') );
@@ -992,9 +1004,6 @@ Mainly great thans to <b>Foziw</b> for the domain and <b>Yorick</b> for forum!
                 $sql->exec('INSERT INTO [download] (`name`, `content`, `binary`, `file`) VALUES (\'OTSCMS Lite\', \'Latest <span style="font-weight: bold;">OTSCMS Lite</span>.<br />
 <br />
 Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, \'http://www.otscms.com/latest.php/lite\')');
-                $sql->exec('INSERT INTO [download] (`name`, `content`, `binary`, `file`) VALUES (\'OTSCMS Easy\', \'Latest <span style="font-weight: bold;">OTSCMS Easy</span>.<br />
-<br />
-Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, \'http://www.otscms.com/latest.php/easy\')');
 
                 $sql->exec('INSERT INTO [profiles] (`name`, `health`, `healthmax`, `direction`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `cap`) VALUES (\'*.*\', 250, 250, 0, 0, 30, 50, 20, 40, 0, 0, 0, 0, 0, 220)');
                 $sql->exec('INSERT INTO [profiles] (`name`, `looktype`) VALUES (\'' . POT::SEX_FEMALE . '.*\', 136)');
@@ -1130,14 +1139,15 @@ $config[\'db\'][\'ots_prefix\'] = \'' . $db['ots_prefix'] . '\';
                 // saving friendly-URLs wrapper
                 file_put_contents('.htaccess', '<IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteCond %{REQUEST_URI} !^/ajax.php
-RewriteCond %{REQUEST_URI} !^/index.php
-RewriteCond %{REQUEST_URI} !^/install.php
-RewriteCond %{REQUEST_URI} !^/update.php
-RewriteCond %{REQUEST_URI} !^/images/
-RewriteCond %{REQUEST_URI} !^/skins/
-RewriteCond %{REQUEST_URI} !^/fckeditor/
-RewriteRule ^(.*)$ /index.php?run=$1 [QSA,L]
+RewriteBase ' . $_SERVER['REQUEST_URI'] . '
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'ajax.php
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'index.php
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'install.php
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'update.php
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'images/
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'skins/
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'fckeditor/
+RewriteRule ^(.*)$ index.php?run=$1 [QSA,L]
 </IfModule>
 ');
                 echo '<span class="bold">+ Configuration saved in config.php</span><br />' . "\n";

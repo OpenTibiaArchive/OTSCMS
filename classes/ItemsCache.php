@@ -62,8 +62,8 @@ class ItemsCache implements IOTS_ItemsCache
         foreach($cache as $id => $record)
         {
             $node = new OTS_FileNode();
-            $node->setType($record['name']);
-            $node->setBuffer($record['content']);
+            $node->type = $record['name'];
+            $node->buffer = $record['content'];
 
             $nodes[$id] = $node;
 
@@ -82,13 +82,13 @@ class ItemsCache implements IOTS_ItemsCache
             // sets child relative
             if($record['parent'])
             {
-                $nodes[ $record['parent'] ]->setChild($node);
+                $nodes[ $record['parent'] ]->child = $node;
             }
 
             // sets sibling relative
             if($record['previous'])
             {
-                $nodes[ $record['previous'] ]->setNext($node);
+                $nodes[ $record['previous'] ]->next = $node;
             }
         }
 
@@ -116,11 +116,11 @@ class ItemsCache implements IOTS_ItemsCache
         while($root)
         {
             // checks if we have to save this node - skip not used by OTSCMS
-            if( in_array( $root->getType(), $types) )
+            if( in_array($root->type, $types) )
             {
-                $insert->execute( array(':key' => $md5, ':id' => $i, ':name' => $root->getType(), ':content' => $root->getBuffer(), ':parent' => $parent, ':previous' => $previous) );
+                $insert->execute( array(':key' => $md5, ':id' => $i, ':name' => $root->type, ':content' => $root->buffer, ':parent' => $parent, ':previous' => $previous) );
 
-                $child = $root->getChild();
+                $child = $root->child;
 
                 // saves child node
                 if( isset($child) )
@@ -134,7 +134,7 @@ class ItemsCache implements IOTS_ItemsCache
                 $i++;
             }
 
-            $root = $root->getNext();
+            $root = $root->next;
         }
     }
 
@@ -150,10 +150,10 @@ class ItemsCache implements IOTS_ItemsCache
         {
             // composes type info from cache
             $type = new OTS_ItemType($item['id']);
-            $type->setName($item['name']);
-            $type->setType($item['type']);
-            $type->setGroup($item['group']);
-            $items[] = $type;
+            $type->name = $item['name'];
+            $type->type = $item['type'];
+            $type->group = $item['group'];
+            $items[ $item['id'] ] = $type;
         }
 
         return $items;
@@ -167,10 +167,10 @@ class ItemsCache implements IOTS_ItemsCache
         foreach($items as $item)
         {
             // leave only those which we need
-            if( $item->isPickupable() && strlen( $item->getName() ) > 0)
+            if($item->pickupable && strlen($item->name) > 0)
             {
                 // saves item type
-                $cache->execute( array(':key' => $md5, ':id' => $item->getId(), ':name' => $item->getName(), ':group' => $item->getGroup(), ':type' => $item->getType() ) );
+                $cache->execute( array(':key' => $md5, ':id' => $item->id, ':name' => $item->name, ':group' => $item->group, ':type' => $item->type) );
             }
         }
     }

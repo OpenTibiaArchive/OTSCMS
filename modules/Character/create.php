@@ -31,7 +31,7 @@ if( count($account) >= $config['system.account_limit'])
 
 // character creation form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/characters/insert';
+$form['action'] = 'characters/insert';
 $form['submit'] = $language['Modules.Character.InsertSubmit'];
 
 $form->addField('character[name]', ComponentAdminForm::FieldText, $language['Modules.Character.Name']);

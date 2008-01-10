@@ -31,7 +31,7 @@ if(!$character->loaded || $character->account->id != User::$number)
 
 // comment edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/characters/' . $character->id . '/save';
+$form['action'] = 'characters/' . $character->id . '/save';
 $form['submit'] = $language['Modules.Character.ChangeSubmit'];
 $form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Character.Name'], $character->name);
 $form->addField('character[comment]', ComponentAdminForm::FieldArea, $language['Modules.Character.Comment'], $character->getCustomField('comment') );

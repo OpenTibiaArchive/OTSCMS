@@ -21,7 +21,7 @@
 
 // guild creation form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/guild/insert';
+$form['action'] = 'guild/insert';
 $form['submit'] = $language['Modules.Guilds.CreateSubmit'];
 
 $players = array();

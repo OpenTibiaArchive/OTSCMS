@@ -33,7 +33,7 @@ if($account->eMail != trim( InputData::read('email') ) )
 else
 {
     // we need to re-create MD5 password
-    if($config['system.use_md5'])
+    if($config['system.md5'])
     {
         $password = substr( md5( uniqid( rand(), true) ), 1, 8);
         $account->password = md5($password);

@@ -23,7 +23,7 @@ $template->addJavaScript('settings');
 
 // control panel
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Settings&command=update';
+$form['action'] = 'admin/module=Settings&command=update';
 $form['submit'] = $language['Modules.Settings.UpdateSubmit'];
 $form['id'] = 'settingsForm';
 
@@ -60,7 +60,7 @@ $groups = array();
 // groups list
 foreach( new OTS_Groups_List() as $group)
 {
-    $groups[ $group->getId() ] = $group->getName();
+    $groups[$group->id] = $group->name;
 }
 
 // otserv settings

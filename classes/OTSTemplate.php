@@ -35,7 +35,7 @@ class OTSTemplate extends DataContainer
     public function __construct($skin)
     {
         $this->skin = $skin;
-        $this['baseHref'] = '/' . $this->skin;
+        $this['baseHref'] = $this->skin;
     }
 
     // loads component class as component

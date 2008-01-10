@@ -41,7 +41,7 @@ foreach($guild as $guildRank)
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Guilds&command=update&id=' . $member->id;
+$form['action'] = 'admin/module=Guilds&command=update&id=' . $member->id;
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
 $form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Guilds.EditCharacter'], $member->name);

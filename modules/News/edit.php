@@ -24,7 +24,7 @@ $news = new CMS_News( (int) InputData::read('id') );
 
 // new news form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=News&command=update&id=' . $news['id'];
+$form['action'] = 'admin/module=News&command=update&id=' . $news['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 $form['id'] = 'newsForm';
 

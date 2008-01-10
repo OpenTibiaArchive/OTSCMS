@@ -31,7 +31,7 @@ if(!($extension = Toolbox::imageExists('Monsters/' . $name) ))
     throw new HandledException('NotToDisplay');
 }
 
-$voices = $monster->getVoices();
+$voices = $monster->voices;
 
 // composes quotes
 foreach($voices as $index => $voice)
@@ -39,29 +39,18 @@ foreach($voices as $index => $voice)
     $voices[$index] = '<span style="font-style: italic;">&quot;' . $voice . '&quot;</span>';
 }
 
-$loot = $monster->getItems();
+$loot = $monster->items;
+$names = array();
 
 if( !empty($loot) )
 {
-    $names = array();
-
-    foreach( $ots->getItemsList() as $item)
-    {
-        $names[$item->id] = $item->name;
-    }
-
     // replaces ids by names
-    foreach($loot as $index => $item)
+    foreach($loot as $item)
     {
         // checks if there is name for such item
-        if( isset($names[$item]) )
+        if( !isset($names[$item->id]) )
         {
-            $loot[$index] = $names[$item];
-        }
-        // otherwise hide that item
-        else
-        {
-            unset($loot[$index]);
+            $names[$item->id] = $item->name;
         }
     }
 }
@@ -89,8 +78,8 @@ $data['health'] = $monster->health;
 $data['voices'] = empty($voices) ? '' : XMLToolbox::inparse( implode(', ', $voices) );
 $data['defenses'] = implode(', ', $defenses);
 $data['attacks'] = empty($attacks) ? '' : XMLToolbox::inparse( implode(', ', $attacks) );
-$data['loot'] = implode(', ', $loot);
-$data['image'] = '/' . str_replace('\\', '/', $config['directories.images']) . 'Monsters/' . $name . $extension;
+$data['loot'] = implode(', ', $names);
+$data['image'] = str_replace('\\', '/', $config['directories.images']) . 'Monsters/' . $name . $extension;
 
 // sets labels
 $data->addLabel('experience', $language['Modules.Library.MonsterExperience']);

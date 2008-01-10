@@ -110,7 +110,7 @@ class ComponentTableList extends TemplateComponent
 
                     // action link
                     $a = XMLToolbox::createElement('a');
-                    $a->setAttribute('href', '/admin/module=' . $this->module . '&command=' . $action . '&id=' . $item['id']);
+                    $a->setAttribute('href', 'admin/module=' . $this->module . '&command=' . $action . '&id=' . $item['id']);
                     // remove action needs confirmation
                     $a->setAttribute('onclick', $action == 'remove' || $action == 'pop' ? 'if( confirm(Language[0]) ) { return page' . $this->module . '.' . $action . '(' . $item['id'] . '); } else { return false; }' : 'return page' . $this->module . '.' . $action . '(' . $item['id'] . ');');
                     $a->addContent($label);

@@ -25,13 +25,13 @@ $account->load( InputData::read('id') );
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Account&command=update&id=' . $account->id;
+$form['action'] = 'admin/module=Account&command=update&id=' . $account->id;
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
 // form fields
 $form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Account.AccountNumber'], $account->id);
 $form->addField('account[email]', ComponentAdminForm::FieldText, $language['Modules.Account.EMail'], $account->eMail);
-$form->addField('account[password]', ComponentAdminForm::FieldText, $language['Modules.Account.Password'], $config['system.use_md5'] ? '' : $account->password);
+$form->addField('account[password]', ComponentAdminForm::FieldText, $language['Modules.Account.Password'], $config['system.md5'] ? '' : $account->password);
 
 $characters = array();
 

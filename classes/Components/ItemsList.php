@@ -82,7 +82,7 @@ class ComponentItemsList extends TemplateComponent
 
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
-                $a->setAttribute('href', '/admin/module=' . $this->module . '&command=edit&id=' . $key);
+                $a->setAttribute('href', 'admin/module=' . $this->module . '&command=edit&id=' . $key);
                 $a->setAttribute('onclick', 'return page' . $this->module . '.edit(' . $key . ');');
                 $img->setAttribute('alt', $language['main.admin.EditSubmit']);
                 $img->setAttribute('src', $this->owner['baseHref'] . 'images/edit.gif');
@@ -91,7 +91,7 @@ class ComponentItemsList extends TemplateComponent
 
                 $a = XMLToolbox::createElement('a');
                 $img = XMLToolbox::createElement('img');
-                $a->setAttribute('href', '/admin/module=' . $this->module . '&command=remove&id=' . $key);
+                $a->setAttribute('href', 'admin/module=' . $this->module . '&command=remove&id=' . $key);
                 $a->setAttribute('onclick', 'if( confirm(Language[0]) ) { return page' . $this['module'] . '.remove(' . $key . '); } else { return false; }');
                 $img->setAttribute('alt', $language['main.admin.DeleteSubmit']);
                 $img->setAttribute('src', $this->owner['baseHref'] . 'images/delete.gif');

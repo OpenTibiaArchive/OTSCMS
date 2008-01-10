@@ -24,7 +24,7 @@ $board = new CMS_Board( (int) InputData::read('id') );
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Forum&command=update&id=' . $board['id'];
+$form['action'] = 'admin/module=Forum&command=update&id=' . $board['id'];
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 $form['id'] = 'forumForm';
 

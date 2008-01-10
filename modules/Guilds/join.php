@@ -21,7 +21,7 @@
 
 // guild creation form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/guild/add';
+$form['action'] = 'guild/add';
 $form['submit'] = $language['Modules.Guilds.JoinSubmit'];
 
 $guild = new OTS_Guild();
