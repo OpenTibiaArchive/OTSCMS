@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 */
 
 // checks characters limit
-$account = $ots->createObject('Account');
+$account = new OTS_Account();
 $account->load(User::$number);
 if( count($account) >= $config['system.account_limit'])
 {
@@ -42,12 +42,7 @@ $form->addField('character[vocation]', ComponentAdminForm::FieldRadio, $language
 if(!$config['system.rook.enabled'])
 {
     // reads all spawns
-    $cache = new OTBMCache($db);
-    $otbm = new OTS_OTBMFile();
-    $otbm->setCacheDriver($cache);
-    $otbm->loadFile($config['directories.data'] . 'world/' . $config['system.map']);
-
-    $form->addField('character[town]', ComponentAdminForm::FieldSelect, $language['Modules.Character.City'], array('options' => $otbm->getTownsList() ) );
+    $form->addField('character[town]', ComponentAdminForm::FieldSelect, $language['Modules.Character.City'], array('options' => $ots->getMap() ) );
 }
 
 ?>

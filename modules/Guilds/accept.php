@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$guild = $ots->createObject('Guild');
+$guild = new OTS_Guild();
 $guild->load( Session::read('guild') );
 
 // if not a gamemaster checks if user is a leader
@@ -30,12 +30,12 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
 
 // adds player to guild with default rank
 new RequestsDriver($guild);
-$player = $ots->createObject('Player');
+$player = new OTS_Player();
 $player->load( InputData::read('id') );
 $guild->acceptRequest($player);
 
 // moves to guild page
-InputData::write('id', $guild->getId() );
+InputData::write('id', $guild->id);
 OTSCMS::call('Guilds', 'display');
 
 ?>

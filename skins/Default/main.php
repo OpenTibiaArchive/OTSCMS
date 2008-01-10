@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -231,7 +231,7 @@ if( User::hasAccess(3) )
 <?php endforeach; ?>
             </div>
             <div id="pageFooter">
-                Powered by <a href="http://www.otscms.com/" class="outLink">OTSCMS</a> v <?php echo $config['version']; ?>; Copyright &copy; 2005 - 2007 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.<br />
+                Powered by <a href="http://www.otscms.com/" class="outLink">OTSCMS</a> v <?php echo $config['version']; ?>; Copyright &copy; 2005 - 2008 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.<br />
 <a class="outLink" href="http://otserv-aac.info/">
     <img alt="This site was smoked" src="http://otserv-aac.info/pot.png"/>
 </a>

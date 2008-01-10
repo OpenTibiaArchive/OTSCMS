@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,20 +20,20 @@
 */
 
 // loads data in correct order
-$character = $ots->createObject('Player');
+$character = new OTS_Player();
 $character->load( InputData::read('id') );
 
 // checks if the character that user wants to edit is his/her
-if( !$character->isLoaded() || $character->getAccount()->getId() != User::$number)
+if(!$character->loaded || $character->account->id != User::$number)
 {
     throw new HandledException('NotOwner');
 }
 
 // comment edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/characters/' . $character->getId() . '/save';
+$form['action'] = '/characters/' . $character->id . '/save';
 $form['submit'] = $language['Modules.Character.ChangeSubmit'];
-$form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Character.Name'], $character->getName() );
+$form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Character.Name'], $character->name);
 $form->addField('character[comment]', ComponentAdminForm::FieldArea, $language['Modules.Character.Comment'], $character->getCustomField('comment') );
 
 ?>

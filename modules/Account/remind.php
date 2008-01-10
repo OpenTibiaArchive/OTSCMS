@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,13 +20,13 @@
 */
 
 // loads HTTP data in correct order
-$account = $ots->createObject('Account');
+$account = new OTS_Account();
 $account->load( InputData::read('number') );
 
 $message = $template->createComponent('Message');
 
 // checks if this e-mail was used for given account
-if( $account->getEMail() != trim( InputData::read('email') ) )
+if($account->eMail != trim( InputData::read('email') ) )
 {
     $message['message'] = $language['Modules.Account.RemindMail_MissMatch'];
 }
@@ -36,12 +36,12 @@ else
     if($config['system.use_md5'])
     {
         $password = substr( md5( uniqid( rand(), true) ), 1, 8);
-        $account->setPassword( md5($password) );
+        $account->password = md5($password);
         $account->save();
     }
     else
     {
-        $password = $account->getPassword();
+        $password = $account->password;
     }
 
     // sends password
@@ -49,7 +49,7 @@ else
     {
         try
         {
-            Mail::send( $account->getEMail(), $language['Modules.Account.RemindMail_Title'], $language['Modules.Account.SignupMail_Content'] . ': '.$password);
+            Mail::send($account->eMail, $language['Modules.Account.RemindMail_Title'], $language['Modules.Account.SignupMail_Content'] . ': '.$password);
             $message['place'] = $language['Modules.Account.SignupMail_Sent'];
         }
         // if failed then tell user about it

@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,21 +39,15 @@ foreach($voices as $index => $voice)
     $voices[$index] = '<span style="font-style: italic;">&quot;' . $voice . '&quot;</span>';
 }
 
-$loot = $monster->getLoot();
+$loot = $monster->getItems();
 
 if( !empty($loot) )
 {
     $names = array();
 
-    // loads items.xml file
-    $cache = new ItemsCache($db);
-    $items = new OTS_ItemsList();
-    $items->setCacheDriver($cache);
-    $items->loadItems($config['directories.data'] . 'items');
-
-    foreach($items as $item)
+    foreach( $ots->getItemsList() as $item)
     {
-        $names[ $id->getId() ] = $item->getName();
+        $names[$item->id] = $item->name;
     }
 
     // replaces ids by names
@@ -72,14 +66,14 @@ if( !empty($loot) )
     }
 }
 
-$defenses = array_merge( $monster->getDefenses(), $monster->getImmunities() );
+$defenses = array_merge($monster->defenses, $monster->immunities);
 
 foreach($defenses as $index => $defense)
 {
     $defemses[$index] = ucfirst($defense);
 }
 
-$attacks = $monster->getAttacks();
+$attacks = $monster->attacks;
 
 foreach($attacks as $index => $attack)
 {
@@ -89,9 +83,9 @@ foreach($attacks as $index => $attack)
 // puts informations into monsters data
 $data = $template->createComponent('LibraryPage');
 $data['header'] = $language['Modules.Library.MonsterInformation'];
-$data['name'] = $monster->getName();
-$data['experience'] = $monster->getExperience();
-$data['health'] = $monster->getHealth();
+$data['name'] = $monster->name;
+$data['experience'] = $monster->experience;
+$data['health'] = $monster->health;
 $data['voices'] = empty($voices) ? '' : XMLToolbox::inparse( implode(', ', $voices) );
 $data['defenses'] = implode(', ', $defenses);
 $data['attacks'] = empty($attacks) ? '' : XMLToolbox::inparse( implode(', ', $attacks) );

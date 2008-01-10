@@ -1,4 +1,4 @@
-OTSCMS uses POT (PHP OTServ Toolkit) in version 0.0.8
+OTSCMS uses POT (PHP OTServ Toolkit) in version 0.1.0+SVN
     http://www.otserv-aac.info/pot/
 
 POT is GNU/LGPGv3 licensed.

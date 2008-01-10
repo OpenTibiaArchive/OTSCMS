@@ -7,7 +7,7 @@
 
 /**
  * @package POT
- * @version 0.0.8
+ * @version 0.1.0+SVN
  * @author Wrzasq <wrzasq@gmail.com>
  * @copyright 2007 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
@@ -17,7 +17,13 @@
  * OTServ guild rank abstraction.
  * 
  * @package POT
- * @version 0.0.8
+ * @version 0.1.0+SVN
+ * @property string $name Rank title.
+ * @property OTS_Guild $guild Guild in which rank exists.
+ * @property int $level Guild access level.
+ * @property-read bool $loaded Loaded state check.
+ * @property-read int $id Row ID.
+ * @property-read OTS_Players_List $playersList List of members with this rank.
  */
 class OTS_GuildRank extends OTS_Base_DAO implements IteratorAggregate, Countable
 {
@@ -147,6 +153,7 @@ class OTS_GuildRank extends OTS_Base_DAO implements IteratorAggregate, Countable
 /**
  * Returns guild of this rank.
  * 
+ * @version 0.1.0+SVN
  * @return OTS_Guild Guild of this rank.
  * @throws E_OTS_NotLoaded If rank is not loaded.
  */
@@ -157,7 +164,7 @@ class OTS_GuildRank extends OTS_Base_DAO implements IteratorAggregate, Countable
             throw new E_OTS_NotLoaded();
         }
 
-        $guild = POT::getInstance()->createObject('Guild');
+        $guild = new OTS_Guild();
         $guild->load($this->data['guild_id']);
         return $guild;
     }
@@ -254,7 +261,7 @@ class OTS_GuildRank extends OTS_Base_DAO implements IteratorAggregate, Countable
 /**
  * Reads all players who has this rank set.
  * 
- * @version 0.0.5
+ * @version 0.1.0+SVN
  * @return array List of members.
  * @throws E_OTS_NotLoaded If rank is not loaded.
  * @deprecated 0.0.5 Use getPlayersList().
@@ -271,7 +278,7 @@ class OTS_GuildRank extends OTS_Base_DAO implements IteratorAggregate, Countable
         foreach( $this->db->query('SELECT ' . $this->db->fieldName('id') . ' FROM ' . $this->db->tableName('players') . ' WHERE ' . $this->db->fieldName('rank_id') . ' = ' . $this->data['id'])->fetchAll() as $player)
         {
             // creates new object
-            $object = POT::getInstance()->createObject('Player');
+            $object = new OTS_Player();
             $object->load($player['id']);
             $players[] = $object;
         }
@@ -284,7 +291,7 @@ class OTS_GuildRank extends OTS_Base_DAO implements IteratorAggregate, Countable
  * 
  * In difference to {@link OTS_GuildRank::getPlayers() getPlayers() method} this method returns filtered {@link OTS_Players_List OTS_Players_List} object instead of array of {@link OTS_Player OTS_Player} objects. It is more effective since OTS_Player_List doesn't perform all rows loading at once.
  * 
- * @version 0.0.5
+ * @version 0.1.0+SVN
  * @since 0.0.5
  * @return OTS_Players_List List of players with current rank.
  * @throws E_OTS_NotLoaded If rank is not loaded.
@@ -299,11 +306,11 @@ class OTS_GuildRank extends OTS_Base_DAO implements IteratorAggregate, Countable
         $ots = POT::getInstance();
 
         // creates filter
-        $filter = $ots->createFilter();
+        $filter = new OTS_SQLFilter();
         $filter->compareField('rank_id', (int) $this->data['id']);
 
         // creates list object
-        $list = $ots->createObject('Players_List');
+        $list = new OTS_Players_List();
         $list->setFilter($filter);
 
         return $list;
@@ -355,8 +362,97 @@ class OTS_GuildRank extends OTS_Base_DAO implements IteratorAggregate, Countable
  */
     public function count()
     {
-        // count( $this->getPlayersList() ); will be slower
         return $this->getPlayersList()->count();
+    }
+
+/**
+ * Magic PHP5 method.
+ * 
+ * @version 0.1.0+SVN
+ * @since 0.1.0+SVN
+ * @param string $name Property name.
+ * @return mixed Property value.
+ * @throws OutOfBoundsException For non-supported properties.
+ */
+    public function __get($name)
+    {
+        switch($name)
+        {
+            case 'loaded':
+                return $this->isLoaded();
+
+            case 'id':
+                return $this->getId();
+
+            case 'name':
+                return $this->getName();
+
+            case 'guild':
+                return $this->getGuild();
+
+            case 'level':
+                return $this->getLevel();
+
+            case 'playersList':
+                return $this->getPlayersList();
+
+            default:
+                throw new OutOfBoundsException();
+        }
+    }
+
+/**
+ * Magic PHP5 method.
+ * 
+ * @version 0.1.0+SVN
+ * @since 0.1.0+SVN
+ * @param string $name Property name.
+ * @param mixed $value Property value.
+ * @throws OutOfBoundsException For non-supported properties.
+ */
+    public function __set($name, $value)
+    {
+        switch($name)
+        {
+            case 'name':
+                $this->setName($value);
+                break;
+
+            case 'guild':
+                $this->setGuild($value);
+                break;
+
+            case 'level':
+                $this->setLevel($value);
+                break;
+
+            default:
+                throw new OutOfBoundsException();
+        }
+    }
+
+/**
+ * Returns string representation of object.
+ * 
+ * If any display driver is currently loaded then it uses it's method. Else it returns rank name.
+ * 
+ * @version 0.1.0+SVN
+ * @since 0.1.0+SVN
+ * @return string String representation of object.
+ */
+    public function __toString()
+    {
+        $ots = POT::getInstance();
+
+        // checks if display driver is loaded
+        if( $ots->isDisplayDriverLoaded() )
+        {
+            return $ots->getDisplayDriver()->displayGuildRank($this);
+        }
+        else
+        {
+            return $this->getName();
+        }
     }
 }
 

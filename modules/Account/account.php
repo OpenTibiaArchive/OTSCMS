@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,13 +32,13 @@ $template->addJavaScript('character');
 $template->addJavaScript('user');
 
 // reads account information
-$account = $ots->createObject('Account');
+$account = new OTS_Account();
 $account->load(User::$number);
 
 // account metainfo table
 $data = $template->createComponent('TableData');
 $data['caption'] = $language['Modules.Account.AccountData'];
-$data['data'] = array($language['Modules.Account.AccountNumber'] => $account->getId() );
+$data['data'] = array($language['Modules.Account.AccountNumber'] => $account->id);
 
 // password change form
 $form = $template->createComponent('AdminForm');
@@ -77,18 +77,18 @@ foreach($account as $player)
 
     // delete link
     $delete = XMLToolbox::createElement('a');
-    $delete->setAttribute('href', '/characters/' . $player->getId() . '/delete');
-    $delete->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Account.DeleteConfirm'] . '\') ) { return pageCharacter.Delete(' . $player->getId() . '); } else { return false; }');
+    $delete->setAttribute('href', '/characters/' . $player->id . '/delete');
+    $delete->setAttribute('onclick', 'if( confirm(\'' . $language['Modules.Account.DeleteConfirm'] . '\') ) { return pageCharacter.Delete(' . $player->id . '); } else { return false; }');
     $delete->addContent($language['main.admin.DeleteSubmit']);
 
     // edit link
     $edit = XMLToolbox::createElement('a');
-    $edit->setAttribute('href', '/characters/' . $player->getId() . '/change');
+    $edit->setAttribute('href', '/characters/' . $player->id . '/change');
     $edit->addContent($language['main.admin.EditSubmit']);
 
     $root->addContents($delete, ' | ', $edit);
 
-    $characters[] = array('id' => $player->getId(), 'name' => $player->getName(), 'actions' => $root);
+    $characters[] = array('id' => $player->id, 'name' => $player->name, 'actions' => $root);
 }
 
 // reads account's characters

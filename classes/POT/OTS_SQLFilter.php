@@ -7,6 +7,7 @@
 
 /**
  * @package POT
+ * @version 0.1.0+SVN
  * @author Wrzasq <wrzasq@gmail.com>
  * @copyright 2007 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
@@ -16,6 +17,8 @@
  * SQL WHERE clause object.
  * 
  * @package POT
+ * @version 0.1.0+SVN
+ * @property-read array $tables List of tables used by this statement.
  */
 class OTS_SQLFilter extends OTS_Base_DAO
 {
@@ -86,6 +89,7 @@ class OTS_SQLFilter extends OTS_Base_DAO
  * 
  * Returned string can be easily inserted into SQL query.
  * 
+ * @version 0.1.0+SVN
  * @internal Magic PHP5 function.
  * @return string String WHERE clause.
  */
@@ -129,15 +133,7 @@ class OTS_SQLFilter extends OTS_Base_DAO
                 // left side
                 if($criterium['left'] instanceof OTS_SQLField)
                 {
-                    $table = $criterium['left']->getTable();
-
-                    // full table name
-                    if( !empty($table) )
-                    {
-                        $table = $this->db->tableName($table) . '.';
-                    }
-
-                    $where .= $table . $this->db->fieldName( $criterium['left']->getName() );
+                    $where .= $criterium['left']->__toString();
                 }
                 else
                 {
@@ -191,15 +187,7 @@ class OTS_SQLFilter extends OTS_Base_DAO
                 // right side
                 if($criterium['right'] instanceof OTS_SQLField)
                 {
-                    $table = $criterium['right']->getTable();
-
-                    // full table name
-                    if( !empty($table) )
-                    {
-                        $table = $this->db->tableName($table) . '.';
-                    }
-
-                    $where .= $table . $this->db->fieldName( $criterium['right']->getName() );
+                    $where .= $criterium['right']->__toString();
                 }
                 else
                 {
@@ -307,6 +295,27 @@ class OTS_SQLFilter extends OTS_Base_DAO
         }
 
         return $tables;
+    }
+
+/**
+ * Magic PHP5 method.
+ * 
+ * @version 0.1.0+SVN
+ * @since 0.1.0+SVN
+ * @param string $name Property name.
+ * @return mixed Property value.
+ * @throws OutOfBoundsException For non-supported properties.
+ */
+    public function __get($name)
+    {
+        switch($name)
+        {
+            case 'tables':
+                return $this->getTables();
+
+            default:
+                throw new OutOfBoundsException();
+        }
     }
 }
 

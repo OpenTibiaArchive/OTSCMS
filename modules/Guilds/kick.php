@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@
 */
 
 // loads player info
-$player = $ots->createObject('Player');
+$player = new OTS_Player();
 $player->load( InputData::read('id') );
-$rank = $player->getRank();
-$guild = $rank->getGuild();
+$rank = $player->rank;
+$guild = $rank->guild;
 
 // if not a gamemaster checks if user is a leader
 if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
@@ -32,18 +32,18 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
 }
 
 // checks user rank if he is not a leader
-if( $rank->getLevel() == 3)
+if($rank->level == 3)
 {
     throw new NoAccessException();
 }
 
 // kick user out
+$player->guildNick = '';
 $player->setRank();
-$player->setGuildNick('');
 $player->save();
 
 // moves to guild page
-InputData::write('id', $guild->getId() );
+InputData::write('id', $guild->id);
 OTSCMS::call('Guilds', 'display');
 
 ?>

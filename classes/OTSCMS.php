@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -175,14 +175,24 @@ class OTSCMS
             $config[ $setting['name'] ] = $setting['content'];
         }
 
+        // pre-sets cache drivers
+        $ots->setItemsCache( new ItemsCache($db) );
+        $ots->setMapCache( new OTBMCache($db) );
+
         // loads vocations
         $ots->loadVocations($config['directories.data'] . 'vocations.xml');
 
         // loads monsters list file
-        $ots->loadMonsters($config['directories.data'].'monster/');
+        $ots->loadMonsters($config['directories.data'] . 'monster/');
 
         // loads spells
-        $ots->loadSpells($config['directories.data'].'spells/spells.xml');
+        $ots->loadSpells($config['directories.data'] . 'spells/spells.xml');
+
+        // loads map
+        $ots->loadMap($config['directories.data'] . 'world/' . $config['system.map']);
+
+        // loads map
+        $ots->loadItems($config['directories.data'] . 'items');
 
         // sets current language
         if( InputData::read('language') )
@@ -317,10 +327,10 @@ class OTSCMS
                 try
                 {
                     // checks account ban
-                    $account = $ots->createObject('Account');
+                    $account = new OTS_Account();
                     $account->load( (int) Session::read('useraccount') );
 
-                    if( $account->isBanned() )
+                    if($account->banned)
                     {
                         throw new HandledException('AccountBlocked');
                     }

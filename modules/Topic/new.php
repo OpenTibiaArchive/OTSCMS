@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,14 +46,14 @@ else
     $post = '';
 }
 
-$account = $ots->createObject('Account');
+$account = new OTS_Account();
 $account->load(User::$number);
 
 // bb message editor
 $form = $template->createComponent('BBEditor');
 $form['action'] = '/admin/module=Topic&command=insert&bb[upperid]=' . $id . '&bb[istopic]=' . $newTopic;
 $form['fields'] = array('content' => $post);
-$form['characters'] = $account->getPlayersList();
+$form['characters'] = $account->playersList;
 $form->module = 'Topic';
 $form->adminActions = $newTopic && User::hasAccess(3);
 

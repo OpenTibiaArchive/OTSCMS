@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,11 +22,11 @@
 // loads data in correct order
 $character = InputData::read('character');
 
-$row = $ots->createObject('Player');
+$row = new OTS_Player();
 $row->load( InputData::read('id') );
 
 // checks if the character that user wants to edit is his/her
-if( !$row->isLoaded() || $row->getAccount()->getId() != User::$number)
+if(!$row->loaded || $row->account->id != User::$number)
 {
     throw new HandledException('NotOwner');
 }

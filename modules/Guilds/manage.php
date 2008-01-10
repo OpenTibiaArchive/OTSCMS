@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 $template->addJavaScript('guilds');
 
-$guild = $ots->createObject('Guild');
+$guild = new OTS_Guild();
 $guild->load( InputData::read('id') );
 $access = Toolbox::guildAccess($guild);
 
@@ -35,13 +35,13 @@ if( !User::hasAccess(3) && $access < 2)
 $js = $template->createComponent('RAW');
 $js['content'] = '<script type="text/javascript">
 
-GuildID = ' . $guild->getId() . ';
+GuildID = ' . $guild->id . ';
 
 </script>';
 
 // new rank form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Guilds&command=new&rank[guild_id]=' . $guild->getId();
+$form['action'] = '/admin/module=Guilds&command=new&rank[guild_id]=' . $guild->id;
 $form['submit'] = $language['Modules.Guilds.NewSubmit'];
 $form['id'] = 'ranksForm';
 
@@ -61,18 +61,18 @@ $ranks = array();
 foreach($guild as $rank)
 {
     // skips leader rank if it's not leader on current account
-    if($access == 2 && $rank->getLevel() == 3)
+    if($access == 2 && $rank->level == 3)
     {
         continue;
     }
 
     // deletion link
     $link = XMLToolbox::createElement('a');
-    $link->setAttribute('href', '/admin/module=Guilds&command=delete&id=' . $rank->getId() );
-    $link->setAttribute('onclick', 'if( confirm(\'' . $language['main.admin.ConfirmDelete'] . '\') ) { return pageGuilds.Delete(' . $rank->getId() . '); } else { return false; }');
+    $link->setAttribute('href', '/admin/module=Guilds&command=delete&id=' . $rank->id);
+    $link->setAttribute('onclick', 'if( confirm(\'' . $language['main.admin.ConfirmDelete'] . '\') ) { return pageGuilds.Delete(' . $rank->id . '); } else { return false; }');
     $link->addContent($language['main.admin.DeleteSubmit']);
 
-    $ranks[] = array('id' => $rank->getId(), 'name' => $rank->getName() . ' (' . $language['Modules.Guilds.Level_' . $rank->getLevel() ] . ')', 'actions' => $link);
+    $ranks[] = array('id' => $rank->id, 'name' => $rank->name . ' (' . $language['Modules.Guilds.Level_' . $rank->level] . ')', 'actions' => $link);
 }
 
 $table['list'] = $ranks;
@@ -91,12 +91,12 @@ $requests = array();
 new RequestsDriver($guild);
 
 // reads membership requests
-foreach( $guild->listRequests() as $player)
+foreach($guild->requests as $player)
 {
-    $requests[ $player->getId() ] = $player->getName();
+    $requests[$player->id] = $player->name;
 }
 
 $list['list'] = $requests;
-Session::write('guild', $guild->getId() );
+Session::write('guild', $guild->id);
 
 ?>

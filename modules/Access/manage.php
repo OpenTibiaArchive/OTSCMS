@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ $form['id'] = 'accessForm';
 // composes group labels
 $groups = array(-1 => $language['Modules.Access.Level-1'], 0 => $language['Modules.Access.Level0'], 3 => $language['Modules.Access.Level3']);
 
-foreach( $ots->createObject('Groups_List') as $group)
+foreach( new OTS_Groups_List() as $group)
 {
     $groups[ $group->getAccess() ] = $group->getName();
 }

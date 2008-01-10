@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,11 +30,11 @@ foreach( $ots->getInstantsList() as $spell)
 {
     $spell = $ots->getInstant($spell);
 
-    $name = $spell->getName();
+    $name = $spell->name;
 
     // if spell isn't enabled then skip to next
     // and there has to be an image for that spell - that is the way how you can select which spells should be displayed
-    if( !$spell->isEnabled() || !Toolbox::imageExists('Spells/' . $name) )
+    if(!$spell->enabled || !Toolbox::imageExists('Spells/' . $name) )
     {
         continue;
     }
@@ -57,11 +57,11 @@ foreach( $ots->getRunesList() as $spell)
 {
     $spell = $ots->getRune($spell);
 
-    $name = $spell->getName();
+    $name = $spell->name;
 
     // if spell isn't enabled then skip to next
     // and there has to be an image for that spell - that is the way how you can select which spells should be displayed
-    if( !$spell->isEnabled() || !Toolbox::imageExists('Spells/' . $name) )
+    if(!$spell->enabled || !Toolbox::imageExists('Spells/' . $name) )
     {
         continue;
     }
@@ -84,11 +84,11 @@ foreach( $ots->getConjuresList() as $spell)
 {
     $spell = $ots->getConjure($spell);
 
-    $name = $spell->getName();
+    $name = $spell->name;
 
     // if spell isn't enabled then skip to next
     // and there has to be an image for that spell - that is the way how you can select which spells should be displayed
-    if( !$spell->isEnabled() || !Toolbox::imageExists('Spells/' . $name) )
+    if(!$spell->enabled || !Toolbox::imageExists('Spells/' . $name) )
     {
         continue;
     }

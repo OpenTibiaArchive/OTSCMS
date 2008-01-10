@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -91,18 +91,14 @@ $form->addField('profile[loss_skills]', ComponentAdminForm::FieldText, $language
 $message = $template->createComponent('Message');
 $message['message'] = $language['Modules.Character.SettingsHelp'];
 
-// loads items.xml file
-$cache = new ItemsCache($db);
-$reader = new OTS_ItemsList();
-$reader->setCacheDriver($cache);
-$reader->loadItems($config['directories.data'] . 'items');
-
 // creates items array
 $items = array();
 
+$reader = $ots->getItemsList();
+
 foreach($reader as $item)
 {
-    $items[ $item->getId() ] = $item->getName();
+    $items[$item->id] = $item->name;
 }
 
 // current items list
@@ -135,10 +131,10 @@ $containers = array();
 foreach( $db->query('SELECT `id`, `content`, `slot`, `count` FROM [containers] WHERE `profile` = ' . $profile['id']) as $container)
 {
     // loads item
-    $container['name'] = $reader->getItemType($container['content'])->getName();
+    $container['name'] = $reader[ $container['content'] ]->name;
 
     // checks if this item can be a container
-    if( $reader->getItemType($container['content'])->getGroup() == OTS_ItemType::ITEM_GROUP_CONTAINER)
+    if($reader[ $container['content'] ]->group == OTS_ItemType::ITEM_GROUP_CONTAINER)
     {
         $slots[ $container['id'] ] = $language['Modules.Character.ContainerType'] . ' #' . $container['id'] . ' (' . $container['name'] . ')';
     }

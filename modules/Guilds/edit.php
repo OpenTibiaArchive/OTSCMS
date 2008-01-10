@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,13 +20,13 @@
 */
 
 // reads member
-$member = $ots->createObject('Player');
+$member = new OTS_Player();
 $member->load( InputData::read('id') );
-$rank = $member->getRank();
-$guild = $rank->getGuild();
+$rank = $member->rank;
+$guild = $rank->guild();
 
 // if not a gamemaster checks if user can modify current member record
-if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->getLevel() )
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->level)
 {
     throw new NoAccessException();
 }
@@ -36,16 +36,16 @@ $ranks = array();
 // guild ranks list
 foreach($guild as $guildRank)
 {
-    $ranks[ $guildRank->getId() ] = $guildRank->getName();
+    $ranks[$guildRank->id] = $guildRank->name;
 }
 
 // edition form
 $form = $template->createComponent('AdminForm');
-$form['action'] = '/admin/module=Guilds&command=update&id=' . $member->getId();
+$form['action'] = '/admin/module=Guilds&command=update&id=' . $member->id;
 $form['submit'] = $language['main.admin.UpdateSubmit'];
 
-$form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Guilds.EditCharacter'], $member->getName() );
-$form->addField('member[rank_id]', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.EditRank'], array('options' => $ranks, 'selected' => $rank->getId() ) );
-$form->addField('member[guildnick]', ComponentAdminForm::FieldText, $language['Modules.Guilds.EditTitle'], $member->getGuildNick() );
+$form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Guilds.EditCharacter'], $member->name);
+$form->addField('member[rank_id]', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.EditRank'], array('options' => $ranks, 'selected' => $rank->id) );
+$form->addField('member[guildnick]', ComponentAdminForm::FieldText, $language['Modules.Guilds.EditTitle'], $member->guildNick);
 
 ?>

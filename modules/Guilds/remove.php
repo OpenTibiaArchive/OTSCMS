@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@
 */
 
 // loads guild id
-$guild = $ots->createObject('Guild');
+$guild = new OTS_Guild();
 $guild->load( InputData::read('id') );
 
 // if not a gamemaster checks if user is a leader
-if( !$guild->isLoaded() || ( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 3 ))
+if(!$guild->loaded || ( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 3 ))
 {
     throw new NoAccessException();
 }

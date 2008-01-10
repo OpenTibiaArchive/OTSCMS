@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,9 +34,9 @@ if(($config['system.md5'] ? md5($oldpassword) : $oldpassword) != Session::read('
 $newpassword = $config['system.md5'] ? md5($newpassword) : $newpassword;
 
 // updates password
-$account = $ots->createObject('Account');
+$account = new OTS_Account();
 $account->load(User::$number);
-$account->setPassword($newpassword);
+$account->password = $newpassword;
 $account->save();
 
 // and session so the user doesn't have to relog

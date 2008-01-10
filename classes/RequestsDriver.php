@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,11 +43,10 @@ class RequestsDriver implements IOTS_GuildAction
     public function listRequests()
     {
         $invites = array();
-        $ots = POT::getInstance();
 
-        foreach( $this->db->query('SELECT `name` FROM [requests] WHERE `content` = ' . $this->guild->getId() ) as $invite)
+        foreach( $this->db->query('SELECT `name` FROM [requests] WHERE `content` = ' . $this->guild->id) as $invite)
         {
-            $player = $ots->createObject('Player');
+            $player = new OTS_Player();
             $player->load($invite['name']);
             $invites[] = $player;
         }
@@ -58,13 +57,13 @@ class RequestsDriver implements IOTS_GuildAction
     // invites player to current guild
     public function addRequest(OTS_Player $player)
     {
-        $this->db->query('INSERT INTO [requests] (`name`, `content`) VALUES (' . $player->getId() . ', ' . $this->guild->getId() . ')');
+        $this->db->query('INSERT INTO [requests] (`name`, `content`) VALUES (' . $player->id . ', ' . $this->guild->id . ')');
     }
 
     // un-invites player
     public function deleteRequest(OTS_Player $player)
     {
-        $this->db->query('DELETE FROM [requests] WHERE `name` = ' . $player->getId() . ' AND `content` = ' . $this->guild->getId() );
+        $this->db->query('DELETE FROM [requests] WHERE `name` = ' . $player->id . ' AND `content` = ' . $this->guild->id);
     }
 
     // commits invitation
@@ -75,14 +74,14 @@ class RequestsDriver implements IOTS_GuildAction
         // finds normal member rank
         foreach($this->guild as $guildRank)
         {
-            if( $guildRank->getLevel() == 1)
+            if($guildRank->level == 1)
             {
                 $rank = $guildRank;
                 break;
             }
         }
 
-        $player->setRank($rank);
+        $player->rank = $rank;
         $player->save();
 
         // clears invitation

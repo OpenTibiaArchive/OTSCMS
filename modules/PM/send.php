@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,13 +22,13 @@
 $pm = InputData::read('bb');
 
 // loads characters
-$from = $ots->createObject('Player');
+$from = new OTS_Player();
 $from->find($pm['from']);
-$to = $ots->createObject('Player');
+$to = new OTS_Player();
 $to->find($pm['to']);
 
 // couldn't find character(s), or message addressed to author-self
-if(!( $from->isLoaded() && $to->isLoaded() ) || $from->getAccount()->getId() == $to->getAccount()->getId() )
+if(!($from->loaded && $to->loaded) || $from->account->id == $to->account->id)
 {
     $message = $template->createComponent('PM');
     $message['message'] = $language['Modules.PM.Error'];
@@ -36,7 +36,7 @@ if(!( $from->isLoaded() && $to->isLoaded() ) || $from->getAccount()->getId() == 
 }
 
 // author doesn't belong to user
-if( $from->getAccount()->getId() != User::$number)
+if($from->account->id != User::$number)
 {
     throw new NoAccessException();
 }
@@ -45,8 +45,8 @@ if( $from->getAccount()->getId() != User::$number)
 $insert = new CMS_PM();
 $insert['name'] = $pm['name'];
 $insert['content'] = $pm['content'];
-$insert['from'] = $from['id'];
-$insert['to'] = $to['id'];
+$insert['from'] = $from->id;
+$insert['to'] = $to->id;
 $insert['read'] = 0;
 $insert['date_time'] = time();
 $insert->save();

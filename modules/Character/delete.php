@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@
 */
 
 // gets account of the character
-$player = $ots->createObject('Player');
+$player = new OTS_Player();
 $player->load( InputData::read('id') );
 
-if( $player->getAccount()->getId() != User::$number)
+if($player->account->id != User::$number)
 {
     throw new NoAccessException();
 }

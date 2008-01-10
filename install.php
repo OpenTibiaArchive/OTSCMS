@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -258,7 +258,7 @@ if( !extension_loaded('PDO') )
 if( !extension_loaded('gd') )
 {
     // filename depended on platform
-    $file = $winOS ? 'php_gd.dll' : 'gd.so';
+    $file = $winOS ? 'php_gd2.dll' : 'gd.so';
 
     requiredFeature('Missing GD extension', 'OTSCMS uses PHP GD extension for Gallery module. If you want to use this module, uou must enable GD in your <span class="code">php.ini</span> file by adding following line:</p>
 <pre class="code">extension=' . $file . '</pre>
@@ -739,21 +739,21 @@ returned:<br />
                     $ots->connect(null, $db);
 
                     // GM account
-                    $account = $ots->createObject('Account');
+                    $account = new OTS_Account();
                     $account->create($_POST['gm_account'], $_POST['gm_account']);
-                    $account->unblock();
-                    $account->setPassword($_POST['uses_md5'] ? md5($_POST['gm_password']) : $_POST['gm_password']);
+                    $account->blocked = false;
+                    $account->password = $_POST['uses_md5'] ? md5($_POST['gm_password']) : $_POST['gm_password'];
                     $account->save();
 
                     echo '+ GM account created<br />' . "\n";
 
                     // searches for GM group
-                    $filter = $ots->createFilter();
+                    $filter = new OTS_SQLFilter();
                     $filter->compareField('access', 3, OTS_SQLFilter::OPERATOR_NLOWER);
 
                     // loads user group
-                    $list = $ots->createObject('Groups_List');
-                    $list->setFilter($filter);
+                    $list = new OTS_Groups_List();
+                    $list->filter = $filter;
 
                     // GM gorup
                     if( count($list) > 0)
@@ -764,23 +764,23 @@ returned:<br />
                     // creates new group
                     else
                     {
-                        $group = $ots->createObject('Group');
-                        $group->setName('OTSCMS');
-                        $group->setAccess(3);
-                        $group->setMaxDepotItems(1000);
-                        $group->setMaxVIPList(50);
+                        $group = new OTS_Group();
+                        $group->name = 'OTSCMS';
+                        $group->access = 3;
+                        $group->maxDepotItems = 1000;
+                        $group->maxVIPList = 50;
                         $group->save();
                         echo 'GameMasters group not found, created new one<br />' . "\n";
                     }
 
                     // creates GM character
-                    $player = $ots->createObject('Player');
-                    $player->setAccount($account);
-                    $player->setGroup($group);
-                    $player->setName($_POST['gm_name']);
+                    $player = OTS_Player();
+                    $player->account = $account;
+                    $player->group = $group;
+                    $player->name = $_POST['gm_name'];
                     $player->setRank();
-                    $player->setTownId(1);
-                    $player->setConditions('');
+                    $player->townId = 1;
+                    $player->conditions = '';
                     $player->save();
 
                     echo '+ GM character created<br />' . "\n";
@@ -1021,9 +1021,9 @@ Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, 
                 $query->execute( array(':name' => '^news/?$', ':content' => 'module=News&command=list', ':order' => 50) );
                 $query->execute( array(':name' => '^news/([0-9]+)$', ':content' => 'module=News&command=display&id=$1', ':order' => 30) );
                 $query->execute( array(':name' => '^spells/?$', ':content' => 'module=Library&command=spells', ':order' => 50) );
-                $query->execute( array(':name' => '^spells/instants/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_INSTANT, ':order' => 20) );
-                $query->execute( array(':name' => '^spells/runes/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_RUNE, ':order' => 20) );
-                $query->execute( array(':name' => '^spells/conjures/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_CONJURE, ':order' => 20) );
+                $query->execute( array(':name' => '^spells/instants/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . OTS_SpellsList::SPELL_INSTANT, ':order' => 20) );
+                $query->execute( array(':name' => '^spells/runes/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . OTS_SpellsList::SPELL_RUNE, ':order' => 20) );
+                $query->execute( array(':name' => '^spells/conjures/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . OTS_SpellsList::SPELL_CONJURE, ':order' => 20) );
                 $query->execute( array(':name' => '^monsters/?$', ':content' => 'module=Library&command=monsters', ':order' => 50) );
                 $query->execute( array(':name' => '^monsters/(.+)$', ':content' => 'module=Library&command=monster&name=$1', ':order' => 40) );
                 $query->execute( array(':name' => '^characters/?$', ':content' => 'module=Character&command=display', ':order' => 50) );
@@ -1094,7 +1094,7 @@ Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, 
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1124,6 +1124,21 @@ $config[\'db\'][\'cms_prefix\'] = \'' . $db['cms_prefix'] . '\';
 $config[\'db\'][\'ots_prefix\'] = \'' . $db['ots_prefix'] . '\';
 
 ?>
+');
+                echo '<span class="bold">+ Configuration saved in config.php</span><br />' . "\n";
+
+                // saving friendly-URLs wrapper
+                file_put_contents('.htaccess', '<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/ajax.php
+RewriteCond %{REQUEST_URI} !^/index.php
+RewriteCond %{REQUEST_URI} !^/install.php
+RewriteCond %{REQUEST_URI} !^/update.php
+RewriteCond %{REQUEST_URI} !^/images/
+RewriteCond %{REQUEST_URI} !^/skins/
+RewriteCond %{REQUEST_URI} !^/fckeditor/
+RewriteRule ^(.*)$ /index.php?run=$1 [QSA,L]
+</IfModule>
 ');
                 echo '<span class="bold">+ Configuration saved in config.php</span><br />' . "\n";
             }
@@ -1168,7 +1183,7 @@ $config[\'db\'][\'ots_prefix\'] = \'' . $db['ots_prefix'] . '\';
 ?>
 </div>
             <div id="pageFooter">
-                Powered by <a href="http://www.otscms.com/">OTSCMS</a> v <?php echo $version; ?>; Copyright &copy; 2005 - 2007 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.<br />
+                Powered by <a href="http://www.otscms.com/">OTSCMS</a> v <?php echo $version; ?>; Copyright &copy; 2005 - 2008 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.<br />
 <a href="http://otserv-aac.info/">
     <img alt="This site was smoked" src="http://otserv-aac.info/pot.png"/>
 </a>

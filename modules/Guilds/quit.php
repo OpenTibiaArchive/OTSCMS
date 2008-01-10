@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,19 +20,19 @@
 */
 
 // loads member
-$character = $ots->createObject('Player');
+$character = new OTS_Player();
 $character->load( InputData::read('id') );
 
 // checks if member belongs to current account
-if( !$character->isLoaded() || $character->getAccount()->getId() != User::$number)
+if(!$character->loaded || $character->account->id != User::$number)
 {
     throw new HandledException('NotOwner');
 }
 
-$guild = $character->getRank()->getGuild();
+$guild = $character->rank->guild;
 
 // checks if member is a leader
-if( $guild->getOwner()->getId() == $character->getId() )
+if($guild->owner()->id == $character->id)
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Guilds.CantLeave'];
@@ -40,12 +40,12 @@ if( $guild->getOwner()->getId() == $character->getId() )
 }
 
 // clears membership data
-$character->setGuildNick('');
+$character->guildNick = '';
 $character->setRank();
 $character->save();
 
 // moves to guild page
-InputData::write('id', $guild->getId() );
+InputData::write('id', $guild->id);
 OTSCMS::call('Guilds', 'display');
 
 ?>

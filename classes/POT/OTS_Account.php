@@ -7,7 +7,7 @@
 
 /**
  * @package POT
- * @version 0.0.6
+ * @version 0.1.0+SVN
  * @author Wrzasq <wrzasq@gmail.com>
  * @copyright 2007 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
@@ -17,7 +17,14 @@
  * OTServ account abstraction.
  * 
  * @package POT
- * @version 0.0.6
+ * @version 0.1.0+SVN
+ * @property string $password Password.
+ * @property string $eMail Email address.
+ * @property bool $blocked Blocked flag state.
+ * @property bool $banned Ban state.
+ * @property-read int $id Account number.
+ * @property-read bool $loaded Loaded state.
+ * @property-read OTS_Players_List $playersList Characters of this account.
  */
 class OTS_Account extends OTS_Base_DAO implements IteratorAggregate, Countable
 {
@@ -195,7 +202,7 @@ class OTS_Account extends OTS_Base_DAO implements IteratorAggregate, Countable
 /**
  * Returns group of this account.
  * 
- * @version 0.0.6
+ * @version 0.1.0+SVN
  * @since 0.0.4
  * @return OTS_Group Group of which current account is member (currently random group).
  * @throws E_OTS_NotLoaded If account is not loaded.
@@ -209,7 +216,7 @@ class OTS_Account extends OTS_Base_DAO implements IteratorAggregate, Countable
         }
 
         // loads default group
-        $groups = POT::getInstance()->createObject('Groups_List');
+        $groups = new OTS_Groups_List();
         $groups->rewind();
         return $groups->current();
     }
@@ -399,7 +406,7 @@ class OTS_Account extends OTS_Base_DAO implements IteratorAggregate, Countable
 /**
  * List of characters on account.
  * 
- * @version 0.0.5
+ * @version 0.1.0+SVN
  * @return array Array of OTS_Player objects from given account.
  * @throws E_OTS_NotLoaded If account is not loaded.
  * @deprecated 0.0.5 Use getPlayersList().
@@ -416,7 +423,7 @@ class OTS_Account extends OTS_Base_DAO implements IteratorAggregate, Countable
         foreach( $this->db->query('SELECT ' . $this->db->fieldName('id') . ' FROM ' . $this->db->tableName('players') . ' WHERE ' . $this->db->fieldName('account_id') . ' = ' . $this->data['id'])->fetchAll() as $player)
         {
             // creates new object
-            $object = POT::getInstance()->createObject('Player');
+            $object = new OTS_Player();
             $object->load($player['id']);
             $players[] = $object;
         }
@@ -429,7 +436,7 @@ class OTS_Account extends OTS_Base_DAO implements IteratorAggregate, Countable
  * 
  * In difference to {@link OTS_Account::getPlayers() getPlayers() method} this method returns filtered {@link OTS_Players_List OTS_Players_List} object instead of array of {@link OTS_Player OTS_Player} objects. It is more effective since OTS_Player_List doesn't perform all rows loading at once.
  * 
- * @version 0.0.5
+ * @version 0.1.0+SVN
  * @since 0.0.5
  * @return OTS_Players_List List of players from current account.
  * @throws E_OTS_NotLoaded If account is not loaded.
@@ -444,11 +451,11 @@ class OTS_Account extends OTS_Base_DAO implements IteratorAggregate, Countable
         $ots = POT::getInstance();
 
         // creates filter
-        $filter = $ots->createFilter();
+        $filter = new OTS_SQLFilter();
         $filter->compareField('account_id', (int) $this->data['id']);
 
         // creates list object
-        $list = $ots->createObject('Players_List');
+        $list = new OTS_Players_List();
         $list->setFilter($filter);
 
         return $list;
@@ -554,8 +561,118 @@ class OTS_Account extends OTS_Base_DAO implements IteratorAggregate, Countable
  */
     public function count()
     {
-        // count( $this->getPlayersList() ); will be slower
         return $this->getPlayersList()->count();
+    }
+
+/**
+ * Magic PHP5 method.
+ * 
+ * @version 0.1.0+SVN
+ * @since 0.1.0+SVN
+ * @param string $name Property name.
+ * @return mixed Property value.
+ * @throws OutOfBoundsException For non-supported properties.
+ */
+    public function __get($name)
+    {
+        switch($name)
+        {
+            case 'id':
+                return $this->getId();
+
+            case 'password':
+                return $this->getPassword();
+
+            case 'eMail':
+                return $this->getEMail();
+
+            case 'loaded':
+                return $this->isLoaded();
+
+            case 'playersList':
+                return $this->getPlayersList();
+
+            case 'blocked':
+                return $this->isBlocked();
+
+            case 'banned':
+                return $this->isBanned();
+
+            default:
+                throw new OutOfBoundsException();
+        }
+    }
+
+/**
+ * Magic PHP5 method.
+ * 
+ * @version 0.1.0+SVN
+ * @since 0.1.0+SVN
+ * @param string $name Property name.
+ * @param mixed $value Property value.
+ * @throws OutOfBoundsException For non-supported properties.
+ */
+    public function __set($name, $value)
+    {
+        switch($name)
+        {
+            case 'password':
+                $this->setPassword($value);
+                break;
+
+            case 'eMail':
+                $this->setEMail($value);
+                break;
+
+            case 'blocked':
+                if($value)
+                {
+                    $this->block();
+                }
+                else
+                {
+                    $this->unblock();
+                }
+                break;
+
+            case 'banned':
+                if($value)
+                {
+                    $this->ban();
+                }
+                else
+                {
+                    $this->unban();
+                }
+                break;
+
+            default:
+                throw new OutOfBoundsException();
+        }
+    }
+
+/**
+ * Returns string representation of object.
+ * 
+ * If any display driver is currently loaded then it uses it's method. Otherwise just returns account number.
+ * 
+ * @version 0.1.0+SVN
+ * @since 0.1.0+SVN
+ * @return string String representation of object.
+ */
+    public function __toString()
+    {
+        $ots = POT::getInstance();
+
+        // checks if display driver is loaded
+        if( $ots->isDisplayDriverLoaded() )
+        {
+            return $ots->getDisplayDriver()->displayAccount($this);
+        }
+        else
+        {
+            return $this->getId();
+        }
     }
 }
 

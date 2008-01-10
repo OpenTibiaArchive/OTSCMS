@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@
 $guild = InputData::read('guild');
 
 // checks if guild with such name exists
-$row = $ots->createObject('Guild');
+$row = new OTS_Guild();
 $row->find($guild['name']);
 
-if( $row->isLoaded() )
+if($row->loaded)
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Guilds.NameUsed'];
@@ -33,19 +33,19 @@ if( $row->isLoaded() )
 }
 
 // loads creator data
-$player = $ots->createObject('Player');
+$player = new OTS_Player();
 $player->load($guild['ownerid']);
 
 // checks if user has controll over given character
-if( !$player->isLoaded() || $player->getAccount()->getId() != User::$number)
+if(!$player->loaded || $player->account->id != User::$number)
 {
     throw new HandledException('NotOwner');
 }
 
 // creates guild
-$row->setName( htmlspecialchars($guild['name']) );
-$row->setOwner($player);
-$row->setCreationData( time() );
+$row->name = htmlspecialchars($guild['name']);
+$row->owner = $player;
+$row->creationData = time();
 $row->save();
 
 $leader = null;
@@ -53,7 +53,7 @@ $leader = null;
 // reads guild leader rank created by database trigger
 foreach($row as $rank)
 {
-    if( $rank->getLevel() == 3)
+    if($rank->level == 3)
     {
         $leader = $rank;
         break;
@@ -61,11 +61,11 @@ foreach($row as $rank)
 }
 
 // updates leader rank info
-$player->getRank($leader);
+$player->rank = $leader;
 $player->save();
 
 // moves to just-created guild page
-InputData::write('id', $row->getId() );
+InputData::write('id', $row->id);
 OTSCMS::call('Guilds', 'display');
 
 ?>

@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,23 +24,23 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = '/guild/add';
 $form['submit'] = $language['Modules.Guilds.JoinSubmit'];
 
-$guild = $ots->createObject('Guild');
+$guild = new OTS_Guild();
 $guild->load( InputData::read('id') );
 
 new InvitesDriver($guild);
 
 $invited = array();
 
-foreach( $guild->listInvites() as $player)
+foreach($guild->invites as $player)
 {
-    if( $player->getAccount()->getId() == User::$number)
+    if($player->account->id == User::$number)
     {
-        $invited[ $player->getId() ] = $player->getName();
+        $invited[$player->id] = $player->name;
     }
 }
 
 $form->addField('id', ComponentAdminForm::FieldSelect, $language['Modules.Guilds.JoinCharacter'], array('options' => $invited) );
 
-Session::write('guild', $guild->getId() );
+Session::write('guild', $guild->id);
 
 ?>

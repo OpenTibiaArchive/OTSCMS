@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,12 +20,12 @@
 */
 
 // reads rank info
-$rank = $ots->createObject('GuildRank');
+$rank = new OTS_GuildRank();
 $rank->load( InputData::read('id') );
-$guild = $rank->getGuild();
+$guild = $rank->guild();
 
 // if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->getLevel() )
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->level)
 {
     throw new NoAccessException();
 }
@@ -35,7 +35,7 @@ $new = null;
 
 foreach($guild as $guildRank)
 {
-    if( $rank->getId() != $guildRank->getId() && $rank->getLevel() == $guildRank->getLevel() )
+    if($rank->id != $guildRank->id && $rank->level == $guildRank->level)
     {
         $new = $guildRank;
         break;
@@ -45,7 +45,7 @@ foreach($guild as $guildRank)
 // moves all members from old rank to new
 foreach($new as $player)
 {
-    $player->getRank($new);
+    $player->rank = $new;
     $player->save();
 }
 
@@ -53,7 +53,7 @@ foreach($new as $player)
 $rank->delete();
 
 // displays creation form
-InputData::write('id', $guild->getId() );
+InputData::write('id', $guild->id);
 OTSCMS::call('Guilds', 'manage');
 
 ?>

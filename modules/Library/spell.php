@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -26,17 +26,17 @@ $type = InputData::read('type');
 switch($type)
 {
     // instant spell
-    case POT::SPELL_INSTANT:
+    case OTS_SpellsList::SPELL_INSTANT:
         $spell = $ots->getInstant($name);
         break;
 
     // rune spell
-    case POT::SPELL_RUNE:
+    case OTS_SpellsList::SPELL_RUNE:
         $spell = $ots->getRune($name);
         break;
 
     // conjure spell
-    case POT::SPELL_CONJURE:
+    case OTS_SpellsList::SPELL_CONJURE:
         $spell = $ots->getConjure($name);
         break;
 
@@ -45,29 +45,29 @@ switch($type)
 }
 
 // checks if spell is enabled
-if( !$spell->isEnabled() )
+if(!$spell->enabled)
 {
     throw new HandledException('NotToDisplay');
 }
 
 // checks if we should display it
 // there has to be an image for that spell - that is the way how you can select which spells should be displayed
-if(!($extension = Toolbox::imageExists('Spells/' . $spell->getName() ) ))
+if(!($extension = Toolbox::imageExists('Spells/' . $spell->name) ))
 {
     throw new HandledException('NotToDisplay');
 }
 
 $data = $template->createComponent('LibraryPage');
 
-$data['name'] = $spell->getName();
-$data['words'] = $spell->getWords();
-$data['maglv'] = $spell->getMagicLevel();
-$data['mana'] = $spell->getMana();
-$data['soul'] = $spell->getSoul();
+$data['name'] = $spell->name;
+$data['words'] = $spell->words;
+$data['maglv'] = $spell->magicLevel;
+$data['mana'] = $spell->mana;
+$data['soul'] = $spell->soul;
 $data['image'] = '/' . str_replace('\\', '/', $config['directories.images']) . 'Spells/' . $data['name'] . $extension;
 
 // finds all allowed vocations
-$data['vocations'] = implode(', ', $spell->getVocations() );
+$data['vocations'] = implode(', ', $spell->vocations);
 
 // puts spells and runes into template
 $data['header'] = $language['Modules.Library.SpellInformation'];

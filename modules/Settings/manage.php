@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ $form->addField('settings[cookies.expire]', ComponentAdminForm::FieldSelect, $la
 $groups = array();
 
 // groups list
-foreach( $ots->createObject('Groups_List') as $group)
+foreach( new OTS_Groups_List() as $group)
 {
     $groups[ $group->getId() ] = $group->getName();
 }

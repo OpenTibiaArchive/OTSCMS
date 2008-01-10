@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,11 +32,11 @@ if( !preg_match('/^[a-z ]+$/i', $name) )
 if( isset($name) )
 {
     // gets character informations from database
-    $character = $ots->createObject('Player');
+    $character = new OTS_Player();
     $character->find($name);
 
     // checks if player exists
-    if( !$character->isLoaded() )
+    if(!$character->loaded)
     {
         $message = $template->createComponent('Message');
         $message['message'] = $language['Modules.Character.NoCharacterText'];
@@ -45,58 +45,41 @@ if( isset($name) )
         return;
     }
 
-    // cities names
-    $cache = new OTBMCache($db);
-    $otbm = new OTS_OTBMFile();
-    $otbm->setCacheDriver($cache);
-    $otbm->loadFile($config['directories.data'] . 'world/' . $config['system.map']);
-
     // character info table
     $table = $template->createComponent('TableData');
     $table['caption'] = $language['Modules.Character.CharacterData'];
 
-    $data = array($language['Modules.Character.Name'] => $character->getName(), $language['Modules.Character.Gender'] => $language['main.gender' . $character->getSex() ], $language['Modules.Character.Vocation'] => $character->getVocationName(), $language['Modules.Character.Experience'] => $character->getExperience(), $language['Modules.Character.Level'] => $character->getLevel(), $language['Modules.Character.MagicLevel'] => $character->getMagLevel(),
-    $language['Modules.Character.City'] => $otbm->getTownName( $character->getTownId() ) );
+    $data = array($language['Modules.Character.Name'] => $character->name, $language['Modules.Character.Gender'] => $language['main.gender' . $character->sex], $language['Modules.Character.Vocation'] => $character->vocationName, $language['Modules.Character.Experience'] => $character->experience, $language['Modules.Character.Level'] => $character->level, $language['Modules.Character.MagicLevel'] => $character->magLevel,
+    $language['Modules.Character.City'] => $character->townName);
 
     // house
-    $house = $db->query('SELECT `id` FROM {houses} WHERE `owner` = ' . $character->getId() )->fetch();
+    $house = $character->house;
 
-    if( !empty($house) )
+    if( isset($house) )
     {
-        $xml = new DOMDocument();
-        $xml->load($config['directories.data'] . 'world/' . preg_replace('/\.otbm$/', '-house.xml', $config['system.map']) );
-
-        foreach( $xml->getElementsByTagName('house') as $element)
-        {
-            if( $element->getAttribute('houseid') == $house['id'])
-            {
-                $data[ $language['Modules.Character.House'] ] = $element->getAttribute('name');
-
-                break;
-            }
-        }
+        $data[ $language['Modules.Character.House'] ] = $house->name;
     }
 
     // reads guild information if there is any
-    $rank = $character->getRank();
+    $rank = $character->rank;
     if( isset($rank) )
     {
         // for guilds link
         $root = XMLToolbox::createDocumentFragment();
         $a = XMLToolbox::createElement('a');
 
-        $guild = $rank->getGuild();
+        $guild = $rank->guild;
 
-        $a->setAttribute('href', '/guilds/' . $guild->getId() );
-        $a->addContent( $guild->getName() );
+        $a->setAttribute('href', '/guilds/' . $guild->id);
+        $a->addContent($guild->name);
 
-        $root->addContents( $rank->getName() . ' ' . $language['Modules.Character.InGuild'] . ' ', $a);
+        $root->addContents($rank->name . ' ' . $language['Modules.Character.InGuild'] . ' ', $a);
 
         $data[ $language['Modules.Character.Guild'] ] = $root;
     }
 
     // last login time
-    $data[ $language['Modules.Character.LastLogin'] ] = date($config['site.date_format'], $character->getLastLogin() );
+    $data[ $language['Modules.Character.LastLogin'] ] = date($config['site.date_format'], $character->lastLogin);
 
     // forum profile part
     $account = $character->getAccount();
@@ -139,16 +122,16 @@ if( isset($name) )
 
     // PM link
     $link = $template->createComponent('Links');
-    $link['links'] = array( array('link' => '/characters/' . urlencode( $character->getName() ) . '/message', 'label' => $language['Modules.Account.PMSubmit']) );
+    $link['links'] = array( array('link' => '/characters/' . urlencode($character->name) . '/message', 'label' => $language['Modules.Account.PMSubmit']) );
 
     // other characters list
     $others = array();
     foreach($account as $other)
     {
         // checks if it's not current player
-        if( $character->getId() != $other->getId() )
+        if($character->id != $other->id)
         {
-            $others[ $other->getName() ] = $other->getName();
+            $others[$other->name] = $other->name;
         }
     }
 

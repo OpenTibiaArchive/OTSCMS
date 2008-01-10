@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@
 
 // loads HTTP data in correct order
 $account = InputData::read('account');
-$row = $ots->createObject('Account');
+$row = new OTS_Account();
 $row->load( InputData::read('id') );
 
-$row->setEMail($account['email']);
+$row->eMail = $account['email'];
 
 // checks if new password is set
 if( trim($account['password']) )
 {
-    $row->setPassword($config['system.use_md5'] ? md5($account['password']) : $account['password']);
+    $row->password = $config['system.use_md5'] ? md5($account['password']) : $account['password'];
 }
 
 $row->save();

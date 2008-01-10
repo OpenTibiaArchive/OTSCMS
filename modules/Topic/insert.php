@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,10 +24,10 @@
 $post = InputData::read('bb');
 
 // checks if the posted character belongs to user's account
-$author = $ots->createObject('Player');
+$author = new OTS_Player();
 $author->find($post['from']);
 
-if( !$author->isLoaded() || $author->getAccount()->getId() != User::$number)
+if(!$author->loaded || $author->account->id != User::$number)
 {
     throw new HandledException('NotOwner');
 }
@@ -65,7 +65,7 @@ $insert['upperid'] = $post['upperid'];
 $insert['closed'] = 0;
 $insert['pinned'] = 0;
 $insert['content'] = $post['content'];
-$insert['poster'] = $author->getId();
+$insert['poster'] = $author->id;
 $insert['date_time'] = time();
 
 // checks if there are any instructions from administrator to do with this topics

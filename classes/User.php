@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,27 +36,27 @@ class User
     public static function login($number, $password)
     {
         // reading account information from SQL
-        $account = POT::getInstance()->createObject('Account');
+        $account = new OTS_Account();
         $account->load($number);
 
         // checks password
-        if( !$account->isLoaded() || $password != $account->getPassword() )
+        if(!$account->loaded || $password != $account->password)
         {
             throw new HandledException('WrongPassword');
         }
 
         // checks if account is active
-        if( $account->isBlocked() )
+        if($account->blocked)
         {
             throw new HandledException('AccountBlocked');
         }
 
         // reads highest access level
-        $maxAccess = OTSCMS::getResource('DB')->query('SELECT MAX({groups}.`access`) AS `access` FROM {players}, {groups} WHERE {players}.`account_id` = ' . $account->getId() . ' AND {players}.`group_id` = {groups}.`id`')->fetch();
+        $maxAccess = OTSCMS::getResource('DB')->query('SELECT MAX({groups}.`access`) AS `access` FROM {players}, {groups} WHERE {players}.`account_id` = ' . $account->id . ' AND {players}.`group_id` = {groups}.`id`')->fetch();
 
         // sets user information
         self::$logged = true;
-        self::$number = $account->getId();
+        self::$number = $account->id;
         self::$access = $maxAccess['access'];
 
         // default 0 access for logged player without characters

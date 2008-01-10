@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@
 
 // pre-loads HTTP data
 $member = InputData::read('member');
-$player = $ots->createObject('Player');
+$player = new OTS_Player();
 $player->load( InputData::read('id') );
-$rank = $player->getRank();
-$new = $ots->createObject('GuildRank');
+$rank = $player->rank;
+$new = new OTS_GuildRank();
 $new->load($member['rank_id']);
-$guild = $rank->getGuild();
+$guild = $rank->guild;
 
 // check if ranks are from same guild
-if( $new->getGuild()->getId() != $guild->getId() )
+if($new->guild->id != $guild->id)
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Guilds.DifferentGuild'];
@@ -37,18 +37,18 @@ if( $new->getGuild()->getId() != $guild->getId() )
 }
 
 // if not a gamemaster checks if user is a leader
-if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->getLevel() )
+if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $rank->level)
 {
     throw new NoAccessException();
 }
 
 // updates member
-$player->setRank($new);
-$player->setGuildNick($member['guildnick']);
+$player->rank = $new;
+$player->guildNick = $member['guildnick'];
 $player->save();
 
 // moves to guilds list
-InputData::write('id', $guild->getId() );
+InputData::write('id', $guild->id);
 OTSCMS::call('Guilds', 'display');
 
 ?>

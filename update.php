@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -308,11 +308,16 @@ switch($config['version'])
         $query = $sql->prepare('INSERT INTO [urls] (`name`, `content`, `order`) VALUES (:name, :content, :order)');
 
         // updates spells library links
-        $query->execute( array(':name' => '^spells/instants/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_INSTANT, ':order' => 20) );
-        $query->execute( array(':name' => '^spells/runes/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_RUNE, ':order' => 20) );
-        $query->execute( array(':name' => '^spells/conjures/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . POT::SPELL_CONJURE, ':order' => 20) );
+        $query->execute( array(':name' => '^spells/instants/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . OTS_SpellsList::SPELL_INSTANT, ':order' => 20) );
+        $query->execute( array(':name' => '^spells/runes/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . OTS_SpellsList::SPELL_RUNE, ':order' => 20) );
+        $query->execute( array(':name' => '^spells/conjures/(.+)$', ':content' => 'module=Library&command=spell&name=$1&type=' . OTS_SpellsList::SPELL_CONJURE, ':order' => 20) );
 
         $db->exec('DELETE FROM [urls] WHERE `name` = \'^spells/(.+)$\' AND `content` = \'module=Library&command=spell&name=$1\'');
+
+    // 3.1.1 and up
+    case '3.1.1':
+        // updates system version
+        $db->exec('UPDATE [settings] SET `content` = \'3.1.2\' WHERE `name` = \'version\'');
 }
 
 $raw = $template->createComponent('RAW');

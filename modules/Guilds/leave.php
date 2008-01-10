@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,10 +24,10 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = '/guild/quit';
 $form['submit'] = $language['Modules.Guilds.LeaveSubmit'];
 
-$guild = $ots->createObject('Guild');
+$guild = new OTS_Guild();
 $guild->load( InputData::read('id') );
 
-$account = $ots->createObject('Account');
+$account = new OTS_Account();
 $account->load(User::$number);
 
 $players = array();
@@ -35,11 +35,11 @@ $players = array();
 // loads all non-leader members of this guild that belongs to currently logged account
 foreach($account as $player)
 {
-    $rank = $player->getRank();
+    $rank = $player->rank;
 
-    if( isset($rank) && $rank->getLevel() < 3)
+    if( isset($rank) && $rank->level < 3)
     {
-        $players[ $player->getId() ] = $player->getName();
+        $players[$player->id] = $player->name;
     }
 }
 

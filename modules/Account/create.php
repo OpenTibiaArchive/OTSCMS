@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,11 +30,11 @@ if( !preg_match('/^[a-z][\w\.+-]*[a-z0-9]@[a-z0-9][\w\.+-]*\.[a-z][a-z\.]*[a-z]$
     return;
 }
 
-$account = $ots->createObject('Account');
+$account = new OTS_Account();
 
 // checks if this e-mail was already used
 $account->find($email);
-if( $account->isLoaded() )
+if($account->loaded)
 {
     $message = $template->createComponent('Message');
     $message['message'] = $language['Modules.Account.AlreadyUsed'];
@@ -65,9 +65,9 @@ catch(Exception $e)
 $password = substr( md5( uniqid( rand(), true) ), 1, 8);
 
 // sets all info
-$account->unblock();
-$account->setPassword($config['system.use_md5'] ? md5($password) : $password);
-$account->setEMail($email);
+$account->blocked = false;
+$account->password = $config['system.use_md5'] ? md5($password) : $password;
+$account->eMail = $email;
 $account->save();
 
 $root = XMLToolbox::createDocumentFragment();

@@ -2,7 +2,7 @@
 /*
     This file is part of OTSCMS (http://www.otscms.com/) project.
 
-    Copyright (C) 2005 - 2007 Wrzasq (wrzasq@gmail.com)
+    Copyright (C) 2005 - 2008 Wrzasq (wrzasq@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 */
 
 // checks characters limit
-$account = $ots->createObject('Account');
+$account = new OTS_Account();
 $account->load(User::$number);
 if( count($account) >= $config['system.account_limit'])
 {
@@ -42,35 +42,33 @@ if( !preg_match('/^[A-Z][A-Za-z ]{' . ($system['nick_length'] - 1) . ',}$/', $ch
 }
 
 // checks if character exists
-$player = $ots->createObject('Player');
+$player = new OTS_Player();
 $player->find($character['name']);
 
-if( $player->isLoaded() )
+if($player->loaded)
 {
     throw new HandledException('NameUsed');
 }
 
-$account = $ots->createObject('Account');
-$account->load(User::$number);
-$group = $ots->createObject('Group');
+$group = new OTS_Group();
 $group->load($system['default_group']);
 
 // composes new player record
-$player = $ots->createObject('Player');
-$player->setName($character['name']);
-$player->setAccount($account);
-$player->setGroup($group);
-$player->setSex($character['sex']);
-$player->setVocation($character['vocation']);
-$player->setConditions(0);
+$player = new OTS_Player();
+$player->name = $character['name'];
+$player->account = $account;
+$player->group = $group;
+$player->sex = $character['sex'];
+$player->vocation = $character['vocation'];
+$player->conditions = '';
 $player->setRank();
-$player->setLookAddons(0);
-$player->setTownId($system['rook']['enabled'] ? $system['rook']['id'] : $character['town']);
+$player->lookAddons = 0;
+$player->townId = $system['rook']['enabled'] ? $system['rook']['id'] : $character['town'];
 
 // reads deafult character profile
 $profile = new CMS_Profile('*.*');
-$sex = $player->getSex();
-$vocation = $player->getVocation();
+$sex = $player->sex;
+$vocation = $player->vocation;
 
 $list = array();
 
@@ -91,7 +89,7 @@ if( is_array($profile) )
     foreach( $db->query('SELECT `id`, `content`, `slot`, `count` FROM [containers] WHERE `profile` = ' . $profile['id'] . ' ORDER BY `id`') as $item)
     {
         $container = new OTS_Container($item['content']);
-        $container->setCount($item['count']);
+        $container->count = $item['count'];
 
         // appends to parent container
         if( isset($list[ $item['slot'] ]) )
@@ -130,7 +128,7 @@ if($gender['id'])
         }
 
         $container = new OTS_Container($item['content']);
-        $container->setCount($item['count']);
+        $container->count = $item['count'];
 
         // appends to parent container
         if( isset($list[ $item['slot'] ]) )
@@ -169,7 +167,7 @@ if($profession['id'])
         }
 
         $container = new OTS_Container($item['content']);
-        $container->setCount($item['count']);
+        $container->count = $item['count'];
 
         // appends to parent container
         if( isset($list[ $item['slot'] ]) )
@@ -208,7 +206,7 @@ if($detail['id'])
         }
 
         $container = new OTS_Container($item['content']);
-        $container->setCount($item['count']);
+        $container->count = $item['count'];
 
         // appends to parent container
         if( isset($list[ $item['slot'] ]) )
@@ -233,25 +231,25 @@ foreach($profile as $key => $value)
 }
 
 // continues player data inserting from profile
-$player->setExperience($profile['experience']);
-$player->setLevel($level);
-$player->setMagLevel($profile['maglevel']);
-$player->setHealth($profile['health']);
-$player->setHealthMax($profile['healthmax']);
-$player->setMana($profile['mana']);
-$player->setManaMax($profile['manamax']);
-$player->setManaSpent($profile['manaspent']);
-$player->setSoul($profile['soul']);
-$player->setDirection($profile['direction']);
-$player->setLookBody($profile['lookbody']);
-$player->setLookFeet($profile['lookfeet']);
-$player->setLookHead($profile['lookhead']);
-$player->setLookLegs($profile['looklegs']);
-$player->setLookType($profile['looktype']);
-$player->setCap($profile['cap']);
-$player->setLossExperience($profile['loss_experience']);
-$player->setLossMana($profile['loss_mana']);
-$player->setLossSkills($profile['loss_skills']);
+$player->experience = $profile['experience'];
+$player->level = $level;
+$player->magLevel = $profile['maglevel'];
+$player->health = $profile['health'];
+$player->healthMax = $profile['healthmax'];
+$player->mana = $profile['mana'];
+$player->manaMax = $profile['manamax'];
+$player->manaSpent = $profile['manaspent'];
+$player->soul = $profile['soul'];
+$player->direction = $profile['direction'];
+$player->lookBody = $profile['lookbody'];
+$player->lookFeet = $profile['lookfeet'];
+$player->lookHead = $profile['lookhead'];
+$player->lookLegs = $profile['looklegs'];
+$player->lookType = $profile['looktype'];
+$player->cap = $profile['cap'];
+$player->lossExperience = $profile['loss_experience'];
+$player->lossMana = $profile['loss_mana'];
+$player->lossSkills = $profile['loss_skills'];
 
 // skill vlaues
 $player->setSkill(POT::SKILL_FIST, $profile['skill0']);
