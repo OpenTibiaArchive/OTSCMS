@@ -22,7 +22,7 @@
 // this is a temporary state before installation will be completed
 if( !defined('OTSCMS_INSTALL') )
 {
-    header('Location: /install.php');
+    header('Location: install.php');
     die('OTSCMS not installed. Please run install.php.');
 }
 

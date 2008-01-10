@@ -421,7 +421,7 @@ if($matches)
             else
             {
 ?>
-<form action="/install.php" method="post" enctype="multipart/form-data">
+<form action="install.php" method="post" enctype="multipart/form-data">
 <input type="hidden" name="command" value="account" />
 <input type="hidden" name="db[type]" value="<?php echo $db['type']; ?>" />
 <input type="hidden" name="mapfile" value="<?php echo isset($mapfile) ? $mapfile : 'map.otbm'; ?>" />
@@ -520,7 +520,7 @@ if( !isset($_GET['advanced']) )
 ?>
     <tr id="advanced_button">
         <td colspan="2">
-            <a href="/install.php?advanced" onclick="var advanced_settings = document.getElementById('advanced_settings').style; advanced_settings.display = 'table'; advanced_settings.visibility = 'visible'; this.parentNode.removeChild(this); return false;">Advanced options</a>
+            <a href="install.php?advanced" onclick="var advanced_settings = document.getElementById('advanced_settings').style; advanced_settings.display = 'table'; advanced_settings.visibility = 'visible'; this.parentNode.removeChild(this); return false;">Advanced options</a>
         </td>
     </tr>
 <?php
@@ -597,7 +597,7 @@ if( !isset($_GET['advanced']) )
             }
 
 ?>
-<form action="/install.php" method="post">
+<form action="install.php" method="post">
 <input type="hidden" name="command" value="install" />
 <input type="hidden" name="db[type]" value="<?php echo $db['type']; ?>" />
 <input type="hidden" name="db[host]" value="<?php echo $db['host']; ?>" />
@@ -1152,7 +1152,7 @@ RewriteRule ^(.*)$ /index.php?run=$1 [QSA,L]
         // first screen
         default:
 ?>
-<form action="/install.php" method="post" enctype="multipart/form-data">
+<form action="install.php" method="post" enctype="multipart/form-data">
 <input type="hidden" name="command" value="database" />
 <table>
 <tbody>
