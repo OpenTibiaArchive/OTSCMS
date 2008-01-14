@@ -318,6 +318,12 @@ switch($config['version'])
     case '3.1.1':
         // updates system version
         $db->exec('UPDATE [settings] SET `content` = \'3.1.2\' WHERE `name` = \'version\'');
+
+        // deletes obsolete MD5 setting
+        $db->exec('DELETE FROM [settings] WHERE `name` = \'system.md5\'');
+
+        // new passwords type setting
+        $db->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.passwords\', \'' . ($config['system.md5'] ? 'md5' : 'plain') . '\')');
 }
 
 $raw = $template->createComponent('RAW');

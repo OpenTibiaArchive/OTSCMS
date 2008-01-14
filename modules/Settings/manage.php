@@ -66,7 +66,7 @@ foreach( new OTS_Groups_List() as $group)
 // otserv settings
 $part = $config['system'];
 $form->addField('', ComponentAdminForm::FieldSeparator, $language['Modules.Settings.PartSystem']);
-$form->addField('settings[system.md5]', ComponentAdminForm::FieldIsEnabled, $language['Modules.Settings.SettingSystemMD5'], $part['md5']);
+$form->addField('settings[system.passwords]', ComponentAdminForm::FieldSelect, $language['Modules.Settings.SettingSystemPasswords'], array('options' => array('plain' => $language['Modules.Settings.SettingSystemPasswordsPlain'], 'md5' => 'MD5', 'sha1' => 'SHA1'), 'selected' => $part['passwords']) );
 $form->addField('settings[system.use_mail]', ComponentAdminForm::FieldIsEnabled, $language['Modules.Settings.SettingSystemUseMail'], $part['use_mail']);
 $form->addField('settings[system.nick_length]', ComponentAdminForm::FieldText, $language['Modules.Settings.SettingSystemNickLength'], $part['nick_length']);
 $form->addField('settings[system.default_group]', ComponentAdminForm::FieldSelect, $language['Modules.Settings.SettingSystemDefaultGroup'], array('options' => $groups, 'selected' => $part['default_group']) );

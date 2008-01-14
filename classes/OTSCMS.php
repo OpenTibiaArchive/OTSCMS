@@ -43,6 +43,9 @@ class OTSCMS
 
         // POT inclusion
         self::setDriver('POT', 'POT/OTS');
+
+        // sets default timezone
+        date_default_timezone_set('UTC');
     }
 
     // handles critical exceptions
@@ -250,7 +253,21 @@ class OTSCMS
         if( InputData::read('useraccount') && InputData::read('userpassword') )
         {
             Session::write('useraccount', trim( InputData::read('useraccount') ) );
-            Session::write('userpassword', $config['system.md5'] ? md5( InputData::read('userpassword') ) : InputData::read('userpassword') );
+
+            switch($config['system.passwords'])
+            {
+                case 'plain':
+                    Session::write('userpassword', InputData::read('userpassword') );
+                    break;
+
+                case 'md5':
+                    Session::write('userpassword', md5( InputData::read('userpassword') ) );
+                    break;
+
+                case 'sha1':
+                    Session::write('userpassword', sha1( InputData::read('userpassword') ) );
+                    break;
+            }
 
             // checks if user wants to use cookies for login
             if( InputData::read('usercookies') )

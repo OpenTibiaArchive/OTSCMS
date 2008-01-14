@@ -32,16 +32,24 @@ if($account->eMail != trim( InputData::read('email') ) )
 }
 else
 {
-    // we need to re-create MD5 password
-    if($config['system.md5'])
+    // we need to re-create MD5 and SHA1 password
+    switch($config['system.passwords'])
     {
-        $password = substr( md5( uniqid( rand(), true) ), 1, 8);
-        $account->password = md5($password);
-        $account->save();
-    }
-    else
-    {
-        $password = $account->password;
+        case 'md5':
+            $password = substr( md5( uniqid( rand(), true) ), 1, 8);
+            $account->password = md5($password);
+            $account->save();
+            break;
+
+        case 'sha1':
+            $password = substr( md5( uniqid( rand(), true) ), 1, 8);
+            $account->password = sha1($password);
+            $account->save();
+            break;
+
+        case 'plain':
+            $password = $account->password;
+            break;
     }
 
     // sends password

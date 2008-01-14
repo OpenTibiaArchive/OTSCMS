@@ -66,7 +66,23 @@ $password = substr( md5( uniqid( rand(), true) ), 1, 8);
 
 // sets all info
 $account->blocked = false;
-$account->password = $config['system.md5'] ? md5($password) : $password;
+
+// generates password hash if used
+switch($config['system.passwords'])
+{
+    case 'md5':
+        $account->password = md5($password);
+        break;
+
+    case 'sha1':
+        $account->password = sha1($password);
+        break;
+
+    case 'plain':
+        $account->password = $password;
+        break;
+}
+
 $account->eMail = $email;
 $account->save();
 

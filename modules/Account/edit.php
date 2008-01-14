@@ -31,7 +31,7 @@ $form['submit'] = $language['main.admin.UpdateSubmit'];
 // form fields
 $form->addField('', ComponentAdminForm::FieldLabel, $language['Modules.Account.AccountNumber'], $account->id);
 $form->addField('account[email]', ComponentAdminForm::FieldText, $language['Modules.Account.EMail'], $account->eMail);
-$form->addField('account[password]', ComponentAdminForm::FieldText, $language['Modules.Account.Password'], $config['system.md5'] ? '' : $account->password);
+$form->addField('account[password]', ComponentAdminForm::FieldText, $language['Modules.Account.Password'], $config['system.passwords'] != 'plain' ? '' : $account->password);
 
 $characters = array();
 

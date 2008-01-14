@@ -69,7 +69,7 @@ $insert['poster'] = $author->id;
 $insert['date_time'] = time();
 
 // checks if there are any instructions from administrator to do with this topics
-if( User::hasAccess(3) )
+if( User::hasAccess(3) && isset($post['after']) )
 {
     // gets the value for posted instruction
     switch($post['after'])

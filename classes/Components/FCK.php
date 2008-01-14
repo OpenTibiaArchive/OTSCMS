@@ -40,7 +40,7 @@ class ComponentFCK extends TemplateComponent
         $fck->Config['FormatSource'] = true;
 
         // returns HTML
-        return '<form id="siteForm" action="/admin/module=Sites&amp;command=' . ( isset($this['id']) ? 'update&amp;id=' . $this['id'] : 'insert') . '" method="post">
+        return '<form id="siteForm" action="admin/module=Sites&amp;command=' . ( isset($this['id']) ? 'update&amp;id=' . $this['id'] : 'insert') . '" method="post">
 <label for="siteName">' . htmlspecialchars($language['Modules.Sites.Name']) . ': </label><input type="text" name="site[name]" id="siteName" value="' . htmlspecialchars($this['name']) . '" /><br />
 ' . $fck->CreateHtml() . '
 <br />

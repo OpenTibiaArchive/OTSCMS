@@ -22,15 +22,15 @@
 $template->addJavaScript('account');
 
 $accounts = array();
-$md5 = $config['system.md5'];
+$plain = $config['system.passwords'] == 'plain';
 
 // reads accounts
 foreach( new OTS_Accounts_List() as $account)
 {
     $row = array('id' => $account->id, 'email' => $account->eMail, 'blocked' => $account->blocked ? $language['Modules.Account.Blocked'] : $language['Modules.Account.Unblocked'] );
 
-    // if MD5 is disabled we can display passwords
-    if(!$md5)
+    // if password hashing is disabled we can display passwords
+    if($plain)
     {
         $row['password'] = $account->password;
     }
@@ -42,7 +42,7 @@ foreach( new OTS_Accounts_List() as $account)
 $list = $template->createComponent('TableList');
 $list->addField('id', $language['Modules.Account.AccountNumber']);
 
-if(!$md5)
+if($plain)
 {
     $list->addField('password', $language['Modules.Account.Password']);
 }

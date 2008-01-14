@@ -129,7 +129,7 @@ class ComponentBoardTopics extends TemplateComponent
                 $img->setAttribute('src', $this->owner['baseHref'] . 'images/arrow.png');
                 $img->setAttribute('alt', $language['Modules.Forum.LastPost']);
                 $a->addContent($img);
-                $td->addContents($a, date( $config['site.date_format'], $lastPost['date_time']), XMLToolbox::createElement('br'), $language['Modules.Forum.by'] . ' ');
+                $td->addContents($a, date($config['site.date_format'], $lastPost['date_time']), XMLToolbox::createElement('br'), $language['Modules.Forum.by'] . ' ');
 
                 $a = XMLToolbox::createElement('a');
                 $a->setAttribute('href', 'characters/' . urlencode($lastPost['poster']) );

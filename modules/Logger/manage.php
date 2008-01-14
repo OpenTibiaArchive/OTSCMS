@@ -35,7 +35,7 @@ $logs = array();
 // loads error logs
 foreach( $db->query('SELECT `name`, `content`, `date_time` FROM [logs]') as $log)
 {
-    $logs[] = array('name' => $log['name'], 'content' => long2ip($log['content']), 'date_time' => date( $config['site.date_format'], $log['date_time']) );
+    $logs[] = array('name' => $log['name'], 'content' => long2ip($log['content']), 'date_time' => date($config['site.date_format'], $log['date_time']) );
 }
 
 $list['list'] = $logs;

@@ -20,7 +20,7 @@
 */
 
 header('Content-Type: text/html; charset=utf-8');
-$version = '3.1.1';
+$version = '3.1.2';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -367,9 +367,9 @@ if($matches)
                     $db['database'] = $lua['sql_db'];
                 }
 
-                if( isset($lua['md5passwords']) )
+                if( isset($lua['passwordtype']) )
                 {
-                    $uses_md5 = $lua['md5passwords'] != '0' && $lua['md5passwords'] != 'no';
+                    $password_type = $lua['passwordtype'];
                 }
 
                 if( isset($lua['map'], $lua['mapkind']) && $lua['mapkind'] == 'OTBM')
@@ -501,12 +501,13 @@ if($matches)
 <?php break; ?>
 <?php endswitch; ?>
     <tr>
-        <td class="formLeft">Use MD5 for passwords:
-<p class="hint">MD5 is hashing algorithm that makes password safer. This is not an OPTION - turn it on only if your OTServ uses MD5!</p>
+        <td class="formLeft">Password saving mechanism:
+<p class="hint">This is not an OPTION - it must correspond with your OTServ setting!</p>
         </td>
         <td class="formRight">
-            <label><input type="radio" name="uses_md5" value="1"<?php echo isset($uses_md5) && $uses_md5 ? ' checked="checked"': ''; ?> />Enable</label><br />
-            <label><input type="radio" name="uses_md5" value="0"<?php echo isset($uses_md5) && $uses_md5 ? '': ' checked="checked"'; ?> />Disable</label><br />
+            <label><input type="radio" name="password_type" value="plain"<?php echo isset($password_type) && $password_type == 'plain' ? ' checked="checked"': ''; ?> />Plain (no hashing)</label><br />
+            <label><input type="radio" name="password_type" value="md5"<?php echo isset($password_type) && $password_type == 'md5' ? '': ' checked="checked"'; ?> />MD5 hash</label><br />
+            <label><input type="radio" name="password_type" value="sha1"<?php echo isset($password_type) && $password_type == 'sha1' ? '': ' checked="checked"'; ?> />SHA1 hash</label><br />
         </td>
     </tr>
     <tr>
@@ -620,7 +621,7 @@ if( !isset($_GET['advanced']) )
 <input type="hidden" name="mapfile" value="<?php echo $_POST['mapfile']; ?>" />
 <input type="hidden" name="data_directory" value="<?php echo $_POST['data_directory']; ?>" />
 <input type="hidden" name="del_install" value="<?php echo isset($_POST['del_install']) && $_POST['del_install'] ? '1' : '0'; ?>" />
-<input type="hidden" name="uses_md5" value="<?php echo $_POST['uses_md5']; ?>" />
+<input type="hidden" name="password_type" value="<?php echo $_POST['password_type']; ?>" />
 <?php if( isset($_POST['online']['name']) ): ?>
 <input type="hidden" name="online[name]" value="<?php echo $_POST['online']['name']; ?>" />
 <?php endif; ?>
@@ -750,11 +751,30 @@ returned:<br />
                     $ots = POT::getInstance();
                     $ots->connect(null, $db);
 
+                    // generates password hash
+                    switch($_POST['password_type'])
+                    {
+                        default:
+                            $_POST['password_type'] = 'plain';
+
+                        case 'plain':
+                            $password = $_POST['gm_password'];
+                            break;
+
+                        case 'md5':
+                            $password = md5($_POST['gm_password']);
+                            break;
+
+                        case 'sha1':
+                            $password = sha1($_POST['gm_password']);
+                            break;
+                    }
+
                     // GM account
                     $account = new OTS_Account();
                     $account->create($_POST['gm_account'], $_POST['gm_account']);
                     $account->blocked = false;
-                    $account->password = $_POST['uses_md5'] ? md5($_POST['gm_password']) : $_POST['gm_password'];
+                    $account->password = $_POST['gm_password'];
                     $account->save();
 
                     echo '+ GM account created<br />' . "\n";
@@ -908,7 +928,7 @@ Mainly great thans to <b>Foziw</b> for the domain and <b>Yorick</b> for forum!
                 $query->execute( array(':name' => 'cookies.path', ':content' => '/') );
                 $query->execute( array(':name' => 'cookies.domain', ':content' => '.example.com') );
                 $query->execute( array(':name' => 'cookies.expire', ':content' => 2592000) );
-                $query->execute( array(':name' => 'system.md5', ':content' => (bool) $_POST['uses_md5']) );
+                $query->execute( array(':name' => 'system.passwords', ':content' => $_POST['password_type']) );
                 $query->execute( array(':name' => 'system.use_mail', ':content' => false) );
                 $query->execute( array(':name' => 'system.nick_length', ':content' => 3) );
                 $query->execute( array(':name' => 'system.default_group', ':content' => 1) );

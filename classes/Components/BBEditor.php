@@ -223,7 +223,7 @@ class ComponentBBEditor extends TemplateComponent
         $separator->addContent($img);
 
         // button options
-        foreach( array('bold' => 'bbcode(\'B\')', 'italic' => 'bbcode(\'I\')', 'underline' => 'bbcode(\'U\')', false, 'justifyleft' => 'bbcode(\'ALIGN\', \'left\')', 'justifycenter' => 'bbcode(\'CENTER\')', 'justifyright' => 'bbcode(\'ALIGN\', \'right\')', false, 'orderlist' => 'dolist(1)', 'unorderedlist' => 'dolist()', false, 'insertimage' => 'bbcode(\'IMG\')', 'createlink' => 'namedlink(\'URL\')', 'email' => 'namedlink(\'EMAIL\')', false, 'code' => 'bbcode(\'CODE\')', 'php' => 'bbcode(\'PHP\')', false, 'quote' => 'bbcode(\'QUOTE\')', false, 'sub' => 'bbcode(\'SUB\')', 'sup' => 'bbcode(\'SUB\')') as $label => $code)
+        foreach( array('bold' => 'bbcode(\'B\')', 'italic' => 'bbcode(\'I\')', 'underline' => 'bbcode(\'U\')', false, 'justifyleft' => 'bbcode(\'ALIGN\', \'left\')', 'justifycenter' => 'bbcode(\'CENTER\')', 'justifyright' => 'bbcode(\'ALIGN\', \'right\')', false, 'orderlist' => 'dolist(1)', 'unorderedlist' => 'dolist()', false, 'insertimage' => 'bbcode(\'IMG\')', 'createlink' => 'namedlink(\'URL\')', 'email' => 'namedlink(\'EMAIL\')', false, 'code' => 'bbcode(\'CODE\')', 'php' => 'bbcode(\'PHP\')', false, 'quote' => 'bbcode(\'QUOTE\')', false, 'sub' => 'bbcode(\'SUB\')', 'sup' => 'bbcode(\'SUP\')') as $label => $code)
         {
             // separator
             if(!$code)

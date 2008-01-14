@@ -26,12 +26,26 @@ $newpassword2 = InputData::read('newpassword2');
 
 // checks if old password matches real password and new passwords matches
 // thats for sure that user know what he typed as he/she dont see it durning typing
-if(($config['system.md5'] ? md5($oldpassword) : $oldpassword) != Session::read('userpassword') || $newpassword != $newpassword2)
+// hashes password if needed
+switch($config['system.passwords'])
+{
+    case 'md5':
+        $newpassword = md5($newpassword);
+        $oldpassword = md5($oldpassword);
+        $newpassword2 = md5($newpassword2);
+        break;
+
+    case 'sha1':
+        $newpassword = sha1($newpassword);
+        $oldpassword = sha1($oldpassword);
+        $newpassword2 = sha1($newpassword2);
+        break;
+}
+
+if($oldpassword != Session::read('userpassword') || $newpassword != $newpassword2)
 {
     throw new HandledException('WrongPassword');
 }
-
-$newpassword = $config['system.md5'] ? md5($newpassword) : $newpassword;
 
 // updates password
 $account = new OTS_Account();
