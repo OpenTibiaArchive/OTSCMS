@@ -24,8 +24,7 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = 'guild/add';
 $form['submit'] = $language['Modules.Guilds.JoinSubmit'];
 
-$guild = new OTS_Guild();
-$guild->load( InputData::read('id') );
+$guild = new OTS_Guild( (int) InputData::read('id') );
 
 new InvitesDriver($guild);
 

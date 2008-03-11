@@ -48,8 +48,7 @@ if($oldpassword != Session::read('userpassword') || $newpassword != $newpassword
 }
 
 // updates password
-$account = new OTS_Account();
-$account->load(User::$number);
+$account = new OTS_Account(User::$number);
 $account->password = $newpassword;
 $account->save();
 

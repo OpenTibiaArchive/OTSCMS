@@ -20,8 +20,7 @@
 */
 
 // deletes account
-$account = new OTS_Account();
-$account->load(User::$number);
+$account = new OTS_Account(User::$number);
 $account->delete();
 
 // redirects to logout page

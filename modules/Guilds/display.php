@@ -19,8 +19,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$guild = new OTS_Guild();
-$guild->load( InputData::read('id') );
+$guild = new OTS_Guild( (int) InputData::read('id') );
 
 $isLeader = false;
 $isVice = User::hasAccess(3);

@@ -22,10 +22,8 @@
 $pm = InputData::read('bb');
 
 // loads characters
-$from = new OTS_Player();
-$from->find($pm['from']);
-$to = new OTS_Player();
-$to->find($pm['to']);
+$from = new OTS_Player($pm['from']);
+$to = new OTS_Player($pm['to']);
 
 // couldn't find character(s), or message addressed to author-self
 if(!($from->loaded && $to->loaded) || $from->account->id == $to->account->id)

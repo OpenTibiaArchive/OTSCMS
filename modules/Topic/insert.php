@@ -24,8 +24,7 @@
 $post = InputData::read('bb');
 
 // checks if the posted character belongs to user's account
-$author = new OTS_Player();
-$author->find($post['from']);
+$author = new OTS_Player($post['from']);
 
 if(!$author->loaded || $author->account->id != User::$number)
 {

@@ -344,8 +344,7 @@ class OTSCMS
                 try
                 {
                     // checks account ban
-                    $account = new OTS_Account();
-                    $account->load( (int) Session::read('useraccount') );
+                    $account = new OTS_Account( (int) Session::read('useraccount') );
 
                     if($account->banned)
                     {

@@ -19,8 +19,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$account = new OTS_Account();
-$account->load(User::$number);
+$account = new OTS_Account(User::$number);
 
 // bb message editor
 $form = $template->createComponent('BBEditor');

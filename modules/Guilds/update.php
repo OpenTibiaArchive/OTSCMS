@@ -21,11 +21,9 @@
 
 // pre-loads HTTP data
 $member = InputData::read('member');
-$player = new OTS_Player();
-$player->load( InputData::read('id') );
+$player = new OTS_Player( (int) InputData::read('id') );
 $rank = $player->rank;
-$new = new OTS_GuildRank();
-$new->load($member['rank_id']);
+$new = new OTS_GuildRank( (int) $member['rank_id']);
 $guild = $rank->guild;
 
 // check if ranks are from same guild

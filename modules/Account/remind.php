@@ -20,8 +20,7 @@
 */
 
 // loads HTTP data in correct order
-$account = new OTS_Account();
-$account->load( InputData::read('number') );
+$account = new OTS_Account( (int) InputData::read('number') );
 
 $message = $template->createComponent('Message');
 

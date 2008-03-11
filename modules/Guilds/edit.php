@@ -20,8 +20,7 @@
 */
 
 // reads member
-$member = new OTS_Player();
-$member->load( InputData::read('id') );
+$member = new OTS_Player( (int) InputData::read('id') );
 $rank = $member->rank;
 $guild = $rank->guild();
 

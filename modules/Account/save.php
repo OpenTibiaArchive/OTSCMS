@@ -60,8 +60,7 @@ if( !empty($user['avatar']) )
 }
 
 // updates profile
-$account = new OTS_Account();
-$account->load(User::$number);
+$account = new OTS_Account(User::$number);
 $account->setCustomField('signature', $user['signature']);
 $account->setCustomField('website', $user['website']);
 

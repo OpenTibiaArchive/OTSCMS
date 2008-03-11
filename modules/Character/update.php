@@ -20,10 +20,9 @@
 */
 
 // loads data from form
-$id = InputData::read('id');
+$id = (int) InputData::read('id');
 $player = InputData::read('player');
-$row = new OTS_Player();
-$row->load($id);
+$row = new OTS_Player($id);
 
 // checks if the names are different
 // if not then we dont need to change anything
@@ -41,20 +40,15 @@ if($player['name'] != $row->name)
     $row->load($id);
 }
 
-// finds experience level based on points
-for($level = 1; 50 * $level * (($level + 1) * ($level + 1) - 5 * $level + 7) / 3 <= $player['experience']; $level++);
-
-$account = new OTS_Account();
-$account->load($player['account_id']);
-$group = new OTS_Group();
-$group->load($player['group_id']);
+$account = new OTS_Account( (int) $player['account_id']);
+$group = new OTS_Group( (int) $player['group_id']);
 
 // updates character informations
 $row->name = $player['name'];
 $row->account = $account;
 $row->group = $group;
 $row->experience = $player['experience'];
-$row->level = $player['level'];
+$row->level = OTS_Toolbox::levelForExperience($player['experience']);
 $row->magLevel = $player['maglevel'];
 $row->save();
 $row->setCustomField('comment', $player['comment']);

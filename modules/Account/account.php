@@ -32,8 +32,7 @@ $template->addJavaScript('character');
 $template->addJavaScript('user');
 
 // reads account information
-$account = new OTS_Account();
-$account->load(User::$number);
+$account = new OTS_Account(User::$number);
 
 // account metainfo table
 $data = $template->createComponent('TableData');

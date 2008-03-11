@@ -20,8 +20,7 @@
 */
 
 // reads rank info
-$rank = new OTS_GuildRank();
-$rank->load( InputData::read('id') );
+$rank = new OTS_GuildRank( (int) InputData::read('id') );
 $guild = $rank->guild();
 
 // if not a gamemaster checks if user is a leader

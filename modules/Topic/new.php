@@ -46,8 +46,7 @@ else
     $post = '';
 }
 
-$account = new OTS_Account();
-$account->load(User::$number);
+$account = new OTS_Account(User::$number);
 
 // bb message editor
 $form = $template->createComponent('BBEditor');

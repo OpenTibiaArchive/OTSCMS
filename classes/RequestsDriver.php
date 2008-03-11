@@ -46,9 +46,7 @@ class RequestsDriver implements IOTS_GuildAction
 
         foreach( $this->db->query('SELECT `name` FROM [requests] WHERE `content` = ' . $this->guild->id) as $invite)
         {
-            $player = new OTS_Player();
-            $player->load($invite['name']);
-            $invites[] = $player;
+            $invites[] = new OTS_Player( (int) $invite['name']);
         }
 
         return $invites;

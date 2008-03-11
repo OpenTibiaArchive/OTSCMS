@@ -20,8 +20,7 @@
 */
 
 // checks characters limit
-$account = new OTS_Account();
-$account->load(User::$number);
+$account = new OTS_Account(User::$number);
 if( count($account) >= $config['system.account_limit'])
 {
     $message = $template->createComponent('Message');
@@ -42,16 +41,14 @@ if( !preg_match('/^[A-Z][A-Za-z ]{' . ($system['nick_length'] - 1) . ',}$/', $ch
 }
 
 // checks if character exists
-$player = new OTS_Player();
-$player->find($character['name']);
+$player = new OTS_Player($character['name']);
 
 if($player->loaded)
 {
     throw new HandledException('NameUsed');
 }
 
-$group = new OTS_Group();
-$group->load($system['default_group']);
+$group = new OTS_Group( (int) $system['default_group']);
 
 // composes new player record
 $player = new OTS_Player();
@@ -218,9 +215,6 @@ if($detail['id'])
     }
 }
 
-// finds experience level based on points
-for($level = 1; 50 * $level * (($level + 1) * ($level + 1) - 5 * $level + 7) / 3 <= (int) $profile['experience']; $level++);
-
 // fixes NULLs
 foreach($profile as $key => $value)
 {
@@ -232,7 +226,7 @@ foreach($profile as $key => $value)
 
 // continues player data inserting from profile
 $player->experience = $profile['experience'];
-$player->level = $level;
+$player->level = OTS_Toolbox::levelForExperience($profile['experience']);
 $player->magLevel = $profile['maglevel'];
 $player->health = $profile['health'];
 $player->healthMax = $profile['healthmax'];

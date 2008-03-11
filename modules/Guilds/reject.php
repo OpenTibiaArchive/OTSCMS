@@ -19,8 +19,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$guild = new OTS_Guild();
-$guild->load( Session::read('guild') );
+$guild = new OTS_Guild( (int) Session::read('guild') );
 
 // if not a gamemaster checks if user is a leader
 if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
@@ -29,8 +28,7 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 2)
 }
 
 new RequestsDriver($guild);
-$player = new OTS_Player();
-$player->load( InputData::read('id') );
+$player = new OTS_Player( (int) InputData::read('id') );
 $guild->deleteRequest($player);
 
 // moves to guild page

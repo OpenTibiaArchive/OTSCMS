@@ -20,8 +20,7 @@
 */
 
 // loads character id
-$player = new OTS_Player();
-$player->load( InputData::read('character') );
+$player = new OTS_Player( (int) InputData::read('character') );
 
 // checks if it's current user's character
 if(!$player->loaded || $player->account->id != User::$number)
@@ -30,8 +29,7 @@ if(!$player->loaded || $player->account->id != User::$number)
 }
 
 // saves request
-$guild = $ots->createAccount('Guild');
-$guild->load( InputData::read('id') );
+$guild = new OTS_Guild( (int) InputData::read('id') );
 
 new RequestsDriver($guild);
 $guild->request($player);

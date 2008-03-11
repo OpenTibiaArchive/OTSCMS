@@ -32,8 +32,7 @@ if( !preg_match('/^[a-z ]+$/i', $name) )
 if( isset($name) )
 {
     // gets character informations from database
-    $character = new OTS_Player();
-    $character->find($name);
+    $character = new OTS_Player($name);
 
     // checks if player exists
     if(!$character->loaded)

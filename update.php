@@ -324,6 +324,11 @@ switch($config['version'])
 
         // new passwords type setting
         $db->exec('INSERT INTO [settings] (`name`, `content`) VALUES (\'system.passwords\', \'' . ($config['system.md5'] ? 'md5' : 'plain') . '\')');
+
+    // 3.1.2 and up
+    case '3.1.2':
+        // updates system version
+        $db->exec('UPDATE [settings] SET `content` = \'3.1.3\' WHERE `name` = \'version\'');
 }
 
 $raw = $template->createComponent('RAW');

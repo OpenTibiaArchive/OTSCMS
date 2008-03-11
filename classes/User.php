@@ -56,7 +56,7 @@ class User
 
         // sets user information
         self::$logged = true;
-        self::$number = $account->id;
+        self::$number = (int) $account->id;
         self::$access = $maxAccess['access'];
 
         // default 0 access for logged player without characters

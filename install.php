@@ -20,7 +20,7 @@
 */
 
 header('Content-Type: text/html; charset=utf-8');
-$version = '3.1.2';
+$version = '3.1.3';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -282,12 +282,15 @@ if( !extension_loaded('pcre') )
 }
 
 // checks if mod_rewrite is enabled
-if( !in_array('mod_rewrite', apache_get_modules() ) )
+if( function_exists('apache_get_modules') )
 {
-    $matches = false;
-    requiredFeature('Missing mod_rewrite module', 'OTSCMS requires mod_rewrite Apache module for running. You must enable it in your <span class="code">httpd.conf</span> file by adding following line:</p>
+    if( !in_array('mod_rewrite', apache_get_modules() ) )
+    {
+        $matches = false;
+        requiredFeature('Missing mod_rewrite module', 'OTSCMS requires mod_rewrite Apache module for running. You must enable it in your <span class="code">httpd.conf</span> file by adding following line:</p>
 <pre class="code">LoadModule rewrite_module modules/mod_rewrite.so</pre>
     <p>It\'s probably out there already, but commented by hash (<span class="code">#</span>). After enabling this extension, save <span class="code">httpd.conf</span> file and restart server.');
+    }
 }
 
 // checking if config.php file is writable
@@ -1157,20 +1160,24 @@ $config[\'db\'][\'ots_prefix\'] = \'' . $db['ots_prefix'] . '\';
                 echo '<span class="bold">+ Configuration saved in config.php</span><br />' . "\n";
 
                 // saving friendly-URLs wrapper
+                $_SERVER['REQUEST_URI'] = dirname($_SERVER['REQUEST_URI']);
                 file_put_contents('.htaccess', '<IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteBase ' . $_SERVER['REQUEST_URI'] . '
-RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'ajax.php
-RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'index.php
-RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'install.php
-RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'update.php
-RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'images/
-RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'skins/
-RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . 'fckeditor/
+RewriteBase ' . $_SERVER['REQUEST_URI'] . '/
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . '/ajax.php
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . '/index.php
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . '/install.php
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . '/update.php
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . '/images/
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . '/skins/
+RewriteCond %{REQUEST_URI} !^' . $_SERVER['REQUEST_URI'] . '/fckeditor/
 RewriteRule ^(.*)$ index.php?run=$1 [QSA,L]
 </IfModule>
 ');
                 echo '<span class="bold">+ Configuration saved in config.php</span><br />' . "\n";
+
+                requiredFeature('Cache generation', 'OTSCMS uses <span class="code">data/</span> directory resources including <span class="bold">OTBM</span> and items files. Loading them takes long time, so before first run you man need to change PHP configuration to turn off memory limit (set <span class="code">memory_limit = 4096M</span> in <span class="code">php.ini</span> file - it doesn\'t matter if you have so much RAM) and execution time limit (<span class="code">max_execution_time = 0</span>).</p>
+                <p>This is only for first run as OTSCMS needs to generate cache for those files. After that you should switch your PHP configuration back to previous (backup your <span class="code">php.ini</span> file). Note that cache will need to be re-created after each items or OTBM file change.');
             }
             catch(Exception $e)
             {
@@ -1181,6 +1188,12 @@ RewriteRule ^(.*)$ index.php?run=$1 [QSA,L]
 
         // first screen
         default:
+
+            // checks if it is possible to handle mod_rewrite as Apache module
+            if( !function_exists('apache_get_modules') )
+            {
+                requiredFeature('Not running on Apache', 'It seems that you are not running OTSCMS on Apache server. OTSCMS itself is not using any Apache-specyfic functions, but it uses "fiendly-URLs" with <span class="code">mod_rewrite</span>. Installer will generate <span class="code">.htaccess</span> file which will contain URLs rewriting rules. You have to configure your server to handle them somehow (it depends on server which you are using). For example for Microsoft IIS there are <span class="code">mod_rewrite</span> replacements called <a href="http://www.isapirewrite.com/">ISAPI_Rewrite</a> or <a href="http://www.qwerksoft.com/products/iisrewrite/">IIS Rewrite Engine</a>.');
+            }
 ?>
 <form action="install.php" method="post" enctype="multipart/form-data">
 <input type="hidden" name="command" value="database" />

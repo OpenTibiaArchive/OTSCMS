@@ -20,8 +20,7 @@
 */
 
 // loads guild id
-$guild = new OTS_Guild();
-$guild->load( InputData::read('id') );
+$guild = new OTS_Guild( (int) InputData::read('id') );
 
 // if not a gamemaster checks if user is a leader
 if(!$guild->loaded || ( !User::hasAccess(3) && Toolbox::guildAccess($guild) < 3 ))

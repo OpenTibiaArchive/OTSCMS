@@ -20,8 +20,7 @@
 */
 
 // loads data in correct order
-$character = new OTS_Player();
-$character->load( InputData::read('id') );
+$character = new OTS_Player( (int) InputData::read('id') );
 
 // checks if the character that user wants to edit is his/her
 if(!$character->loaded || $character->account->id != User::$number)

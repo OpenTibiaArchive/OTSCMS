@@ -21,8 +21,7 @@
 
 // loads HTTP data in correct order
 $account = InputData::read('account');
-$row = new OTS_Account();
-$row->load( InputData::read('id') );
+$row = new OTS_Account( (int) InputData::read('id') );
 
 $row->eMail = $account['email'];
 

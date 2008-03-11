@@ -26,8 +26,7 @@ $form['submit'] = $language['Modules.Guilds.CreateSubmit'];
 
 $players = array();
 
-$account = new OTS_Account();
-$account->load(User::$number);
+$account = new OTS_Account(User::$number);
 
 foreach($account as $player)
 {

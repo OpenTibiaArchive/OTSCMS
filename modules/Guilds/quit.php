@@ -20,8 +20,7 @@
 */
 
 // loads member
-$character = new OTS_Player();
-$character->load( InputData::read('id') );
+$character = new OTS_Player( (int) InputData::read('id') );
 
 // checks if member belongs to current account
 if(!$character->loaded || $character->account->id != User::$number)

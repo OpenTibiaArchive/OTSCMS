@@ -20,8 +20,7 @@
 */
 
 // gets account of the character
-$player = new OTS_Player();
-$player->load( InputData::read('id') );
+$player = new OTS_Player( (int) InputData::read('id') );
 
 if($player->account->id != User::$number)
 {

@@ -22,8 +22,7 @@
 $guild = InputData::read('guild');
 
 // checks if guild with such name exists
-$row = new OTS_Guild();
-$row->find($guild['name']);
+$row = new OTS_Guild($guild['name']);
 
 if($row->loaded)
 {
@@ -33,8 +32,7 @@ if($row->loaded)
 }
 
 // loads creator data
-$player = new OTS_Player();
-$player->load($guild['ownerid']);
+$player = new OTS_Player( (int) $guild['ownerid']);
 
 // checks if user has controll over given character
 if(!$player->loaded || $player->account->id != User::$number)

@@ -21,8 +21,7 @@
 
 $template->addJavaScript('guilds');
 
-$guild = new OTS_Guild();
-$guild->load( InputData::read('id') );
+$guild = new OTS_Guild( (int) InputData::read('id') );
 $access = Toolbox::guildAccess($guild);
 
 // if not a gamemaster checks if user is a leader

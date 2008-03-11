@@ -24,11 +24,8 @@ $form = $template->createComponent('AdminForm');
 $form['action'] = 'guild/quit';
 $form['submit'] = $language['Modules.Guilds.LeaveSubmit'];
 
-$guild = new OTS_Guild();
-$guild->load( InputData::read('id') );
-
-$account = new OTS_Account();
-$account->load(User::$number);
+$guild = new OTS_Guild( (int) InputData::read('id') );
+$account = new OTS_Account(User::$number);
 
 $players = array();
 

@@ -19,11 +19,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-$guild = new OTS_Guild();
-$guild->load( Session::read('guild') );
+$guild = new OTS_Guild( (int) Session::read('guild') );
 
-$player = new OTS_Player();
-$player->load( InputData::read('id') );
+$player = new OTS_Player( (int) InputData::read('id') );
 
 // checks if user is really owner of character
 if($player->account->id != User::$number)

@@ -20,8 +20,7 @@
 */
 
 // loads account
-$account = new OTS_Account();
-$account->load( InputData::read('id') );
+$account = new OTS_Account( (int) InputData::read('id') );
 $account->blocked = true;
 $account->save();
 

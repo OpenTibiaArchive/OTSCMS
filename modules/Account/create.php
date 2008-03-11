@@ -30,10 +30,9 @@ if( !preg_match('/^[a-z][\w\.+-]*[a-z0-9]@[a-z0-9][\w\.+-]*\.[a-z][a-z\.]*[a-z]$
     return;
 }
 
-$account = new OTS_Account();
+$account = new OTS_Account($email);
 
 // checks if this e-mail was already used
-$account->find($email);
 if($account->loaded)
 {
     $message = $template->createComponent('Message');
@@ -47,10 +46,10 @@ try
 {
     $number = $account->create($config['system.min_number'], $config['system.max_number']);
 }
-catch(Exception $e)
+catch(E_OTS_Generic $e)
 {
     // no free numbers
-    if( $e->getMessage() == 'No free account number are available.')
+    if( $e->getCode() == E_OTS_Generic::CREATE_ACCOUNT_IMPOSSIBLE)
     {
         throw new HandledException('OutOfNumbers');
     }

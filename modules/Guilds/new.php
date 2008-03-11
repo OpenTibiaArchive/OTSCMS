@@ -19,11 +19,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// creates new rank
-$rank = new OTS_GuildRank();
-$guild = new OTS_Guild();
-$guild->load($input['guild_id']);
-
+$guild = new OTS_Guild( (int) $input['guild_id']);
 
 // checks if user is able to create this rank
 if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $input['level'])
@@ -31,7 +27,8 @@ if( !User::hasAccess(3) && Toolbox::guildAccess($guild) < $input['level'])
     throw new NoAccessException();
 }
 
-// saves new rank
+// creates new rank
+$rank = new OTS_GuildRank();
 $rank->guild = $guild;
 $renk->name = $input['name'];
 $rank->level = $input['level'];
