@@ -26,6 +26,7 @@ return array(
     'Vocation' => 'Profesja',
     'Experience' => 'Doświadczenie',
     'MagicLevel' => 'Poziom magii',
+    'Balance' => 'Stan konta bankowego',
     'Guild' => 'Gildia',
     'Group' => 'Poziom dostępu',
     'LastLogin' => 'Ostatnie logowanie',

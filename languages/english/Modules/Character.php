@@ -26,6 +26,7 @@ return array(
     'Vocation' => 'Vocation',
     'Experience' => 'Experience',
     'MagicLevel' => 'Magic level',
+    'Balance' => 'Bank account balance',
     'Guild' => 'Guild',
     'Group' => 'Access group',
     'LastLogin' => 'Last logged',

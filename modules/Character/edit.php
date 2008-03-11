@@ -49,6 +49,7 @@ $form->addField('player[account_id]', ComponentAdminForm::FieldSelect, $language
 $form->addField('player[group_id]', ComponentAdminForm::FieldSelect, $language['Modules.Character.Group'], array('options' => $groups, 'selected' => $player->group->id) );
 $form->addField('player[experience]', ComponentAdminForm::FieldText, $language['Modules.Character.Experience'], $player->experience);
 $form->addField('player[maglevel]', ComponentAdminForm::FieldText, $language['Modules.Character.MagicLevel'], $player->magLevel);
+$form->addField('player[balance]', ComponentAdminForm::FieldText, $language['Modules.Character.Balance'], $player->balance);
 $form->addField('player[comment]', ComponentAdminForm::FieldArea, $language['Modules.Character.Comment'], $player->getCustomField('comment') );
 
 ?>

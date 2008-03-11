@@ -50,6 +50,7 @@ $row->group = $group;
 $row->experience = $player['experience'];
 $row->level = OTS_Toolbox::levelForExperience($player['experience']);
 $row->magLevel = $player['maglevel'];
+$row->balance = $player['balance'];
 $row->save();
 $row->setCustomField('comment', $player['comment']);
 

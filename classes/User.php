@@ -51,13 +51,10 @@ class User
             throw new HandledException('AccountBlocked');
         }
 
-        // reads highest access level
-        $maxAccess = OTSCMS::getResource('DB')->query('SELECT MAX({groups}.`access`) AS `access` FROM {players}, {groups} WHERE {players}.`account_id` = ' . $account->id . ' AND {players}.`group_id` = {groups}.`id`')->fetch();
-
         // sets user information
         self::$logged = true;
         self::$number = (int) $account->id;
-        self::$access = $maxAccess['access'];
+        self::$access = $account->access;
 
         // default 0 access for logged player without characters
         if( is_null(self::$access) )
