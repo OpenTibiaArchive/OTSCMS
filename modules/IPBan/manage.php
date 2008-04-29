@@ -43,7 +43,7 @@ $list->addField('actions', $language['main.admin.Actions']);
 $ipbans = array();
 
 // loads banned ips
-foreach( $db->query('SELECT `ip`, `mask` FROM {bans} WHERE `type` = 1') as $ipban)
+foreach( $ots->bannedIPs() as $ipban)
 {
     // creates actions links
     $actions = XMLToolbox::createElement('a');

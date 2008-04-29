@@ -100,7 +100,8 @@ class Toolbox
     public static function getPlayersCount(CMS_Online $server)
     {
         // reads server status
-        $status = POT::getInstance()->serverStatus($server['content'], $server['port']);
+        $status = new OTS_ServerInfo($server['content'], $server['port']);
+        $status = $status->status();
 
         // offline message
         if(!$status)

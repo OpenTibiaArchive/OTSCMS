@@ -7,18 +7,25 @@
 
 /**
  * @package POT
+ * @version 0.1.3
  * @author Wrzasq <wrzasq@gmail.com>
- * @copyright 2007 (C) by Wrzasq
+ * @copyright 2007 - 2008 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
  */
 
 /**
  * Wrapper for spells list.
  * 
+ * <p>
+ * Note: Unlike other lists classes this one doesn't implement either Iterator/IteratorAggregate, Countable or ArrayAccess interfaces because it contains three kinds of spells grouped into pararell arrays.
+ * </p>
+ * 
  * @package POT
+ * @version 0.1.3
  * @property-read array $runesList List of rune spells.
  * @property-read array $instantsList List of instant spells.
  * @property-read array $conjuresList List of conjure spells.
+ * @tutorial POT/data_directory.pkg#spells
  */
 class OTS_SpellsList
 {
@@ -55,12 +62,14 @@ class OTS_SpellsList
  * @var array
  */
     private $conjures = array();
+
 /**
  * Magic PHP5 method.
  * 
+ * <p>
  * Allows object importing from {@link http://www.php.net/manual/en/function.var-export.php var_export()}.
+ * </p>
  * 
- * @internal Magic PHP5 method.
  * @param array $properties List of object properties.
  */
     public function __set_state($properties)
@@ -80,6 +89,7 @@ class OTS_SpellsList
  * Loads spells list.
  * 
  * @param string $file Spells file name.
+ * @throws DOMException On DOM operation error.
  */
     public function __construct($file)
     {
@@ -117,10 +127,25 @@ class OTS_SpellsList
     }
 
 /**
+ * Checks if rune exists.
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @param string $name Rune name.
+ * @return bool If rune is set then true.
+ */
+    public function hasRune($name)
+    {
+        return isset($this->runes[$name]);
+    }
+
+/**
  * Returns given rune spell.
  * 
+ * @version 0.1.3
  * @param string $name Rune name.
- * @return OTS_Spell|null Rune spell wrapper (null if rune does not exist).
+ * @return OTS_Spell Rune spell wrapper.
+ * @throws OutOfBoundsException If rune does not exist.
  */
     public function getRune($name)
     {
@@ -128,10 +153,8 @@ class OTS_SpellsList
         {
             return $this->runes[$name];
         }
-        else
-        {
-            return null;
-        }
+
+        throw new OutOfBoundsException();
     }
 
 /**
@@ -145,10 +168,25 @@ class OTS_SpellsList
     }
 
 /**
+ * Checks if instant exists.
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @param string $name Instant name.
+ * @return bool If instant is set then true.
+ */
+    public function hasInstant($name)
+    {
+        return isset($this->instants[$name]);
+    }
+
+/**
  * Returns given instant spell.
  * 
+ * @version 0.1.3
  * @param string $name Spell name.
- * @return OTS_Spell|null Instant spell wrapper (null if rune does not exist).
+ * @return OTS_Spell Instant spell wrapper.
+ * @throws OutOfBoundsException If instant does not exist.
  */
     public function getInstant($name)
     {
@@ -156,10 +194,8 @@ class OTS_SpellsList
         {
             return $this->instants[$name];
         }
-        else
-        {
-            return null;
-        }
+
+        throw new OutOfBoundsException();
     }
 
 /**
@@ -173,10 +209,25 @@ class OTS_SpellsList
     }
 
 /**
+ * Checks if conjure exists.
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @param string $name Conjure name.
+ * @return bool If conjure is set then true.
+ */
+    public function hasConjure($name)
+    {
+        return isset($this->conjures[$name]);
+    }
+
+/**
  * Returns given conjure spell.
  * 
+ * @version 0.1.3
  * @param string $name Spell name.
- * @return OTS_Spell|null Conjure spell wrapper (null if rune does not exist).
+ * @return OTS_Spell Conjure spell wrapper.
+ * @throws OutOfBoundsException If conjure does not exist.
  */
     public function getConjure($name)
     {
@@ -184,10 +235,8 @@ class OTS_SpellsList
         {
             return $this->conjures[$name];
         }
-        else
-        {
-            return null;
-        }
+
+        throw new OutOfBoundsException();
     }
 
 /**
@@ -213,6 +262,30 @@ class OTS_SpellsList
             default:
                 throw new OutOfBoundsException();
         }
+    }
+
+/**
+ * Returns string representation of object.
+ * 
+ * <p>
+ * If any display driver is currently loaded then it uses it's method.
+ * </p>
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @return string String representation of object.
+ */
+    public function __toString()
+    {
+        $ots = POT::getInstance();
+
+        // checks if display driver is loaded
+        if( $ots->isDataDisplayDriverLoaded() )
+        {
+            return $ots->getDataDisplayDriver()->displaySpellsList($this);
+        }
+
+        return (string) $this->count();
     }
 }
 

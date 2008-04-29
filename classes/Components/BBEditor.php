@@ -302,7 +302,7 @@ class ComponentBBEditor extends TemplateComponent
             $both = XMLToolbox::createElement('option');
             $both->setAttribute('value', '3');
             $both->addContent($language['Components.BBEditor.AfterPinClose']);
-            $element->addContents($nothing, $pin, $option, $both);
+            $element->addContents($nothing, $pin, $close, $both);
 
             $td->addContent($element);
             $row->addContent($td);

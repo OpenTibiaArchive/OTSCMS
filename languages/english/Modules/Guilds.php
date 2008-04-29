@@ -51,6 +51,9 @@ return array(
     'RequestSubmit' => 'Request membership',
     'AcceptSubmit' => 'Accept',
     'RejectSubmit' => 'Reject',
+    'Content' => 'Description',
+    'Icon' => 'Emblemat',
+    'Saved' => 'Changes saved',
 );
 
 ?>

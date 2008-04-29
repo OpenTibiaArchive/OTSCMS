@@ -2,11 +2,14 @@ ALTER TABLE {players} ADD `comment` TEXT;
 ALTER TABLE {accounts} ADD `signature` TEXT;
 ALTER TABLE {accounts} ADD `avatar` VARCHAR(255);
 ALTER TABLE {accounts} ADD `website` VARCHAR(255);
+ALTER TABLE {guilds} ADD `icon` VARCHAR(255);
+ALTER TABLE {guilds} ADD `content` TEXT;
 
 DROP VIEW IF EXISTS [player_skills];
 DROP VIEW IF EXISTS [private_messages];
 DROP VIEW IF EXISTS [posts_with_authors];
 
+DROP TABLE IF EXISTS [otadmin];
 DROP TABLE IF EXISTS [items];
 DROP TABLE IF EXISTS [cache];
 DROP TABLE IF EXISTS [sites];
@@ -176,6 +179,7 @@ CREATE TABLE [profiles] (
     `loss_experience` INT,
     `loss_mana` INT,
     `loss_skills` INT,
+    `balance` INT,
     PRIMARY KEY (`id`)
 );
 
@@ -245,6 +249,15 @@ CREATE TABLE [items] (
     `name` VARCHAR(255),
     `group` INT,
     `type` INT
+);
+
+CREATE TABLE [otadmin] (
+    `id` SERIAL,
+    `name` VARCHAR(255),
+    `content` VARCHAR(255),
+    `port` INT,
+    `password` VARCHAR(255),
+    PRIMARY KEY (`id`)
 );
 
 CREATE VIEW [posts_with_authors]

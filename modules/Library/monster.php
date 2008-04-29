@@ -23,7 +23,7 @@
 $name = InputData::read('name');
 
 // loads monster file
-$monster = $ots->getMonster($name);
+$monster = $ots->getMonstersList()->getMonster($name);
 
 // there has to be an image for that spell - that is the way how you can select which spells should be displayed
 if(!($extension = Toolbox::imageExists('Monsters/' . $name) ))

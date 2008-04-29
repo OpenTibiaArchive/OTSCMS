@@ -80,4 +80,10 @@ if( ini_get('register_globals') )
     _compat_revert_register_globals($_COOKIE);
 }
 
+// it can crush installation
+if( function_exists('set_magic_quotes_runtime') )
+{
+    set_magic_quotes_runtime(0);
+}
+
 ?>

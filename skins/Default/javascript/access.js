@@ -110,6 +110,9 @@ function AccessAJAX()
                 break;
             }
         }
+
+        // everything's fine
+        return false;
     }
 }
 

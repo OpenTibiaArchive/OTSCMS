@@ -45,6 +45,7 @@ return array(
             'PM' => 'Private Messages',
             'Logger' => 'Error Logs',
             'MSP' => 'Mass spawn changer',
+            'OTAdmin' => 'OTAdmin',
         ),
 
         'Account' => array(

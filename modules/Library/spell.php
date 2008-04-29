@@ -27,17 +27,17 @@ switch($type)
 {
     // instant spell
     case OTS_SpellsList::SPELL_INSTANT:
-        $spell = $ots->getInstant($name);
+        $spell = $ots->getSpellsList()->getInstant($name);
         break;
 
     // rune spell
     case OTS_SpellsList::SPELL_RUNE:
-        $spell = $ots->getRune($name);
+        $spell = $ots->getSpellsList()->getRune($name);
         break;
 
     // conjure spell
     case OTS_SpellsList::SPELL_CONJURE:
-        $spell = $ots->getConjure($name);
+        $spell = $ots->getSpellsList()->getConjure($name);
         break;
 
     default:

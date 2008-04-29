@@ -7,8 +7,9 @@
 
 /**
  * @package POT
+ * @version 0.1.4+SVN
  * @author Wrzasq <wrzasq@gmail.com>
- * @copyright 2007 (C) by Wrzasq
+ * @copyright 2007 - 2008 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
  */
 
@@ -16,6 +17,16 @@
  * OTAdmin protocol client.
  * 
  * @package POT
+ * @version 0.1.4+SVN
+ * @property-read bool $requiresLogin {@link OTS_Admin::requiresLogin() requiresLogin()} wrapper.
+ * @property-read bool $requiresEncryption {@link OTS_Admin::requiresEncryption() requiresEncryption()} wrapper.
+ * @property-read bool $usesRSA1024XTEA {@link OTS_Admin::usesRSA1024XTEA() usesRSA1024XTEA()} wrapper.
+ * @property-read int $ping Ping time.
+ * @property-write string $login Logs in with given password.
+ * @property-write string $broadcast Sends given broadcast message.
+ * @property-write string $kick Kicks player with given name from server.
+ * @tutorial POT/OTAdmin.pkg
+ * @example examples/admin.php admin.php
  */
 class OTS_Admin
 {
@@ -197,9 +208,18 @@ class OTS_Admin
 /**
  * Creates new connection to OTServ administration backend.
  * 
+ * <p>
+ * This method automaticly handles RSA and XTEA encryption if such method is required by server including keys negotiations.
+ * </p>
+ * 
+ * <p>
+ * After connecting you should check {@link OTS_Admin::requiresLogin() if server requires login}.
+ * </p>
+ * 
  * @param string $host Target server.
  * @param int $port Port (7171 by default).
  * @throws E_OTS_ErrorCode When receive failed respond or unexpected message.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public function __construct($host, $port = 7171)
     {
@@ -330,6 +350,7 @@ class OTS_Admin
  * @param OTS_Buffer $message Packet to be sent.
  * @return OTS_Buffer Server respond.
  * @throws E_OTS_ErrorCode When receive RESPOND_ERROR message.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public function send(OTS_Buffer $message)
     {
@@ -377,34 +398,80 @@ class OTS_Admin
         fclose($this->socket);
     }
 
-/*
+/**
+ * Magic PHP5 method.
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @param string $name Property name.
+ * @param mixed $value Property value.
+ * @throws OutOfBoundsException For non-supported properties.
+ * @throws E_OTS_ErrorCode When receive failed respond or unexpected message.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
+ */
     public function __get($name)
     {
         switch($name)
         {
+            case 'requiresLogin':
+                return $this->requiresLogin();
+
+            case 'requiresEncryption':
+                return $this->requiresEncryption();
+
+            case 'usesRSA1024XTEA':
+                return $this->usesRSA1024XTEA();
+
+            case 'ping':
+                return $this->ping();
 
             default:
-                return parent::__get($name);
+                throw new OutOfBoundsException();
         }
     }
 
+/**
+ * Magic PHP5 method.
+ * 
+ * @version 0.1.4+SVN
+ * @since 0.1.3
+ * @param string $name Property name.
+ * @param mixed $value Property value.
+ * @throws OutOfBoundsException For non-supported properties.
+ * @throws E_OTS_ErrorCode When receive failed respond or unexpected message.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
+ */
     public function __set($name, $value)
     {
         switch($name)
         {
+            case 'login':
+                $this->login($value);
+                break;
+
+            case 'broadcast':
+                $this->broadcast($value);
+                break;
+
+            case 'kick':
+                $this->kick($value);
+                break;
 
             default:
-                parent::__set($name, $value);
+                throw new OutOfBoundsException();
         }
     }
-*/
+
 /**
  * Logs into server.
  * 
+ * <p>
  * Call this method if after connection is established login required flag is set.
+ * </p>
  * 
  * @param string $password Admin password.
  * @throws E_OTS_ErrorCode When receive failed respond or unexpected message.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public function login($password)
     {
@@ -428,10 +495,13 @@ class OTS_Admin
 /**
  * Ping command.
  * 
+ * <p>
  * Note: This methods calculates ping time based on {@link OTS_Admin::send() OTS_Admin::send()} sub-call. This means ping time will be time used for entire seding operation including packet encryption, packing, unpacking and decryption.
+ * </p>
  * 
  * @return int Ping time.
  * @throws E_OTS_ErrorCode When receive failed respond or unexpected message.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public function ping()
     {
@@ -460,11 +530,14 @@ class OTS_Admin
 /**
  * Sends command message.
  * 
+ * <p>
  * This method wraps another buffer within command byte and also checks for command success.
+ * </p>
  * 
  * @param OTS_Buffer $message Command to be send.
  * @return OTS_Buffer Respond.
  * @throws E_OTS_ErrorCode If failure respond received.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     private function sendCommand(OTS_Buffer $message)
     {
@@ -489,11 +562,15 @@ class OTS_Admin
     }
 
 /**
- * Sends broadcast message to all players.
- * 
  * Sends COMMAND_BROADCAST command with given parameter.
  * 
+ * <p>
+ * Sends broadcast message to all players.
+ * </p>
+ * 
  * @param string $message Broadcast to be sent.
+ * @throws E_OTS_ErrorCode If failure respond received.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public function broadcast($message)
     {
@@ -505,9 +582,14 @@ class OTS_Admin
     }
 
 /**
- * Closes server.
+ * Sends COMMAND_CLOSE_SERVER command.
  * 
- * Sends COMMAND_CLOSE_SERVER command. This command closes server for connections to enable maintenance but doesn't shut it down.
+ * <p>
+ * Closes server. This command closes server for connections to enable maintenance but doesn't shut it down.
+ * </p>
+ * 
+ * @throws E_OTS_ErrorCode If failure respond received.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public function close()
     {
@@ -518,9 +600,14 @@ class OTS_Admin
     }
 
 /**
- * Takes fees for all rented houses.
- * 
  * Sends COMMAND_PAY_HOUSES command.
+ * 
+ * <p>
+ * Takes fees for all rented houses.
+ * </p>
+ * 
+ * @throws E_OTS_ErrorCode If failure respond received.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public function payHouses()
     {
@@ -531,9 +618,14 @@ class OTS_Admin
     }
 
 /**
- * Shutdowns server.
+ * Sends COMMAND_SHUTDOWN_SERVER command.
  * 
- * Sends COMMAND_SHUTDOWN_SERVER command. This command closes server thread.
+ * <p>
+ * Shutdowns server. This command closes server thread.
+ * </p>
+ * 
+ * @throws E_OTS_ErrorCode If failure respond received.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public function shutdown()
     {
@@ -544,12 +636,37 @@ class OTS_Admin
     }
 
 /**
+ * Sends COMMAND_KICK command with given parameter.
+ * 
+ * <p>
+ * Kicks given player from server.
+ * </p>
+ * 
+ * @version 0.1.4+SVN
+ * @since 0.1.4+SVN
+ * @param string $name Name of player to be kicked.
+ * @throws E_OTS_ErrorCode If failure respond received.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
+ */
+    public function kick($name)
+    {
+        // sends message
+        $buffer = new OTS_Buffer();
+        $buffer->putChar(self::COMMAND_KICK);
+        $buffer->putString($name);
+        $this->sendCommand($buffer);
+    }
+
+/**
  * Magic PHP5 method.
  * 
+ * <p>
  * Allows object importing from {@link http://www.php.net/manual/en/function.var-export.php var_export()}.
+ * </p>
  * 
- * @internal Magic PHP5 method.
  * @param array $properties List of object properties.
+ * @throws E_OTS_ErrorCode When receive failed respond or unexpected message.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public static function __set_state($properties)
     {
@@ -559,7 +676,12 @@ class OTS_Admin
 /**
  * Magic PHP5 method.
  * 
+ * <p>
  * Creates new socket connection to server.
+ * </p>
+ * 
+ * @throws E_OTS_ErrorCode When receive failed respond or unexpected message.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public function __clone()
     {
@@ -569,10 +691,11 @@ class OTS_Admin
 /**
  * Magic PHP5 method.
  * 
+ * <p>
  * Allows object serialisation.
+ * </p>
  * 
  * @return array List of properties that should be saved.
- * @internal Magic PHP5 method.
  */
     public function __sleep()
     {
@@ -582,9 +705,12 @@ class OTS_Admin
 /**
  * Magic PHP5 method.
  * 
+ * <p>
  * Allows object unserialisation.
+ * </p>
  * 
- * @internal Magic PHP5 method.
+ * @throws E_OTS_ErrorCode When receive failed respond or unexpected message.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of packet stream.
  */
     public function __wakeup()
     {

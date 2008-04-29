@@ -49,6 +49,10 @@ Language[11] = "<?php echo $language['Components.BBEditor.email']; ?>";
 Language[12] = "<?php echo $language['Components.BBEditor.list']; ?>";
 Language[13] = "<?php echo $language['Components.BBEditor.item']; ?>";
 Language[14] = "<?php echo $language['Modules.Account.PleaseEMail']; ?>";
+Language[15] = "<?php echo $language['Modules.OTAdmin.PasswordYes']; ?>";
+Language[16] = "<?php echo $language['Modules.OTAdmin.PasswordNo']; ?>";
+Language[17] = "<?php echo $language['Modules.OTAdmin.PanelSubmit']; ?>";
+Language[18] = "<?php echo $language['Modules.Guild.Saved']; ?>";
 
         </script>
     </head>
@@ -139,7 +143,8 @@ Language[14] = "<?php echo $language['Modules.Account.PleaseEMail']; ?>";
                 [<a href="admin/module=Access&amp;command=manage"><?php echo $language['main.menu.admin.Access']; ?></a>]
                 [<a href="admin/module=PM&amp;command=manage"><?php echo $language['main.menu.admin.PM']; ?></a>]
                 [<a href="admin/module=MSP&amp;command=select"><?php echo $language['main.menu.admin.MSP']; ?></a>]
-                [<a href="admin/module=Logger&amp;command=manage"><?php echo $language['main.menu.admin.Logger']; ?></a>]<br />
+                [<a href="admin/module=Logger&amp;command=manage"><?php echo $language['main.menu.admin.Logger']; ?></a>]
+                [<a href="admin/module=OTAdmin&amp;command=manage"><?php echo $language['main.menu.admin.OTAdmin']; ?></a>]<br />
             </div>
 <?php endif; ?>
             <div id="pageMenu">
@@ -232,7 +237,7 @@ if( User::hasAccess(3) )
 <?php endforeach; ?>
             </div>
             <div id="pageFooter">
-                Powered by <a href="http://www.otscms.com/" class="outLink">OTSCMS</a> v <?php echo $config['version']; ?>; Copyright &copy; 2005 - 2008 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.<br />
+                Powered by <a href="http://otscms.com/" class="outLink">OTSCMS</a> v <?php echo $config['version']; ?>; Copyright &copy; 2005 - 2008 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.<br />
 <a class="outLink" href="http://otserv-aac.info/">
     <img alt="This site was smoked" src="http://otserv-aac.info/pot.png"/>
 </a>

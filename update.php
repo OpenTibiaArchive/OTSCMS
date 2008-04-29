@@ -19,6 +19,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+// to make sure OTSCMS will run correctly on various PHP configurations
+include('compat.php');
+
 // loads system configuration
 include('config.php');
 
@@ -70,6 +73,9 @@ $template['languages'] = array();
 $template['skins'] = array();
 $template['links'] = array();
 $template['onlines'] = array();
+
+// to prevent multiple calls
+$driver = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
 
 // execute update
 switch($config['version'])
@@ -158,7 +164,7 @@ switch($config['version'])
         $db->exec('DROP VIEW [guild_members]');
 
         // guides table
-        switch( $db->getAttribute(PDO::ATTR_DRIVER_NAME) )
+        switch($driver)
         {
             case 'mysql':
                 $db->query('CREATE TABLE [sites] (`id` INT NOT NULL AUTO_INCREMENT, `name` VARCHAR(255), `content` LONGTEXT, `is_home` BOOLEAN DEFAULT FALSE, PRIMARY KEY (`id`) )');
@@ -291,11 +297,11 @@ switch($config['version'])
         $db->exec('UPDATE [settings] SET `content` = \'3.1.1\' WHERE `name` = \'version\'');
 
         // creates cache table
-        switch( $db->getAttribute(PDO::ATTR_DRIVER_NAME) )
+        switch($driver)
         {
             case 'mysql':
                 $db->exec('CREATE TABLE [cache] (`key` VARCHAR(32), `id` INT, `name` INT, `content` BLOB, `parent` INT, `previous` INT) ENGINE = InnoDB CHARSET = utf8');
-                $db->exec('CREATE TABLE [items] ( `key` VARCHAR(32), `id` INT, `name` VARCHAR(255), `group` INT, `type` INT)');
+                $db->exec('CREATE TABLE [items] ( `key` VARCHAR(32), `id` INT, `name` VARCHAR(255), `group` INT, `type` INT) ENGINE = InnoDB CHARSET = utf8');
                 break;
 
             case 'sqlite':
@@ -329,6 +335,32 @@ switch($config['version'])
     case '3.1.2':
         // updates system version
         $db->exec('UPDATE [settings] SET `content` = \'3.1.3\' WHERE `name` = \'version\'');
+
+        // adds balance field to character profiles
+        $db->exec('ALTER TABLE [profiles] ADD `balance` INT');
+
+        // creates OTAdmin connections list
+        switch($driver)
+        {
+            case 'mysql':
+                $db->exec('CREATE TABLE [otadmin] (`id` SERIAL, `name` VARCHAR(255), `content` VARCHAR(255), `port` INT, `password` VARCHAR(255), PRIMARY KEY (`id`) ) ENGINE = InnoDB CHARSET = utf8');
+                break;
+
+            case 'sqlite':
+                $db->exec('CREATE TABLE [otadmin] (`id` SERIAL, `name` VARCHAR(255), `content` VARCHAR(255), `port` INT, `password` VARCHAR(255), PRIMARY KEY (`id`) )');
+                break;
+
+            case 'pgsql':
+                $db->exec('CREATE TABLE [otadmin] (`id` INTEGER PRIMARY KEY, `name` VARCHAR(255), `content` VARCHAR(255), `port` INT, `password` VARCHAR(255) )');
+                break;
+        }
+
+        // OTAdmin module access restrictions
+        $db->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'OTAdmin.*\', 3)');
+
+        // guild table extensions
+        $db->exec('ALTER TABLE {guilds} ADD `icon` VARCHAR(255)');
+        $db->exec('ALTER TABLE {guilds} ADD `content` TEXT');
 }
 
 $raw = $template->createComponent('RAW');

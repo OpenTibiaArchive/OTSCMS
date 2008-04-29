@@ -9,23 +9,25 @@
  * Code in this file bases on oryginal OTServ OTBM format loading C++ code (iomapotbm.h, iomapotbm.cpp).
  * 
  * @package POT
- * @version 0.1.0
+ * @version 0.1.3
  * @author Wrzasq <wrzasq@gmail.com>
- * @copyright 2007 (C) by Wrzasq
+ * @copyright 2007 - 2008 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
- * @todo 1.0.0: Spawns support.
- * @todo 1.0.0: Complete OTBM support: link tiles with items and spawns.
+ * @todo future: Complete OTBM support: link tiles with items and spawns.
+ * @todo future: Spawns support.
  */
 
 /**
  * OTBM format reader.
  * 
  * @package POT
- * @version 0.1.0
+ * @version 0.1.3
  * @property-read OTS_HousesList $housesList Houses list loaded from associated houses file.
  * @property-read int $width Map width.
  * @property-read int $height Map height.
  * @property-read string $description Map description.
+ * @tutorial POT/data_directory.pkg#towns
+ * @example examples/otbm.php otbm.php
  */
 class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countable, ArrayAccess
 {
@@ -195,9 +197,11 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
 /**
  * Magic PHP5 method.
  * 
+ * <p>
  * Allows object unserialisation.
+ * </p>
  * 
- * @internal Magic PHP5 method.
+ * @throws E_OTS_FileLoaderError When error occurs during file operation.
  */
     public function __wakeup()
     {
@@ -206,31 +210,12 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
     }
 
 /**
- * Magic PHP5 method.
- * 
- * Allows object importing from {@link http://www.php.net/manual/en/function.var-export.php var_export()}.
- * 
- * @internal Magic PHP5 method.
- * @param array $properties List of object properties.
- */
-    public static function __set_state($properties)
-    {
-        $object = new self();
-
-        // loads properties
-        foreach($properties as $name => $value)
-        {
-            $object->$name = $value;
-        }
-
-        return $object;
-    }
-
-/**
  * Loads OTBM file content.
  * 
  * @version 0.1.0
  * @param string $file Filename.
+ * @throws E_OTS_FileLoaderError When error occurs during file operation.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of stream.
  */
     public function loadFile($file)
     {
@@ -248,6 +233,8 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
  * Parses loaded file.
  * 
  * @version 0.1.0
+ * @throws E_OTS_FileLoaderError When error occurs during file operation.
+ * @throws E_OTS_OutOfBuffer When there is read attemp after end of stream.
  */
     private function parse()
     {
@@ -415,21 +402,58 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
     }
 
 /**
+ * Checks if given town ID exists on list.
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @param int $id ID.
+ * @return bool If town is set then true.
+ */
+    public function hasTownId($id)
+    {
+        return isset($this->towns[$id]);
+    }
+
+/**
  * Returns town's ID.
  * 
+ * @version 0.1.3
  * @param string $name Town.
- * @return int|bool ID (false if not found).
+ * @return int ID.
+ * @throws OutOfBoundsException If not found.
  */
     public function getTownID($name)
     {
-        return array_search($name, $this->towns);
+        $id = array_search($name, $this->towns);
+
+        if($id === false)
+        {
+            throw new OutOfBoundsException();
+        }
+
+        return $id;
+    }
+
+/**
+ * Checks if given town name exists on list.
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @param string $name Town.
+ * @return bool If town is set then true.
+ */
+    public function hasTownName($name)
+    {
+        return array_search($name, $this->towns) !== false;
     }
 
 /**
  * Returns name of given town's ID.
  * 
+ * @version 0.1.3
  * @param int $id Town ID.
- * @return string|bool Name (false if not found).
+ * @return string Name.
+ * @throws OutOfBoundsException If not found.
  */
     public function getTownName($id)
     {
@@ -437,15 +461,11 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
         {
             return $this->towns[$id];
         }
-        else
-        {
-            return false;
-        }
+
+        throw new OutOfBoundsException();
     }
 
 /**
- * Returns list (id => name) of loaded towns.
- * 
  * @return array List of towns.
  * @deprecated 0.1.0 Use this class object as array for iterations, counting and methods for field fetching.
  */
@@ -485,8 +505,6 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
     }
 
 /**
- * Returns town at current position in iterator.
- * 
  * @version 0.0.8
  * @since 0.0.8
  * @return string Town name.
@@ -498,8 +516,6 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
     }
 
 /**
- * Moves to next iterator town.
- * 
  * @version 0.0.8
  * @since 0.0.8
  * @deprecated 0.1.0 Use getIterator().
@@ -510,8 +526,6 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
     }
 
 /**
- * Returns ID of current position.
- * 
  * @version 0.0.8
  * @since 0.0.8
  * @return int Current position key.
@@ -523,8 +537,6 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
     }
 
 /**
- * Checks if there is anything more in interator.
- * 
  * @version 0.0.8
  * @since 0.0.8
  * @return bool If iterator has anything more.
@@ -536,8 +548,6 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
     }
 
 /**
- * Resets iterator index.
- * 
  * @version 0.0.8
  * @since 0.0.8
  * @deprecated 0.1.0 Use getIterator().
@@ -612,7 +622,7 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
     }
 
 /**
- * This method is implemented for ArrayAccess interface. In fact you can't write/append to towns list. Any call to this method will cause E_OTS_ReadOnly raise.
+ * This method is implemented for ArrayAccess interface. In fact you can't write/append to towns list. Any call to this method will cause {@link E_OTS_ReadOnly E_OTS_ReadOnly} raise.
  * 
  * @version 0.1.0
  * @since 0.1.0
@@ -626,7 +636,7 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
     }
 
 /**
- * This method is implemented for ArrayAccess interface. In fact you can't write/append to towns list. Any call to this method will cause E_OTS_ReadOnly raise.
+ * This method is implemented for ArrayAccess interface. In fact you can't write/append to towns list. Any call to this method will cause {@link E_OTS_ReadOnly E_OTS_ReadOnly} raise.
  * 
  * @version 0.1.0
  * @since 0.1.0
@@ -666,6 +676,30 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
             default:
                 throw new OutOfBoundsException();
         }
+    }
+
+/**
+ * Returns string representation of object.
+ * 
+ * <p>
+ * If any display driver is currently loaded then it uses it's method.
+ * </p>
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @return string String representation of object.
+ */
+    public function __toString()
+    {
+        $ots = POT::getInstance();
+
+        // checks if display driver is loaded
+        if( $ots->isDataDisplayDriverLoaded() )
+        {
+            return $ots->getDataDisplayDriver()->displayOTBMMap($this);
+        }
+
+        return (string) $this->count();
     }
 }
 

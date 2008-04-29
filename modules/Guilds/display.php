@@ -26,6 +26,23 @@ $isVice = User::hasAccess(3);
 $isMember = false;
 $isInvited = false;
 
+$icon = $guild->getCustomField('icon');
+
+// guild header
+$header = XMLToolbox::createDocumentFragment();
+
+if( !empty($icon) )
+{
+    $img = XMLToolbox::createElement('img');
+    $img->setAttribute('src', $icon);
+    $header->addContent($img);
+}
+
+$header->addContent( $guild->getCustomField('content') );
+
+$message = $template->createComponent('Message');
+$message['message'] = $header;
+
 // loads invited list
 if(User::$logged)
 {

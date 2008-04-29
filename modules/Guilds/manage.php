@@ -98,4 +98,13 @@ foreach($guild->requests as $player)
 $list['list'] = $requests;
 Session::write('guild', $guild->id);
 
+// guild info rank
+$form = $template->createComponent('AdminForm');
+$form['action'] = 'admin/module=Guilds&command=save&id=' . $guild->id;
+$form['submit'] = $language['main.admin.UpdateSubmit'];
+$form['id'] = 'guildManage';
+
+$form->addField('guild[icon]', ComponentAdminForm::FieldText, $language['Modules.Guilds.Icon'], $guild->getCustomField('icon') );
+$form->addField('guild[content]', ComponentAdminForm::FieldArea, $language['Modules.Guilds.Content'], $guild->getCustomField('content') );
+
 ?>

@@ -23,12 +23,14 @@
 $list = $template->createComponent('ItemsList');
 $list['header'] = $language['Modules.Library.InstantsList'];
 
+$spells = $ots->getSpellsList();
+
 $temp = array();
 
 // loops through loaded spells
-foreach( $ots->getInstantsList() as $spell)
+foreach( $spells->getInstantsList() as $spell)
 {
-    $spell = $ots->getInstant($spell);
+    $spell = $spells->getInstant($spell);
 
     $name = $spell->name;
 
@@ -53,9 +55,9 @@ $list['header'] = $language['Modules.Library.RunesList'];
 $temp = array();
 
 // loops through loaded spells
-foreach( $ots->getRunesList() as $spell)
+foreach( $spells->getRunesList() as $spell)
 {
-    $spell = $ots->getRune($spell);
+    $spell = $spells->getRune($spell);
 
     $name = $spell->name;
 
@@ -80,9 +82,9 @@ $list['header'] = $language['Modules.Library.ConjuresList'];
 $temp = array();
 
 // loops through loaded spells
-foreach( $ots->getConjuresList() as $spell)
+foreach( $spells->getConjuresList() as $spell)
 {
-    $spell = $ots->getConjure($spell);
+    $spell = $spells->getConjure($spell);
 
     $name = $spell->name;
 

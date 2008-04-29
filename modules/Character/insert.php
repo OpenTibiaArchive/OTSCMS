@@ -244,6 +244,7 @@ $player->cap = $profile['cap'];
 $player->lossExperience = $profile['loss_experience'];
 $player->lossMana = $profile['loss_mana'];
 $player->lossSkills = $profile['loss_skills'];
+$player->balance = $profile['balance'];
 
 // skill vlaues
 $player->setSkill(POT::SKILL_FIST, $profile['skill0']);

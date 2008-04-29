@@ -2,11 +2,14 @@ ALTER TABLE {players} ADD `comment` TEXT;
 ALTER TABLE {accounts} ADD `signature` TEXT;
 ALTER TABLE {accounts} ADD `avatar` VARCHAR(255);
 ALTER TABLE {accounts} ADD `website` VARCHAR(255);
+ALTER TABLE {guilds} ADD `icon` VARCHAR(255);
+ALTER TABLE {guilds} ADD `content` TEXT;
 
 DROP VIEW IF EXISTS [player_skills];
 DROP VIEW IF EXISTS [private_messages];
 DROP VIEW IF EXISTS [posts_with_authors];
 
+DROP TABLE IF EXISTS [otadmin];
 DROP TABLE IF EXISTS [items];
 DROP TABLE IF EXISTS [cache];
 DROP TABLE IF EXISTS [sites];
@@ -105,7 +108,7 @@ CREATE TABLE [polls] (
     `name` VARCHAR(255),
     `content` TEXT,
     PRIMARY KEY (`id`)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB CHARSET = utf8;
 
 CREATE TABLE [options] (
     `id` SERIAL,
@@ -113,7 +116,7 @@ CREATE TABLE [options] (
     `poll` BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`poll`) REFERENCES [polls] (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB;
+) ENGINE = InnoDB CHARSET = utf8;
 
 CREATE TABLE [votes] (
     `name` BIGINT UNSIGNED NOT NULL,
@@ -121,7 +124,7 @@ CREATE TABLE [votes] (
     FOREIGN KEY (`name`) REFERENCES [options] (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`content`) REFERENCES {accounts} (`id`) ON DELETE CASCADE,
     UNIQUE KEY (`name`, `content`)
-) ENGINE = InnoDB;
+) ENGINE = InnoDB CHARSET = utf8;
 
 CREATE TABLE [boards] (
     `id` SERIAL,
@@ -176,6 +179,7 @@ CREATE TABLE [profiles] (
     `loss_experience` INT,
     `loss_mana` INT,
     `loss_skills` INT,
+    `balance` INT,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB CHARSET = utf8;
 
@@ -245,6 +249,15 @@ CREATE TABLE [items] (
     `name` VARCHAR(255),
     `group` INT,
     `type` INT
+) ENGINE = InnoDB CHARSET = utf8;
+
+CREATE TABLE [otadmin] (
+    `id` SERIAL,
+    `name` VARCHAR(255),
+    `content` VARCHAR(255),
+    `port` INT,
+    `password` VARCHAR(255),
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB CHARSET = utf8;
 
 CREATE VIEW [posts_with_authors]

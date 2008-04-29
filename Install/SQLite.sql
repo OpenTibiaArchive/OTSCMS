@@ -2,6 +2,8 @@ ALTER TABLE {players} ADD `comment` TEXT;
 ALTER TABLE {accounts} ADD `signature` TEXT;
 ALTER TABLE {accounts} ADD `avatar` VARCHAR(255);
 ALTER TABLE {accounts} ADD `website` VARCHAR(255);
+ALTER TABLE {guilds} ADD `icon` VARCHAR(255);
+ALTER TABLE {guilds} ADD `content` TEXT;
 
 DROP TABLE [settings];
 
@@ -163,7 +165,8 @@ CREATE TABLE [profiles] (
     `food` INT,
     `loss_experience` INT,
     `loss_mana` INT,
-    `loss_skills` INT
+    `loss_skills` INT,
+    `balance` INT
 );
 
 DROP TABLE [containers];
@@ -242,6 +245,16 @@ CREATE TABLE [items] (
     `name` VARCHAR(255),
     `group` INT,
     `type` INT
+);
+
+DROP TABLE [otadmin];
+
+CREATE TABLE [otadmin] (
+    `id` INTEGER PRIMARY KEY,
+    `name` VARCHAR(255),
+    `content` VARCHAR(255),
+    `port` INT,
+    `password` VARCHAR(255)
 );
 
 DROP VIEW [posts_with_authors];

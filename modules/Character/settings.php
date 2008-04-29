@@ -40,7 +40,7 @@ if( is_numeric($gender) )
 
 if( is_numeric($vocation) )
 {
-    $vocation = $ots->getVocationName($vocation);
+    $vocation = $ots->getVocationsList()->getVocationName($vocation);
 }
 
 $name = $gender . '.' . $vocation;
@@ -74,6 +74,7 @@ $form->addField('profile[manamax]', ComponentAdminForm::FieldText, $language['Mo
 $form->addField('profile[manaspent]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldManaSpent'], $profile['manaspent']);
 $form->addField('profile[soul]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldSoul'], $profile['soul']);
 $form->addField('profile[health]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldHealth'], $profile['health']);
+$form->addField('profile[balance]', ComponentAdminForm::FieldText, $language['Modules.Character.Balance'], $profile['balance']);
 $form->addField('profile[healthmax]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldHealthMax'], $profile['healthmax']);
 $form->addField('profile[direction]', ComponentAdminForm::FieldSelect, $language['Modules.Character.FieldDirection'], array('options' => array('' => $language['Modules.Character.ValueInherit'], 0 => $language['Modules.Character.DirN'], 1 => $language['Modules.Character.DirE'], 2 => $language['Modules.Character.DirS'], 3 => $language['Modules.Character.DirW']), 'selected' => $profile['direction']) );
 $form->addField('profile[looktype]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldLookType'], $profile['looktype']);

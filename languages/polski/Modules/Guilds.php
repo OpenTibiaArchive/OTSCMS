@@ -51,6 +51,9 @@ return array(
     'RequestSubmit' => 'Poproś o przyjęcie',
     'AcceptSubmit' => 'Akceptuj',
     'RejectSubmit' => 'Odrzuć',
+    'Content' => 'Opis',
+    'Icon' => 'Emblemat',
+    'Saved' => 'Zmiany zapisane',
 );
 
 ?>

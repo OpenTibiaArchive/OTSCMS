@@ -2,12 +2,11 @@
 
 /**#@+
  * @version 0.0.1
- * @since 0.0.1
  */
 
 /**
  * @package POT
- * @version 0.1.2
+ * @version 0.1.3
  * @author Wrzasq <wrzasq@gmail.com>
  * @copyright 2007 - 2008 (C) by Wrzasq
  * @license http://www.gnu.org/licenses/lgpl-3.0.txt GNU Lesser General Public License, Version 3
@@ -17,7 +16,7 @@
  * OTServ character abstraction.
  * 
  * @package POT
- * @version 0.1.2
+ * @version 0.1.3
  * @property string $name Character name.
  * @property OTS_Account $account Account to which character belongs.
  * @property OTS_Group $group Group of which character is member.
@@ -62,6 +61,9 @@
  * @property-read bool $loaded Loaded state.
  * @property-read string $townName Name of town in which player residents.
  * @property-read OTS_House $house House which player rents.
+ * @property-read OTS_Players_List $vipsList List of VIPs of player.
+ * @property-read string $vocationName String vocation representation.
+ * @tutorial POT/Players.pkg
  */
 class OTS_Player extends OTS_Row_DAO
 {
@@ -88,7 +90,6 @@ class OTS_Player extends OTS_Row_DAO
  * Allows object serialisation.
  * 
  * @return array List of properties that should be saved.
- * @internal Magic PHP5 method.
  * @version 0.0.4
  * @since 0.0.4
  */
@@ -102,6 +103,7 @@ class OTS_Player extends OTS_Row_DAO
  * 
  * @version 0.1.2
  * @param int $id Player's ID.
+ * @throws PDOException On PDO operation error.
  */
     public function load($id)
     {
@@ -124,6 +126,7 @@ class OTS_Player extends OTS_Row_DAO
  * @version 0.0.5
  * @since 0.0.2
  * @param string $name Player's name.
+ * @throws PDOException On PDO operation error.
  */
     public function find($name)
     {
@@ -150,7 +153,12 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Saves player in database.
  * 
+ * <p>
+ * If player is not loaded to represent any existing group it will create new row for it.
+ * </p>
+ * 
  * @version 0.1.2
+ * @throws PDOException On PDO operation error.
  */
     public function save()
     {
@@ -179,6 +187,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Player ID.
  * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
+ * 
  * @version 0.0.3
  * @return int Player ID.
  * @throws E_OTS_NotLoaded If player is not loaded.
@@ -195,6 +207,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Player name.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return string Player's name.
@@ -213,6 +229,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets players's name.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param string $name Name.
  */
     public function setName($name)
@@ -223,9 +243,14 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Returns account of this player.
  * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
+ * 
  * @version 0.1.0
  * @return OTS_Account Owning account.
  * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function getAccount()
     {
@@ -242,7 +267,12 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Assigns character to account.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param OTS_Account $account Owning account.
+ * @throws E_OTS_NotLoaded If passed <var>$account</var> parameter is not loaded.
  */
     public function setAccount(OTS_Account $account)
     {
@@ -252,9 +282,14 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Returns group of this player.
  * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
+ * 
  * @version 0.1.0
  * @return OTS_Group Group of which current character is member.
  * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function getGroup()
     {
@@ -271,7 +306,12 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Assigns character to group.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param OTS_Group $group Group to be a member.
+ * @throws E_OTS_NotLoaded If passed <var>$group</var> parameter is not loaded.
  */
     public function setGroup(OTS_Group $group)
     {
@@ -299,6 +339,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets player's Premium Account expiration timestamp.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @version 0.0.3
  * @since 0.0.3
  * @param int $premend PACC expiration timestamp.
@@ -310,6 +354,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Player gender.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Player gender.
@@ -328,6 +376,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets player gender.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $sex Player gender.
  */
     public function setSex($sex)
@@ -337,6 +389,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Player proffesion.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Player proffesion.
@@ -355,6 +411,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets player proffesion.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $vocation Player proffesion.
  */
     public function setVocation($vocation)
@@ -364,6 +424,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Experience points.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Experience points.
@@ -382,6 +446,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets experience points.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $experience Experience points.
  */
     public function setExperience($experience)
@@ -391,6 +459,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Experience level.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Experience level.
@@ -409,6 +481,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets experience level.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $level Experience level.
  */
     public function setLevel($level)
@@ -418,6 +494,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Magic level.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Magic level.
@@ -436,6 +516,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets magic level.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $maglevel Magic level.
  */
     public function setMagLevel($maglevel)
@@ -445,6 +529,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Current HP.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Current HP.
@@ -463,6 +551,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets current HP.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $health Current HP.
  */
     public function setHealth($health)
@@ -472,6 +564,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Maximum HP.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Maximum HP.
@@ -490,6 +586,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets maximum HP.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $healthmax Maximum HP.
  */
     public function setHealthMax($healthmax)
@@ -499,6 +599,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Current mana.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Current mana.
@@ -517,6 +621,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets current mana.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $mana Current mana.
  */
     public function setMana($mana)
@@ -526,6 +634,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Maximum mana.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Maximum mana.
@@ -544,6 +656,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets maximum mana.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $manamax Maximum mana.
  */
     public function setManaMax($manamax)
@@ -553,6 +669,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Mana spent.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Mana spent.
@@ -571,6 +691,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets mana spent.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $manaspent Mana spent.
  */
     public function setManaSpent($manaspent)
@@ -580,6 +704,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Soul points.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Soul points.
@@ -598,6 +726,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets soul points.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $soul Soul points.
  */
     public function setSoul($soul)
@@ -607,6 +739,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Looking direction.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Looking direction.
@@ -625,6 +761,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets looking direction.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $direction Looking direction.
  */
     public function setDirection($direction)
@@ -634,6 +774,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Body color.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Body color.
@@ -652,6 +796,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets body color.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $lookbody Body color.
  */
     public function setLookBody($lookbody)
@@ -661,6 +809,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Boots color.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Boots color.
@@ -679,6 +831,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets boots color.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $lookfeet Boots color.
  */
     public function setLookFeet($lookfeet)
@@ -688,6 +844,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Hair color.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Hair color.
@@ -706,6 +866,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets hair color.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $lookhead Hair color.
  */
     public function setLookHead($lookhead)
@@ -715,6 +879,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Legs color.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Legs color.
@@ -733,6 +901,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets legs color.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $looklegs Legs color.
  */
     public function setLookLegs($looklegs)
@@ -742,6 +914,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Outfit.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Outfit.
@@ -760,6 +936,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets outfit.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $looktype Outfit.
  */
     public function setLookType($looktype)
@@ -769,6 +949,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Addons.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Addons.
@@ -787,6 +971,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets addons.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $lookaddons Addons.
  */
     public function setLookAddons($lookaddons)
@@ -796,6 +984,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * X map coordinate.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int X map coordinate.
@@ -814,6 +1006,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets X map coordinate.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $posx X map coordinate.
  */
     public function setPosX($posx)
@@ -823,6 +1019,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Y map coordinate.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Y map coordinate.
@@ -841,6 +1041,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets Y map coordinate.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $posy Y map coordinate.
  */
     public function setPosY($posy)
@@ -850,6 +1054,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Z map coordinate.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Z map coordinate.
@@ -868,6 +1076,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets Z map coordinate.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $posz Z map coordinate.
  */
     public function setPosZ($posz)
@@ -877,6 +1089,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Capacity.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Capacity.
@@ -895,6 +1111,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets capacity.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $cap Capacity.
  */
     public function setCap($cap)
@@ -904,6 +1124,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Last login timestamp.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Last login timestamp.
@@ -922,6 +1146,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets last login timestamp.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $lastlogin Last login timestamp.
  */
     public function setLastLogin($lastlogin)
@@ -931,6 +1159,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Last login IP.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Last login IP.
@@ -949,6 +1181,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets last login IP.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $lastip Last login IP.
  */
     public function setLastIP($lastip)
@@ -958,6 +1194,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Checks if save flag is set.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.7
  * @return bool PACC days.
@@ -976,6 +1216,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Unsets save flag.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @version 0.0.7
  */
     public function unsetSave()
@@ -984,8 +1228,6 @@ class OTS_Player extends OTS_Row_DAO
     }
 
 /**
- * Save counter.
- * 
  * @version 0.0.7
  * @since 0.0.6
  * @return int Save counter.
@@ -1005,6 +1247,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets save flag.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @version 0.0.7
  * @param int $save Deprecated, unused, optional.
  */
@@ -1015,6 +1261,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Conditions.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return string Conditions binary string.
@@ -1033,6 +1283,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets conditions.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param string $conditions Condition binary string.
  */
     public function setConditions($conditions)
@@ -1042,6 +1296,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Red skulled time remained.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Red skulled time remained.
@@ -1060,6 +1318,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets red skulled time remained.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $redskulltime Red skulled time remained.
  */
     public function setRedSkullTime($redskulltime)
@@ -1069,6 +1331,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Checks if player has red skull.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return bool Red skull state.
@@ -1086,6 +1352,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Unsets red skull flag.
+ * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
  */
     public function unsetRedSkull()
     {
@@ -1094,6 +1364,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Sets red skull flag.
+ * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
  */
     public function setRedSkull()
     {
@@ -1102,6 +1376,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Guild nick.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return string Guild title.
@@ -1120,6 +1398,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets guild nick.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param string $guildnick Name.
  */
     public function setGuildNick($guildnick)
@@ -1128,8 +1410,6 @@ class OTS_Player extends OTS_Row_DAO
     }
 
 /**
- * Guild rank ID.
- * 
  * @version 0.0.3
  * @return int Guild rank ID.
  * @throws E_OTS_NotLoaded If player is not loaded.
@@ -1148,9 +1428,14 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Assigned guild rank.
  * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
+ * 
  * @version 0.1.0
  * @return OTS_GuildRank|null Guild rank (null if not member of any).
  * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function getRank()
     {
@@ -1170,8 +1455,6 @@ class OTS_Player extends OTS_Row_DAO
     }
 
 /**
- * Sets guild rank ID.
- * 
  * @param int $rank_id Guild rank ID.
  * @deprecated 0.0.4 Use setRank().
  */
@@ -1183,7 +1466,12 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Assigns guild rank.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param OTS_GuildRank|null Guild rank (null to clear assign).
+ * @throws E_OTS_NotLoaded If passed <var>$guildRank</var> parameter is not loaded.
  */
     public function setRank(OTS_GuildRank $guildRank = null)
     {
@@ -1199,6 +1487,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Residence town's ID.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Residence town's ID.
@@ -1217,6 +1509,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets residence town's ID.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $town_id Residence town's ID.
  */
     public function setTownId($town_id)
@@ -1226,6 +1522,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Percentage of experience lost after dead.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Percentage of experience lost after dead.
@@ -1244,6 +1544,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets percentage of experience lost after dead.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $loss_experience Percentage of experience lost after dead.
  */
     public function setLossExperience($loss_experience)
@@ -1253,6 +1557,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Percentage of used mana lost after dead.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Percentage of used mana lost after dead.
@@ -1271,6 +1579,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets percentage of used mana lost after dead.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @param int $loss_mana Percentage of used mana lost after dead.
  */
     public function setLossMana($loss_mana)
@@ -1280,6 +1592,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Percentage of skills lost after dead.
+ * 
+ * <p>
+ * Note: Since 0.0.3 version this method throws {@link E_OTS_NotLoaded E_OTS_NotLoaded} exception instead of triggering E_USER_WARNING.
+ * </p>
  * 
  * @version 0.0.3
  * @return int Percentage of skills lost after dead.
@@ -1297,6 +1613,10 @@ class OTS_Player extends OTS_Row_DAO
 
 /**
  * Sets percentage of skills lost after dead.
+ * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
  * 
  * @param int $loss_skills Percentage of skills lost after dead.
  */
@@ -1326,6 +1646,10 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Sets bank balance value.
  * 
+ * <p>
+ * This method only updates object state. To save changes in database you need to use {@link OTS_Player::save() save() method} to flush changed to database.
+ * </p>
+ * 
  * @version 0.1.2
  * @since 0.1.2
  * @param int $balance Amount of money to be set in bank.
@@ -1338,7 +1662,9 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Reads custom field.
  * 
+ * <p>
  * Reads field by it's name. Can read any field of given record that exists in database.
+ * </p>
  * 
  * <p>
  * Note: You should use this method only for fields that are not provided in standard setters/getters (SVN fields). This method runs SQL query each time you call it so it highly overloads used resources.
@@ -1349,6 +1675,7 @@ class OTS_Player extends OTS_Row_DAO
  * @param string $field Field name.
  * @return string Field value.
  * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function getCustomField($field)
     {
@@ -1364,7 +1691,9 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Writes custom field.
  * 
+ * <p>
  * Write field by it's name. Can write any field of given record that exists in database.
+ * </p>
  * 
  * <p>
  * Note: You should use this method only for fields that are not provided in standard setters/getters (SVN fields). This method runs SQL query each time you call it so it highly overloads used resources.
@@ -1379,6 +1708,7 @@ class OTS_Player extends OTS_Row_DAO
  * @param string $field Field name.
  * @param mixed $value Field value.
  * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function setCustomField($field, $value)
     {
@@ -1463,11 +1793,12 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Returns value of storage record.
  * 
- * @version 0.1.2
+ * @version 0.1.3
  * @since 0.1.2
  * @param int $key Storage key.
  * @return int|null Stored value (null if not set).
  * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function getStorage($key)
     {
@@ -1477,6 +1808,12 @@ class OTS_Player extends OTS_Row_DAO
         }
 
         $value = $this->db->query('SELECT ' . $this->db->fieldName('value') . ' FROM ' . $this->db->tableName('player_storage') . ' WHERE ' . $this->db->fieldName('key') . ' = ' . (int) $key . ' AND ' . $this->db->fieldName('player_id') . ' = ' . $this->data['id'])->fetch();
+
+        if($value !== false)
+        {
+            return null;
+        }
+
         return $value['value'];
     }
 
@@ -1488,6 +1825,7 @@ class OTS_Player extends OTS_Row_DAO
  * @param int $key Storage key.
  * @param int $value Stored value.
  * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function setStorage($key, $value)
     {
@@ -1516,6 +1854,7 @@ class OTS_Player extends OTS_Row_DAO
  * @version 0.0.5
  * @since 0.0.3
  * @param int $sid Item unique player's ID.
+ * @throws PDOException On PDO operation error.
  */
     private function deleteItem($sid)
     {
@@ -1532,14 +1871,17 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Returns items tree from given slot.
  * 
- * Note: OTS_Player class has no information about item types. It returns all items as OTS_Item, unless they have any contained items in database, so empty container will be instanced as OTS_Item object, not OTS_Container.
+ * <p>
+ * You need global items list resources loaded in order to use this method.
+ * </p>
  * 
  * @version 0.1.2
  * @since 0.0.3
  * @param int $slot Slot to get items.
  * @return OTS_Item|null Item in given slot (items tree if in given slot there is a container). If there is no item in slot then null value will be returned.
- * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws E_OTS_NotLoaded If player is not loaded or there is no global items list resource loaded.
  * @throws E_OTS_NotAContainer If item which is not of type container contains sub items.
+ * @throws PDOException On PDO operation error.
  */
     public function getSlot($slot)
     {
@@ -1596,6 +1938,7 @@ class OTS_Player extends OTS_Row_DAO
  * @param OTS_Item $item Item (can be a container with content) for given slot. Leave this parameter blank to clear slot.
  * @param int $pid Deprecated, not used anymore.
  * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function setSlot($slot, OTS_Item $item = null, $pid = 0)
     {
@@ -1654,6 +1997,7 @@ class OTS_Player extends OTS_Row_DAO
  * @version 0.0.5
  * @since 0.0.3
  * @param int $sid Depot item unique player's ID.
+ * @throws PDOException On PDO operation error.
  */
     private function deleteDepot($sid)
     {
@@ -1670,14 +2014,17 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Returns items tree from given depot.
  * 
- * Note: OTS_Player class has no information about item types. It returns all items as OTS_Item, unless they have any contained items in database, so empty container will be instanced as OTS_Item object, not OTS_Container.
+ * <p>
+ * You need global items list resources loaded in order to use this method.
+ * </p>
  * 
  * @version 0.1.2
  * @since 0.0.3
  * @param int $depot Depot ID to get items.
  * @return OTS_Item|null Item in given depot (items tree if in given depot there is a container). If there is no item in depot then null value will be returned.
- * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws E_OTS_NotLoaded If player is not loaded or there is no global items list resource loaded.
  * @throws E_OTS_NotAContainer If item which is not of type container contains sub items.
+ * @throws PDOException On PDO operation error.
  */
     public function getDepot($depot)
     {
@@ -1735,6 +2082,7 @@ class OTS_Player extends OTS_Row_DAO
  * @param int $pid Deprecated, not used anymore.
  * @param int $depot_id Internal, for further use.
  * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function setDepot($depot, OTS_Item $item = null, $pid = 0, $depot_id = 0)
     {
@@ -1799,6 +2147,7 @@ class OTS_Player extends OTS_Row_DAO
  * @version 0.0.5
  * @since 0.0.5
  * @param int $time Time for time until expires (0 - forever).
+ * @throws PDOException On PDO operation error.
  */
     public function ban($time = 0)
     {
@@ -1816,6 +2165,7 @@ class OTS_Player extends OTS_Row_DAO
  * 
  * @version 0.0.5
  * @since 0.0.5
+ * @throws PDOException On PDO operation error.
  */
     public function unban()
     {
@@ -1834,6 +2184,7 @@ class OTS_Player extends OTS_Row_DAO
  * @version 0.0.5
  * @since 0.0.5
  * @return bool True if player is banned, false otherwise.
+ * @throws PDOException On PDO operation error.
  */
     public function isBanned()
     {
@@ -1853,6 +2204,7 @@ class OTS_Player extends OTS_Row_DAO
  * @version 0.0.5
  * @since 0.0.5
  * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function delete()
     {
@@ -1871,10 +2223,14 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Player proffesion name.
  * 
+ * <p>
+ * You need global vocations list resource loaded in order to use this method.
+ * </p>
+ * 
  * @version 0.1.0
  * @since 0.0.6
- * @return string|bool Player proffesion name.
- * @throws E_OTS_NotLoaded If player is not loaded.
+ * @return string Player proffesion name.
+ * @throws E_OTS_NotLoaded If player is not loaded or global vocations list is not loaded.
  */
     public function getVocationName()
     {
@@ -1889,10 +2245,14 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Player residence town name.
  * 
+ * <p>
+ * You need global map resource loaded in order to use this method.
+ * </p>
+ * 
  * @version 0.1.0
  * @since 0.1.0
- * @return string|bool Player town name.
- * @throws E_OTS_NotLoaded If player is not loaded.
+ * @return string Player town name.
+ * @throws E_OTS_NotLoaded If player is not loaded or global map is not loaded.
  */
     public function getTownName()
     {
@@ -1907,10 +2267,15 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Returns house rented by this player.
  * 
+ * <p>
+ * You need global houses list resource loaded in order to use this method.
+ * </p>
+ * 
  * @version 0.1.0
  * @since 0.1.0
  * @return OTS_House|null House rented by player.
- * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws E_OTS_NotLoaded If player is not loaded or global houses list is not loaded.
+ * @throws PDOException On PDO operation error.
  */
     public function getHouse()
     {
@@ -1926,20 +2291,116 @@ class OTS_Player extends OTS_Row_DAO
         {
             return POT::getInstance()->getHousesList()->getHouse($house['id']);
         }
-        else
+
+        return null;
+    }
+
+/**
+ * Returns list of VIPs.
+ * 
+ * <p>
+ * It means list of players which this player have on his/her list.
+ * </p>
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @return OTS_Players_List List of VIPs.
+ * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
+ */
+    public function getVIPsList()
+    {
+        if( !isset($this->data['id']) )
         {
-           return null;
+            throw new E_OTS_NotLoaded();
         }
+
+        $list = new OTS_Players_List();
+
+        // foreign table fields identifiers
+        $field1 = new OTS_SQLField('player_id', 'player_viplist');
+        $field2 = new OTS_SQLField('vip_id', 'player_viplist');
+
+        // creates filter
+        $filter = new OTS_SQLFilter();
+        $filter->addFilter($field1, $this->data['id']);
+        $filter->compareField('id', $field2);
+
+        // puts filter onto list
+        $list->setFilter($filter);
+
+        return $list;
+    }
+
+/**
+ * Adds player to VIP list.
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @param OTS_Player $player Player to be added.
+ * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
+ */
+    public function addVIP(OTS_Player $player)
+    {
+        if( !isset($this->data['id']) )
+        {
+            throw new E_OTS_NotLoaded();
+        }
+
+        $this->db->execute('INSERT INTO ' . $this->db->tableName('player_viplist') . ' (' . $this->db->fieldName('player_id') . ', ' . $this->db->fieldName('vip_id') . ') VALUES (' . $this->data['id'] . ', ' . $player->getId() . ')');
+    }
+
+/**
+ * Checks if given player is a VIP for current one.
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @param OTS_Player $player Player to check.
+ * @return bool True, if given player is on VIP list.
+ * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
+ */
+    public function isVIP(OTS_Player $player)
+    {
+        if( !isset($this->data['id']) )
+        {
+            throw new E_OTS_NotLoaded();
+        }
+
+        $vip = $this->db->query('SELECT COUNT(' . $this->db->fieldName('vip_id') . ') AS ' . $this->db->fieldName('count') . ' FROM ' . $this->db->tableName('player_viplist') . ' WHERE ' . $this->db->fieldName('player_id') . ' = ' . $this->data['id'] . ' AND ' . $this->db->fieldName('vip_id') . ' = ' . $player->getId() )->fetch();
+        return $vip['count'] > 0;
+    }
+
+/**
+ * Deletes player from VIP list.
+ * 
+ * @version 0.1.3
+ * @since 0.1.3
+ * @param OTS_Player $player Player to be deleted.
+ * @throws E_OTS_NotLoaded If player is not loaded.
+ * @throws PDOException On PDO operation error.
+ */
+    public function deleteVIP(OTS_Player $player)
+    {
+        if( !isset($this->data['id']) )
+        {
+            throw new E_OTS_NotLoaded();
+        }
+
+        $this->db->execute('DELETE FROM ' . $this->db->tableName('player_viplist') . ' WHERE ' . $this->db->fieldName('player_id') . ' = ' . $this->data['id'] . ' AND ' . $this->db->fieldName('vip_id') . ' = ' . $player->getId() );
     }
 
 /**
  * Magic PHP5 method.
  * 
- * @version 0.1.2
+ * @version 0.1.3
  * @since 0.1.0
  * @param string $name Property name.
  * @return mixed Property value.
+ * @throws E_OTS_NotLoaded When player is not loaded.
  * @throws OutOfBoundsException For non-supported properties.
+ * @throws PDOException On PDO operation error.
  */
     public function __get($name)
     {
@@ -2077,6 +2538,12 @@ class OTS_Player extends OTS_Row_DAO
             case 'banned':
                 return $this->isBanned();
 
+            case 'vipsList':
+                return $this->getVIPsList();
+
+            case 'vocationName':
+                return $this->getVocationName();
+
             default:
                 throw new OutOfBoundsException();
         }
@@ -2089,6 +2556,7 @@ class OTS_Player extends OTS_Row_DAO
  * @since 0.1.0
  * @param string $name Property name.
  * @param mixed $value Property value.
+ * @throws E_OTS_NotLoaded When passing object value which represents not-initialised instance.
  * @throws OutOfBoundsException For non-supported properties.
  */
     public function __set($name, $value)
@@ -2284,9 +2752,11 @@ class OTS_Player extends OTS_Row_DAO
 /**
  * Returns string representation of object.
  * 
+ * <p>
  * If any display driver is currently loaded then it uses it's method. Else it returns character name.
+ * </p>
  * 
- * @version 0.1.0
+ * @version 0.1.3
  * @since 0.1.0
  * @return string String representation of object.
  */
@@ -2299,10 +2769,8 @@ class OTS_Player extends OTS_Row_DAO
         {
             return $ots->getDisplayDriver()->displayPlayer($this);
         }
-        else
-        {
-            return $this->getName();
-        }
+
+        return $this->getName();
     }
 }
 

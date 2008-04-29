@@ -52,6 +52,10 @@ function GuildsAJAX()
             case "reject":
                 return this.onAccept();
                 break;
+
+            case "save":
+                return this.onSave();
+                break;
         }
 
         // everything's fine
@@ -110,6 +114,16 @@ function GuildsAJAX()
 
         // executes AJAX request
         return this.request("GET", "Guilds", "reject", "id=" + ID);
+    }
+
+    // udpates guild info
+    this.save = function(ID)
+    {
+        // sets last action flag
+        this.lastAction = "save";
+
+        // executes AJAX request
+        return this.request("GET", "Guilds", "save", "id=" + GuildID + "&" + dumpForm(InfoForm) );
     }
 
     // callback handlers
@@ -177,6 +191,13 @@ function GuildsAJAX()
             }
         }
     }
+
+    this.onSave = function()
+    {
+        alert(Language[18]);
+
+        return false;
+    }
 }
 
 // GuildsAJAX default instance
@@ -192,5 +213,14 @@ pageLoaded = function()
     {
         // insertion form template
         RanksForm.onsubmit = new Function("return pageGuilds.New();");
+    }
+
+    // guild info form
+    InfoForm = document.getElementById("guildManage");
+
+    if(InfoForm)
+    {
+        // update action
+        InfoForm.onsubmit = new Function("return pageGuilds.save();");
     }
 };

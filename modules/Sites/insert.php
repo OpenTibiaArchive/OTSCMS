@@ -33,7 +33,6 @@ if($row['is_home'])
 
 $row->save();
 
-
 // redirects to main page
 OTSCMS::call('Sites', 'list');
 

@@ -22,6 +22,9 @@
 header('Content-Type: text/html; charset=utf-8');
 $version = '3.1.3';
 
+// to make sure OTSCMS will run correctly on various PHP configurations
+include('compat.php');
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -508,9 +511,9 @@ if($matches)
 <p class="hint">This is not an OPTION - it must correspond with your OTServ setting!</p>
         </td>
         <td class="formRight">
-            <label><input type="radio" name="password_type" value="plain"<?php echo isset($password_type) && $password_type == 'plain' ? ' checked="checked"': ''; ?> />Plain (no hashing)</label><br />
-            <label><input type="radio" name="password_type" value="md5"<?php echo isset($password_type) && $password_type == 'md5' ? '': ' checked="checked"'; ?> />MD5 hash</label><br />
-            <label><input type="radio" name="password_type" value="sha1"<?php echo isset($password_type) && $password_type == 'sha1' ? '': ' checked="checked"'; ?> />SHA1 hash</label><br />
+            <label><input type="radio" name="password_type" value="plain"<?php echo !isset($password_type) || $password_type == 'plain' ? ' checked="checked"': ''; ?> />Plain (no hashing)</label><br />
+            <label><input type="radio" name="password_type" value="md5"<?php echo isset($password_type) && $password_type == 'md5' ? ' checked="checked"': ''; ?> />MD5 hash</label><br />
+            <label><input type="radio" name="password_type" value="sha1"<?php echo isset($password_type) && $password_type == 'sha1' ? ' checked="checked"': ''; ?> />SHA1 hash</label><br />
         </td>
     </tr>
     <tr>
@@ -962,11 +965,12 @@ Mainly great thans to <b>Foziw</b> for the domain and <b>Yorick</b> for forum!
                 $query->execute( array(':name' => 'mail.smtp.user', ':content' => '') );
                 $query->execute( array(':name' => 'mail.smtp.password', ':content' => '') );
 
-                $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTSCMS\', \'http://www.otscms.com/\')');
+                $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTSCMS\', \'http://otscms.com/\')');
                 $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTFans\', \'http://otfans.net/\')');
                 $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'PHP OTServ Toolkit\', \'http://otserv-aac.info/\')');
                 $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'Open Tibia Server List\', \'http://www.otservlist.org/\')');
                 $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTServ News\', \'http://www.otservnews.org/\')');
+                $sql->exec('INSERT INTO [links] (`name`, `content`) VALUES (\'OTWiki\', \'http://otserv.org/\')');
 
                 $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Access.*\', 3)');
                 $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Account.*\', 3)');
@@ -1007,6 +1011,7 @@ Mainly great thans to <b>Foziw</b> for the domain and <b>Yorick</b> for forum!
                 $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.manage\', 3)');
                 $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.remove\', 3)');
                 $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'News.update\', 3)');
+                $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'OTAdmin.*\', 3)');
                 $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Online.*\', 3)');
                 $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'Options.*\', 3)');
                 $sql->exec('INSERT INTO [access] (`name`, `content`) VALUES (\'PM.*\', 0)');
@@ -1026,7 +1031,7 @@ Mainly great thans to <b>Foziw</b> for the domain and <b>Yorick</b> for forum!
 
                 $sql->exec('INSERT INTO [download] (`name`, `content`, `binary`, `file`) VALUES (\'OTSCMS Lite\', \'Latest <span style="font-weight: bold;">OTSCMS Lite</span>.<br />
 <br />
-Please visit <a href="http://www.otscms.com/">http://www.otscms.com/</a>.\', 0, \'http://www.otscms.com/latest.php/lite\')');
+Please visit <a href="http://otscms.com/">http://www.otscms.com/</a>.\', 0, \'http://otscms.com/latest.php/lite\')');
 
                 $sql->exec('INSERT INTO [profiles] (`name`, `health`, `healthmax`, `direction`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `cap`) VALUES (\'*.*\', 250, 250, 0, 0, 30, 50, 20, 40, 0, 0, 0, 0, 0, 220)');
                 $sql->exec('INSERT INTO [profiles] (`name`, `looktype`) VALUES (\'' . POT::SEX_FEMALE . '.*\', 136)');
@@ -1226,7 +1231,7 @@ RewriteRule ^(.*)$ index.php?run=$1 [QSA,L]
 ?>
 </div>
             <div id="pageFooter">
-                Powered by <a href="http://www.otscms.com/">OTSCMS</a> v <?php echo $version; ?>; Copyright &copy; 2005 - 2008 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.<br />
+                Powered by <a href="http://otscms.com/">OTSCMS</a> v <?php echo $version; ?>; Copyright &copy; 2005 - 2008 by <a href="http://www.wrzasq.com/" class="outLink">Wrzasq</a>.<br />
 <a href="http://otserv-aac.info/">
     <img alt="This site was smoked" src="http://otserv-aac.info/pot.png"/>
 </a>

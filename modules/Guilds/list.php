@@ -24,13 +24,38 @@ $guilds = array();
 
 foreach( new OTS_Guilds_List() as $guild)
 {
-    $guilds[$guild->id] = $guild->name;
+    $div = XMLToolbox::createElement('div');
+
+    // guild emblemat
+    $icon = $guild->getCustomField('icon');
+
+    if( !empty($icon) )
+    {
+        $a = XMLToolbox::createElement('a');
+        $img = XMLToolbox::createElement('img');
+        $img->setAttribute('src', $icon);
+        $a->setAttribute('href', 'guild/' . $guild->id);
+        $a->addContent($img);
+        $div->addContent($a);
+    }
+
+    // label link
+    $a = XMLToolbox::createElement('a');
+    $a->setAttribute('href', 'guild/' . $guild->id);
+    $a->addContent($guild->name);
+    $div->addContent($a);
+
+    // guild text
+    $p = XMLToolbox::createElement('p');
+    $p->addContent( $guild->getCustomField('content') );
+    $div->addContent($p);
+
+    $guilds[$guild->id] = $div;
 }
 
 // news display component
 $list = $template->createComponent('ItemsList');
 $list['header'] = $language['Modules.Guilds.GuildsList'];
-$list['link'] = 'guilds/';
 $list['list'] = $guilds;
 
 // archive link

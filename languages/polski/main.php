@@ -43,6 +43,7 @@ return array(
             'PM' => 'Prywatne Wiadomości',
             'Logger' => 'Logi Błędów',
             'MSP' => 'Szybka zmiana spawnów',
+            'OTAdmin' => 'OTAdmin',
         ),
 
         'Account' => array(
