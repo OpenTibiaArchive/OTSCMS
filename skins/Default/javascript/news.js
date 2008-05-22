@@ -146,13 +146,13 @@ function NewsAJAX()
 
                 // delete action link
                 deleteLink = document.createElement("a");
-                deleteLink.href = "/admin/module=News&command=remove&id=" + ID;
+                deleteLink.href = "admin/module=News&command=remove&id=" + ID;
                 deleteLink.onclick = new Function("if( confirm(Language[0]) ) { return pageNews.remove(" + ID + "); } else { return false; }");
                 deleteLink.appendChild( document.createTextNode(Language[2]) );
 
                 // edit link
                 editLink = document.createElement("a");
-                editLink.href = "/admin/module=News&command=edit&id=" + ID;
+                editLink.href = "admin/module=News&command=edit&id=" + ID;
                 editLink.onclick = new Function("return pageNews.edit(" + ID + ");");
                 editLink.appendChild( document.createTextNode(Language[1]) );
 
@@ -171,7 +171,7 @@ function NewsAJAX()
     this.onEdit = function()
     {
         // prepares edition form
-        NewsFormEdit.action = "/admin/module=News&command=update&id=" + this.lastData;
+        NewsFormEdit.action = "admin/module=News&command=update&id=" + this.lastData;
         NewsFormEdit.onsubmit = new Function("return pageNews.update(" + this.lastData + ");");
 
         oldNews = this.root.getElementByTagName("data");

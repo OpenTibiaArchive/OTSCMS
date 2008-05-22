@@ -75,6 +75,7 @@ return array(
     'FieldLossExperience' => 'Procent doświadczenia do straty',
     'FieldLossMana' => 'Procent zużytej many na straty',
     'FieldLossSkills' => 'Procent umiejętności na straty',
+    'FieldLossItems' => 'Procent przedmiotów na straty',
     'FieldItem0' => 'Głowa',
     'FieldItem1' => 'Naszyjnik',
     'FieldItem2' => 'Plecak',

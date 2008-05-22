@@ -75,6 +75,7 @@ return array(
     'FieldLossExperience' => 'Percents of experience to lose',
     'FieldLossMana' => 'Percents of spent mana to lose',
     'FieldLossSkills' => 'Percents of skills to lose',
+    'FieldLossItems' => 'Percents of items to lose',
     'FieldItem0' => 'Head slot',
     'FieldItem1' => 'Necklace slot',
     'FieldItem2' => 'Backpack slot',

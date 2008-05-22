@@ -176,7 +176,7 @@ function PollAJAX()
         newPoll.id = "pollID_" + ID;
 
         a = document.createElement("a");
-        a.href = "/polls/" + ID;
+        a.href = "polls/" + ID;
         a.appendChild( document.createTextNode(Name) );
         newPoll.appendChild(a);
 
@@ -184,7 +184,7 @@ function PollAJAX()
 
         a = document.createElement("a");
         a.onclick = new Function("return pagePoll.edit(" + ID + ");");
-        a.href = "/admin/module=Poll&command=edit&id=" + ID;
+        a.href = "admin/module=Poll&command=edit&id=" + ID;
 
         img = document.createElement("img");
         img.alt = Language[1];
@@ -195,7 +195,7 @@ function PollAJAX()
 
         a = document.createElement("a");
         a.onclick = new Function("if( confirm(Language[0]) ) { return pagePoll.remove(" + ID + "); } else { return false; }");
-        a.href = "/admin/module=Poll&command=remove&id=" + ID;
+        a.href = "admin/module=Poll&command=remove&id=" + ID;
 
         img = document.createElement("img");
         img.alt = Language[2];
@@ -216,7 +216,7 @@ function PollAJAX()
     this.onEdit = function()
     {
         // prepares edition form
-        PollsFormEdit.action = "/admin/module=Poll&command=update&id=" + this.lastData;
+        PollsFormEdit.action = "admin/module=Poll&command=update&id=" + this.lastData;
         PollsFormEdit.onsubmit = new Function("return pagePoll.update(" + this.lastData + ");");
 
         oldPoll = this.root.getElementByTagName("data");

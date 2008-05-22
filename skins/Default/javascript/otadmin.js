@@ -128,7 +128,7 @@ function OTAdminAJAX()
                 // delete action link
                 cell = row.insertCell(-1);
                 a = document.createElement("a");
-                a.href = "/admin/module=OTAdmin&command=remove&id=" + ID;
+                a.href = "admin/module=OTAdmin&command=remove&id=" + ID;
                 a.onclick = new Function("if( confirm(Language[0]) ) { return pageOTAdmin.remove(" + ID + "); } else { return false; }");
                 a.appendChild( document.createTextNode(Language[2]) );
                 cell.appendChild(a);
@@ -137,7 +137,7 @@ function OTAdminAJAX()
 
                 cell = row.insertCell(-1);
                 a = document.createElement("a");
-                a.href = "/admin/module=OTAdmin&command=panel&id=" + ID;
+                a.href = "admin/module=OTAdmin&command=panel&id=" + ID;
                 a.appendChild( document.createTextNode(Language[17]) );
                 cell.appendChild(a);
                 break;

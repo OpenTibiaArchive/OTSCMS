@@ -87,6 +87,7 @@ $form->addField('profile[food]', ComponentAdminForm::FieldText, $language['Modul
 $form->addField('profile[loss_experience]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldLossExperience'], $profile['loss_experience']);
 $form->addField('profile[loss_mana]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldLossMana'], $profile['loss_mana']);
 $form->addField('profile[loss_skills]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldLossSkills'], $profile['loss_skills']);
+$form->addField('profile[loss_items]', ComponentAdminForm::FieldText, $language['Modules.Character.FieldLossItems'], $profile['loss_items']);
 
 // info about inheritance
 $message = $template->createComponent('Message');

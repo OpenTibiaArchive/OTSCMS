@@ -336,8 +336,9 @@ switch($config['version'])
         // updates system version
         $db->exec('UPDATE [settings] SET `content` = \'3.1.3\' WHERE `name` = \'version\'');
 
-        // adds balance field to character profiles
+        // adds new character profile fields
         $db->exec('ALTER TABLE [profiles] ADD `balance` INT');
+        $db->exec('ALTER TABLE [profiles] ADD `loss_items` INT');
 
         // creates OTAdmin connections list
         switch($driver)

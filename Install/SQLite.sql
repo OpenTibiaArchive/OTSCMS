@@ -166,6 +166,7 @@ CREATE TABLE [profiles] (
     `loss_experience` INT,
     `loss_mana` INT,
     `loss_skills` INT,
+    `loss_items` INT,
     `balance` INT
 );
 

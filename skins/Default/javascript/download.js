@@ -83,7 +83,7 @@ function DownloadAJAX()
     this.onEdit = function()
     {
         // prepares edition form
-        DownloadsFormEdit.action = "/admin/module=Download&command=update&id=" + this.lastData;
+        DownloadsFormEdit.action = "admin/module=Download&command=update&id=" + this.lastData;
         DownloadsFormEdit.onsubmit = document.getElementById("ajaxWrapper").show;
 
         oldDownload = this.root.getElementByTagName("data");

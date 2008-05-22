@@ -167,7 +167,6 @@ class OTSCMS
         $db['prefix'] = $db['ots_prefix'];
         $ots = POT::getInstance();
         $ots->connect(null, $db);
-        $ots->getDBHandle()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $db = new SQL($db['host'], $db['user'], $db['password'], $db['database'], $db['cms_prefix'], $db['ots_prefix']);
         self::setResource('DB', $db);

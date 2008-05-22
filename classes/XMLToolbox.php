@@ -87,7 +87,7 @@ class XMLToolbox
                 self::parseOut($element, $tag);
             }
             // flat data types will have simple tags <field name="foo" value="bar">
-            elseif( is_numeric($name) || $name == 'field')
+            elseif( is_numeric($name) || $name == 'field' || strpos($name, ' ') !== false)
             {
                 $tag = $document->createElement('field');
                 $tag->setAttribute('name', $name);

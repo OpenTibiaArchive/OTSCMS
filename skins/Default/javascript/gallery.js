@@ -83,7 +83,7 @@ function GalleryAJAX()
     this.onEdit = function()
     {
         // prepares edition form
-        GallerysFormEdit.action = "/admin/module=Gallery&command=update&id=" + this.lastData;
+        GallerysFormEdit.action = "admin/module=Gallery&command=update&id=" + this.lastData;
         GallerysFormEdit.onsubmit = document.getElementById("ajaxWrapper").show;
 
         oldGallery = this.root.getElementByTagName("data");

@@ -144,7 +144,7 @@ function SitesAJAX()
         newSite.id = "siteID_" + ID;
 
         a = document.createElement("a");
-        a.href = "/guides/" + ID;
+        a.href = "guides/" + ID;
         a.appendChild( document.createTextNode(Name) );
         newSite.appendChild(a);
 
@@ -152,7 +152,7 @@ function SitesAJAX()
 
         a = document.createElement("a");
         a.onclick = new Function("return pageSites.edit(" + ID + ");");
-        a.href = "/admin/module=Sites&command=edit&id=" + ID;
+        a.href = "admin/module=Sites&command=edit&id=" + ID;
 
         img = document.createElement("img");
         img.alt = Language[1];
@@ -163,7 +163,7 @@ function SitesAJAX()
 
         a = document.createElement("a");
         a.onclick = new Function("if( confirm(Language[0]) ) { return pageSites.remove(" + ID + "); } else { return false; }");
-        a.href = "/admin/module=Sites&command=remove&id=" + ID;
+        a.href = "admin/module=Sites&command=remove&id=" + ID;
 
         img = document.createElement("img");
         img.alt = Language[2];
@@ -184,7 +184,7 @@ function SitesAJAX()
     this.onEdit = function()
     {
         // prepares edition form
-        SitesFormEdit.action = "/admin/module=Sites&command=update&id=" + this.lastData;
+        SitesFormEdit.action = "admin/module=Sites&command=update&id=" + this.lastData;
         SitesFormEdit.onsubmit = new Function("return pageSites.update(" + this.lastData + ");");
 
         oldSite = this.root.getElementByTagName("data");
